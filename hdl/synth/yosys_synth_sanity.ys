@@ -1,0 +1,21 @@
+# Open-source RTL elaboration sanity check.
+#
+# This does not target Agilex 7 timing resources. Quartus Prime Pro 26.1 is the
+# authoritative synthesis/fitter/timing flow for the selected AGIB027R31B1E1VC
+# device. This script is only a fast portable check that the Verilog parses,
+# elaborates, lowers procedural blocks, and passes structural checking in
+# environments without Quartus.
+
+read_verilog hdl/rtl/psk8_mapper.v
+read_verilog hdl/rtl/psk8_demapper.v
+read_verilog hdl/rtl/srrc_fir_8x.v
+read_verilog hdl/rtl/nco_rotator_8x.v
+read_verilog hdl/rtl/psk8_tx.v
+read_verilog hdl/rtl/psk8_rx.v
+read_verilog hdl/rtl/psk8_modem_top.v
+
+hierarchy -check -top psk8_modem_top
+proc
+check
+stat
+

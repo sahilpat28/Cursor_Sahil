@@ -2,8 +2,11 @@
 
 ## Target
 
-- FPGA family: Xilinx Virtex UltraScale+
-- Part used by the provided P&R script: `xcvu9p-flga2104-3-e`
+- Board: Agilex 7 FPGA I-Series Transceiver-SoC Development Kit (4x F-Tile)
+- Kit ordering code: `DK-SI-AGI027FD`
+- FPGA family: Agilex 7 I-Series
+- Device OPN on board: `AGIB027R31B1E1VC`
+- Tool target: Quartus Prime Pro 26.1
 - RTL clock target: 500 MHz
 - Clock period constraint: 2.000 ns
 - Converter throughput: 4 GSPS via 8 complex I/Q samples per RTL clock
@@ -58,74 +61,67 @@ Bit errors:    0
 BER:           0.000000e+00
 ```
 
-### Open-Source UltraScale+ Synthesis Check
+### Open-Source Synthesis Sanity Check
 
 ```text
-Command: yosys -s hdl/synth/yosys_xcup_synth.ys
+Command: yosys -s hdl/synth/yosys_synth_sanity.ys
 Result: completed successfully
 Yosys check: Found and reported 0 problems
 ```
 
-Full hierarchy resource summary from Yosys `synth_xilinx -family xcup`:
+Generic hierarchy summary from the fast Yosys elaboration check:
 
 ```text
-Number of cells: 137634
-  CARRY4:        11474
-  DSP48E2:        1304
-  FDRE:          83375
-  FDSE:             31
-  LUT1:             32
-  LUT2:          38708
-  LUT3:            678
-  LUT4:            620
-  LUT5:            497
-  LUT6:            708
-  MUXF7:            71
-  MUXF8:            27
-  MUXF9:             8
-Estimated LCs:   21208
+Number of cells: 19164
+  $add:        1350
+  $dff:        5828
+  $mul:        1357
+  $mux:       10452
+  $sub:           8
 ```
 
-The Yosys warnings about replacing Verilog memories with lists of registers are
-expected for the register-array coding style used in the pipelined FIR/NCO.
+This Yosys run is only an RTL elaboration sanity check because Yosys does not
+provide the Agilex 7 Quartus Prime Pro 26.1 timing library, DSP block mapping,
+or fitter. The Yosys warnings about replacing Verilog memories with lists of
+registers are expected for the register-array coding style used in the
+pipelined FIR/NCO.
 
 ## Post-Route Timing Status
 
 A real 500 MHz Fmax result requires vendor place-and-route with the target
-device timing library. Vivado is not installed in this cloud environment, so a
-valid post-route WNS/TNS report could not be produced here.
+device timing library. Quartus Prime Pro 26.1 is not installed in this cloud
+environment, so a valid Agilex 7 post-fit WNS/TNS report could not be produced
+here.
 
-The runnable Vivado flow is provided at:
+The runnable Quartus flow is provided at:
 
 ```text
-hdl/synth/vivado/run_vivado_pnr.tcl
-hdl/synth/vivado/psk8_modem_500mhz.xdc
+hdl/synth/quartus/run_quartus_compile.tcl
+hdl/synth/quartus/psk8_modem_500mhz.sdc
 ```
 
-Run from the repository root on a machine with Vivado installed:
+Run from the repository root on a machine with Quartus Prime Pro 26.1 installed
+and Agilex 7 device support enabled:
 
 ```bash
-vivado -mode batch -source hdl/synth/vivado/run_vivado_pnr.tcl
+quartus_sh -t hdl/synth/quartus/run_quartus_compile.tcl
 ```
 
 Expected output reports:
 
 ```text
-hdl/reports/vivado/post_synth_timing_summary.rpt
-hdl/reports/vivado/post_route_timing_summary.rpt
-hdl/reports/vivado/post_route_worst_paths.rpt
-hdl/reports/vivado/post_route_utilization.rpt
-hdl/reports/vivado/post_route_clock_utilization.rpt
-hdl/reports/vivado/post_route_drc.rpt
+hdl/reports/quartus/flow_summary.rpt
+hdl/reports/quartus/fitter_resource_usage_summary.rpt
+hdl/reports/quartus/timing_analyzer_summary.rpt
 ```
 
 ## Timing Conclusion
 
 - Functional validation: PASS
-- UltraScale+ synthesis/elaboration: PASS
-- 500 MHz post-route timing: PENDING VIVADO RUN
+- Open-source RTL synthesis/elaboration sanity check: PASS
+- Agilex 7 Quartus post-fit timing: PENDING QUARTUS PRIME PRO 26.1 RUN
 
 The RTL is now structured for a realistic 500 MHz implementation, but final
-timing closure must be judged from the Vivado post-route timing summary on the
-selected target part.
+timing closure must be judged from the Quartus Timing Analyzer summary on
+`AGIB027R31B1E1VC`.
 

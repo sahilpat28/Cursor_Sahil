@@ -25,9 +25,9 @@ rtl/psk8_modem_top.v   Integrated TX/RX datapath
 tb/tb_psk8_modem.v     Self-checking loopback simulation
 constraints/psk8_modem_500mhz.sdc
                        Generic 2 ns clock constraint
-synth/yosys_xcup_synth.ys
-                       Yosys UltraScale+ synthesis/elaboration check
-synth/vivado/          Vivado VU9P synthesis/place/route timing flow
+synth/yosys_synth_sanity.ys
+                       Open-source RTL synthesis/elaboration sanity check
+synth/quartus/         Quartus Prime Pro 26.1 Agilex 7 compile/timing flow
 reports/timing_analysis.md
                        Timing-analysis status and results
 ```
@@ -122,21 +122,21 @@ PASS: recovered 1024 PRBS31 8-PSK symbols at 500 MHz RTL clock with CFO correcti
 
 ## Synthesis and Timing
 
-Open-source synthesis/elaboration check:
+Open-source synthesis/elaboration sanity check:
 
 ```bash
-yosys -s hdl/synth/yosys_xcup_synth.ys
+yosys -s hdl/synth/yosys_synth_sanity.ys
 ```
 
-Vendor place-and-route timing flow for the selected target
-`xcvu9p-flga2104-3-e`:
+Quartus Prime Pro 26.1 compile/timing flow for the Agilex 7 I-Series
+Transceiver-SoC Development Kit target device `AGIB027R31B1E1VC`:
 
 ```bash
-vivado -mode batch -source hdl/synth/vivado/run_vivado_pnr.tcl
+quartus_sh -t hdl/synth/quartus/run_quartus_compile.tcl
 ```
 
-The Vivado flow writes timing and utilization reports under
-`hdl/reports/vivado/`. See `hdl/reports/timing_analysis.md` for the latest
+The Quartus flow writes timing and utilization reports under
+`hdl/reports/quartus/`. See `hdl/reports/timing_analysis.md` for the latest
 validation status.
 
 ## Integration Notes
@@ -151,7 +151,7 @@ The included receiver has a configurable symbol sampling phase. In a production
 receiver, replace or drive this with timing recovery if the ADC sample phase is
 not deterministic.
 
-The supplied SDC file constrains the RTL `clk` port to 2.000 ns. Final timing
-closure still depends on the target FPGA/ASIC library, multiplier mapping,
-floorplanning, and retiming settings used by the integration flow.
+The supplied Quartus SDC file constrains the RTL `clk` port to 2.000 ns. Final
+timing closure still depends on Quartus fitter placement, clock resource
+selection, pin/interface constraints, and any board-level integration logic.
 

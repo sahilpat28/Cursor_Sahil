@@ -83,7 +83,7 @@ hdl/
   rtl/         # Verilog-2001 modem RTL
   tb/          # self-checking Verilog testbench
   constraints/ # generic 500 MHz clock constraint
-  synth/       # Yosys and Vivado synthesis/timing scripts
+  synth/       # Yosys sanity check and Quartus Agilex timing scripts
   reports/     # timing-analysis status report
   Makefile     # Icarus Verilog simulation flow
 
@@ -125,8 +125,8 @@ Timing-analysis status and synthesis/P&R scripts are in:
 
 ```text
 hdl/reports/timing_analysis.md
-hdl/synth/yosys_xcup_synth.ys
-hdl/synth/vivado/run_vivado_pnr.tcl
+hdl/synth/yosys_synth_sanity.ys
+hdl/synth/quartus/run_quartus_compile.tcl
 ```
 
 ## Run

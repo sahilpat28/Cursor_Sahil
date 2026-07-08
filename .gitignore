@@ -10,6 +10,18 @@ hdl/build/
 # Generated synthesis/place-and-route outputs
 hdl/reports/*.log
 hdl/reports/vivado/
+hdl/reports/quartus/work/
+hdl/reports/quartus/*.rpt
 *.dcp
 *.rpt
+*.qpf
+*.qsf
+*.qws
+*.sof
+*.pof
+*.pin
+*.sta.rpt
+*.fit.rpt
+*.flow.rpt
+*.map.rpt
 
