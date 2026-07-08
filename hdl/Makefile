@@ -1,5 +1,6 @@
 IVERILOG ?= iverilog
 VVP ?= vvp
+IVERILOG_WARNINGS ?= -Wall -Wno-sensitivity-entire-array
 
 RTL = \
 	rtl/psk8_mapper.v \
@@ -22,7 +23,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 $(SIM): $(RTL) $(TB) | $(BUILD_DIR)
-	$(IVERILOG) -Wall -o $@ $(RTL) $(TB)
+	$(IVERILOG) $(IVERILOG_WARNINGS) -o $@ $(RTL) $(TB)
 
 sim: $(SIM)
 	$(VVP) $(SIM)
