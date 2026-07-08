@@ -1,0 +1,19 @@
+# Open-source synthesis/elaboration check for the 500 MHz 8-PSK modem.
+#
+# This maps the design to Xilinx UltraScale+ primitives with Yosys. It is not a
+# substitute for Vivado place-and-route timing, but it catches synthesizability
+# issues and provides a resource-oriented sanity check in environments without
+# the vendor toolchain.
+
+read_verilog hdl/rtl/psk8_mapper.v
+read_verilog hdl/rtl/psk8_demapper.v
+read_verilog hdl/rtl/srrc_fir_8x.v
+read_verilog hdl/rtl/nco_rotator_8x.v
+read_verilog hdl/rtl/psk8_tx.v
+read_verilog hdl/rtl/psk8_rx.v
+read_verilog hdl/rtl/psk8_modem_top.v
+
+synth_xilinx -family xcup -top psk8_modem_top -noiopad -noclkbuf
+stat -tech xilinx
+check
+

@@ -17,14 +17,19 @@ This directory contains synthesizable Verilog-2001 RTL for the requested modem:
 ```text
 rtl/psk8_mapper.v      Natural-code 8-PSK mapper, Q1.15 I/Q
 rtl/psk8_demapper.v    Hard-decision natural-code 8-PSK demapper
-rtl/srrc_fir_8x.v      8-sample/clock 41-tap beta=0.35 SRRC FIR
-rtl/nco_rotator_8x.v   8-sample/clock complex NCO rotator
+rtl/srrc_fir_8x.v      pipelined 8-sample/clock 41-tap beta=0.35 SRRC FIR
+rtl/nco_rotator_8x.v   pipelined 8-sample/clock complex NCO rotator
 rtl/psk8_tx.v          PRBS31 + mapper + SRRC TX
 rtl/psk8_rx.v          CFO correction + SRRC matched filter + demapper
 rtl/psk8_modem_top.v   Integrated TX/RX datapath
 tb/tb_psk8_modem.v     Self-checking loopback simulation
 constraints/psk8_modem_500mhz.sdc
                        Generic 2 ns clock constraint
+synth/yosys_xcup_synth.ys
+                       Yosys UltraScale+ synthesis/elaboration check
+synth/vivado/          Vivado VU9P synthesis/place/route timing flow
+reports/timing_analysis.md
+                       Timing-analysis status and results
 ```
 
 ## Clocking and Rates
@@ -65,6 +70,18 @@ lane 7 = latest sample in the block
 - NCO sine/cosine LUT: signed Q1.15
 - NCO phase accumulator: 16-bit modulo phase
 
+## Timing-Oriented Pipelines
+
+The 500 MHz datapath avoids long single-cycle arithmetic chains:
+
+- `srrc_fir_8x.v` registers all coefficient products, then uses six registered
+  adder-tree levels before the registered output saturation stage.
+- `nco_rotator_8x.v` registers input/LUT values, registers multiplier outputs,
+  then registers complex add/subtract and saturation outputs.
+
+These pipeline stages increase latency but preserve one 8-sample block per clock
+throughput.
+
 ## Receiver Frequency Correction
 
 The receiver frequency correction input is `rx_phase_inc`.
@@ -102,6 +119,25 @@ Expected result:
 ```text
 PASS: recovered 1024 PRBS31 8-PSK symbols at 500 MHz RTL clock with CFO correction
 ```
+
+## Synthesis and Timing
+
+Open-source synthesis/elaboration check:
+
+```bash
+yosys -s hdl/synth/yosys_xcup_synth.ys
+```
+
+Vendor place-and-route timing flow for the selected target
+`xcvu9p-flga2104-3-e`:
+
+```bash
+vivado -mode batch -source hdl/synth/vivado/run_vivado_pnr.tcl
+```
+
+The Vivado flow writes timing and utilization reports under
+`hdl/reports/vivado/`. See `hdl/reports/timing_analysis.md` for the latest
+validation status.
 
 ## Integration Notes
 

@@ -7,3 +7,9 @@ __pycache__/
 hdl/build/
 *.vcd
 
+# Generated synthesis/place-and-route outputs
+hdl/reports/*.log
+hdl/reports/vivado/
+*.dcp
+*.rpt
+

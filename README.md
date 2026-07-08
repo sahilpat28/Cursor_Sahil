@@ -83,6 +83,8 @@ hdl/
   rtl/         # Verilog-2001 modem RTL
   tb/          # self-checking Verilog testbench
   constraints/ # generic 500 MHz clock constraint
+  synth/       # Yosys and Vivado synthesis/timing scripts
+  reports/     # timing-analysis status report
   Makefile     # Icarus Verilog simulation flow
 
 src/eight_psk_modem/
@@ -105,6 +107,8 @@ maintains the requested 4 GSPS converter throughput without a 4 GHz RTL clock.
 
 - `psk8_tx.v`: PRBS31 source, natural 8-PSK mapper, 4x upsample, SRRC TX filter
 - `psk8_rx.v`: receiver NCO frequency correction, SRRC matched filter, demapper
+- `srrc_fir_8x.v`: pipelined multiplier and adder-tree SRRC FIR
+- `nco_rotator_8x.v`: pipelined receiver frequency-correction rotator
 - `psk8_modem_top.v`: integrated modem with explicit packed complex DAC/ADC ports
 
 Run the self-checking Verilog loopback simulation:
@@ -116,6 +120,14 @@ make sim
 
 The testbench injects an approximately +10 MHz carrier-frequency offset and
 programs the receiver with the inverse correction word.
+
+Timing-analysis status and synthesis/P&R scripts are in:
+
+```text
+hdl/reports/timing_analysis.md
+hdl/synth/yosys_xcup_synth.ys
+hdl/synth/vivado/run_vivado_pnr.tcl
+```
 
 ## Run
 

@@ -1,4 +1,4 @@
-// 8-sample-per-clock complex NCO rotator.
+// Pipelined 8-sample-per-clock complex NCO rotator.
 //
 // This block runs at the 500 MHz RTL clock and rotates eight consecutive
 // 4-GSPS samples per clock. The tuning word is still per 4-GSPS sample:
@@ -7,6 +7,11 @@
 //
 // For +10 MHz at 4 GSPS, phase_inc = +164. For receiver correction of a
 // +10 MHz offset, program -164.
+//
+// Timing-oriented pipeline:
+//   stage P : register input sample lanes and sine/cosine LUT outputs
+//   stage M : register four 16x16 products per lane
+//   stage O : register complex add/subtract, rounding, and saturation
 //
 // Data format:
 //   input/output I/Q lanes = signed Q1.15
@@ -29,64 +34,75 @@ module nco_rotator_8x (
     localparam integer LANES = 8;
 
     reg [15:0] phase_acc;
-    reg signed [15:0] next_i [0:LANES-1];
-    reg signed [15:0] next_q [0:LANES-1];
-    reg signed [15:0] sample_i;
-    reg signed [15:0] sample_q;
-    reg [15:0] lane_phase;
+    reg [2:0] valid_pipe;
+
+    reg signed [15:0] sample_i_p [0:LANES-1];
+    reg signed [15:0] sample_q_p [0:LANES-1];
+    reg signed [15:0] cos_p [0:LANES-1];
+    reg signed [15:0] sin_p [0:LANES-1];
+
+    reg signed [31:0] i_cos_m [0:LANES-1];
+    reg signed [31:0] q_sin_m [0:LANES-1];
+    reg signed [31:0] i_sin_m [0:LANES-1];
+    reg signed [31:0] q_cos_m [0:LANES-1];
+
     reg signed [31:0] lane_phase_full;
-    reg signed [15:0] cos_val;
-    reg signed [15:0] sin_val;
-    reg signed [31:0] i_cos;
-    reg signed [31:0] q_sin;
-    reg signed [31:0] i_sin;
-    reg signed [31:0] q_cos;
+    reg [15:0] lane_phase;
     reg signed [32:0] i_mix;
     reg signed [32:0] q_mix;
     integer lane;
-    integer n;
 
     wire signed [18:0] phase_advance = $signed(phase_inc) * 19'sd8;
-
-    always @* begin
-        for (lane = 0; lane < LANES; lane = lane + 1) begin
-            lane_phase_full = $signed({1'b0, phase_acc})
-                            + ($signed(phase_inc) * lane);
-            lane_phase = lane_phase_full[15:0];
-            cos_val = cos_lut(lane_phase[15:11]);
-            sin_val = sin_lut(lane_phase[15:11]);
-
-            sample_i = i_in[lane * 16 +: 16];
-            sample_q = q_in[lane * 16 +: 16];
-
-            i_cos = $signed(sample_i) * $signed(cos_val);
-            q_sin = $signed(sample_q) * $signed(sin_val);
-            i_sin = $signed(sample_i) * $signed(sin_val);
-            q_cos = $signed(sample_q) * $signed(cos_val);
-
-            i_mix = $signed({i_cos[31], i_cos}) - $signed({q_sin[31], q_sin});
-            q_mix = $signed({i_sin[31], i_sin}) + $signed({q_cos[31], q_cos});
-
-            next_i[lane] = sat_q15(i_mix);
-            next_q[lane] = sat_q15(q_mix);
-        end
-    end
 
     always @(posedge clk) begin
         if (rst || phase_clear) begin
             phase_acc <= 16'd0;
+            valid_pipe <= 3'd0;
             out_valid <= 1'b0;
             i_out <= 128'sd0;
             q_out <= 128'sd0;
-        end else if (in_valid) begin
-            phase_acc <= phase_acc + phase_advance[15:0];
-            for (n = 0; n < LANES; n = n + 1) begin
-                i_out[n * 16 +: 16] <= next_i[n];
-                q_out[n * 16 +: 16] <= next_q[n];
+            for (lane = 0; lane < LANES; lane = lane + 1) begin
+                sample_i_p[lane] <= 16'sd0;
+                sample_q_p[lane] <= 16'sd0;
+                cos_p[lane] <= 16'sd0;
+                sin_p[lane] <= 16'sd0;
+                i_cos_m[lane] <= 32'sd0;
+                q_sin_m[lane] <= 32'sd0;
+                i_sin_m[lane] <= 32'sd0;
+                q_cos_m[lane] <= 32'sd0;
             end
-            out_valid <= 1'b1;
         end else begin
-            out_valid <= 1'b0;
+            valid_pipe <= {valid_pipe[1:0], in_valid};
+            out_valid <= valid_pipe[1];
+
+            if (in_valid) begin
+                phase_acc <= phase_acc + phase_advance[15:0];
+                for (lane = 0; lane < LANES; lane = lane + 1) begin
+                    lane_phase_full = $signed({1'b0, phase_acc})
+                                    + ($signed(phase_inc) * lane);
+                    lane_phase = lane_phase_full[15:0];
+
+                    sample_i_p[lane] <= i_in[lane * 16 +: 16];
+                    sample_q_p[lane] <= q_in[lane * 16 +: 16];
+                    cos_p[lane] <= cos_lut(lane_phase[15:11]);
+                    sin_p[lane] <= sin_lut(lane_phase[15:11]);
+                end
+            end
+
+            for (lane = 0; lane < LANES; lane = lane + 1) begin
+                i_cos_m[lane] <= $signed(sample_i_p[lane]) * $signed(cos_p[lane]);
+                q_sin_m[lane] <= $signed(sample_q_p[lane]) * $signed(sin_p[lane]);
+                i_sin_m[lane] <= $signed(sample_i_p[lane]) * $signed(sin_p[lane]);
+                q_cos_m[lane] <= $signed(sample_q_p[lane]) * $signed(cos_p[lane]);
+
+                i_mix = $signed({i_cos_m[lane][31], i_cos_m[lane]})
+                      - $signed({q_sin_m[lane][31], q_sin_m[lane]});
+                q_mix = $signed({i_sin_m[lane][31], i_sin_m[lane]})
+                      + $signed({q_cos_m[lane][31], q_cos_m[lane]});
+
+                i_out[lane * 16 +: 16] <= sat_q15(i_mix);
+                q_out[lane * 16 +: 16] <= sat_q15(q_mix);
+            end
         end
     end
 
