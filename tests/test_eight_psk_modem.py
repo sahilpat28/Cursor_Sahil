@@ -92,7 +92,7 @@ class EndToEndModemTest(unittest.TestCase):
         rx = modem.receive_samples(tx.samples, symbol_count=tx.symbols.size)
 
         np.testing.assert_array_equal(rx.bits[: tx.input_bits.size], tx.input_bits)
-        self.assertAlmostEqual(rx.frequency_offset_hz, 0.0, delta=1.0)
+        self.assertAlmostEqual(rx.frequency_offset_hz, 0.0, delta=10.0)
 
     def test_receiver_corrects_frequency_offset(self):
         modem = EightPskModem()

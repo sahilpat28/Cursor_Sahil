@@ -91,17 +91,17 @@ tests/test_eight_psk_modem.py
 Install the package locally:
 
 ```bash
-python -m pip install -e .
+python3 -m pip install -e .
 ```
 
 Run a link simulation with a 10 MHz carrier-frequency offset:
 
 ```bash
-python examples/simulate_link.py --bits 30000 --cfo-hz 10000000
+python3 examples/simulate_link.py --bits 30000 --cfo-hz 10000000
 ```
 
 Run the tests:
 
 ```bash
-python -m unittest discover -s tests
+python3 -m unittest discover -s tests
 ```
