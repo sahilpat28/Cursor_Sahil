@@ -1,0 +1,9 @@
+# Python generated files
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Verilog simulation outputs
+hdl/build/
+*.vcd
+
