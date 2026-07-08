@@ -93,6 +93,15 @@ device timing library. Quartus Prime Pro 26.1 is not installed in this cloud
 environment, so a valid Agilex 7 post-fit WNS/TNS report could not be produced
 here.
 
+The Quartus project uses `psk8_modem_quartus_top` as the top-level entity. This
+wrapper keeps the 8-lane DAC/ADC sample buses internal so Quartus does not try
+to assign the raw modem core's 1094 top-level I/O signals to package pins. The
+wrapper exposes only 68 control/status pins, which avoids the reported
+720-user-I/O package limit during standalone core timing analysis.
+
+Use `psk8_modem_top` as the reusable core when connecting to real converter or
+F-Tile/JESD/interface IP in the board-level design.
+
 The runnable Quartus flow is provided at:
 
 ```text

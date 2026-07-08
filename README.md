@@ -110,6 +110,7 @@ maintains the requested 4 GSPS converter throughput without a 4 GHz RTL clock.
 - `srrc_fir_8x.v`: pipelined multiplier and adder-tree SRRC FIR
 - `nco_rotator_8x.v`: pipelined receiver frequency-correction rotator
 - `psk8_modem_top.v`: integrated modem with explicit packed complex DAC/ADC ports
+- `psk8_modem_quartus_top.v`: Quartus compile wrapper with internal DAC/ADC buses
 
 Run the self-checking Verilog loopback simulation:
 
@@ -128,6 +129,11 @@ hdl/reports/timing_analysis.md
 hdl/synth/yosys_synth_sanity.ys
 hdl/synth/quartus/run_quartus_compile.tcl
 ```
+
+For board-level integration, use `hdl/rtl/psk8_modem_top.v` as the modem core.
+For standalone Quartus compile/timing analysis, use
+`hdl/rtl/psk8_modem_quartus_top.v`; the Quartus script selects this wrapper to
+avoid mapping the wide internal sample buses onto physical package pins.
 
 ## Run
 

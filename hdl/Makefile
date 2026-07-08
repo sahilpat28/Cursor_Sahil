@@ -9,7 +9,8 @@ RTL = \
 	rtl/nco_rotator_8x.v \
 	rtl/psk8_tx.v \
 	rtl/psk8_rx.v \
-	rtl/psk8_modem_top.v
+	rtl/psk8_modem_top.v \
+	rtl/psk8_modem_quartus_top.v
 
 TB = tb/tb_psk8_modem.v
 BUILD_DIR = build

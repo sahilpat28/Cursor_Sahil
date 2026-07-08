@@ -13,8 +13,9 @@ read_verilog hdl/rtl/nco_rotator_8x.v
 read_verilog hdl/rtl/psk8_tx.v
 read_verilog hdl/rtl/psk8_rx.v
 read_verilog hdl/rtl/psk8_modem_top.v
+read_verilog hdl/rtl/psk8_modem_quartus_top.v
 
-hierarchy -check -top psk8_modem_top
+hierarchy -check -top psk8_modem_quartus_top
 proc
 check
 stat

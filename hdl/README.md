@@ -22,6 +22,8 @@ rtl/nco_rotator_8x.v   pipelined 8-sample/clock complex NCO rotator
 rtl/psk8_tx.v          PRBS31 + mapper + SRRC TX
 rtl/psk8_rx.v          CFO correction + SRRC matched filter + demapper
 rtl/psk8_modem_top.v   Integrated TX/RX datapath
+rtl/psk8_modem_quartus_top.v
+                       Quartus compile wrapper with internal sample buses
 tb/tb_psk8_modem.v     Self-checking loopback simulation
 constraints/psk8_modem_500mhz.sdc
                        Generic 2 ns clock constraint
@@ -121,6 +123,19 @@ PASS: recovered 1024 PRBS31 8-PSK symbols at 500 MHz RTL clock with CFO correcti
 ```
 
 ## Synthesis and Timing
+
+Top-level choices:
+
+```text
+psk8_modem_top.v
+  Reusable modem core with full packed DAC/ADC sample-block ports.
+  Use this when integrating with real converter, JESD, F-Tile, or custom I/O IP.
+
+psk8_modem_quartus_top.v
+  Quartus standalone compile/timing wrapper. It keeps the wide DAC/ADC sample
+  buses internal and exposes only a small control/status interface, avoiding
+  package I/O overuse during core timing analysis.
+```
 
 Open-source synthesis/elaboration sanity check:
 

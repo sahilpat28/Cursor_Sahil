@@ -23,8 +23,8 @@ file mkdir $work_dir
 file mkdir $report_dir
 
 set project_name psk8_modem_agilex7_500mhz
-set revision_name psk8_modem_top
-set top_name psk8_modem_top
+set revision_name psk8_modem_quartus_top
+set top_name psk8_modem_quartus_top
 set device_opn AGIB027R31B1E1VC
 
 cd $work_dir
@@ -47,6 +47,7 @@ set_global_assignment -name VERILOG_FILE [file join $repo_root hdl rtl nco_rotat
 set_global_assignment -name VERILOG_FILE [file join $repo_root hdl rtl psk8_tx.v]
 set_global_assignment -name VERILOG_FILE [file join $repo_root hdl rtl psk8_rx.v]
 set_global_assignment -name VERILOG_FILE [file join $repo_root hdl rtl psk8_modem_top.v]
+set_global_assignment -name VERILOG_FILE [file join $repo_root hdl rtl psk8_modem_quartus_top.v]
 set_global_assignment -name SDC_FILE [file join $script_dir psk8_modem_500mhz.sdc]
 
 # Keep the flow performance-oriented for the 2 ns clock target. These are
