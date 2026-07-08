@@ -1,7 +1,8 @@
 # 8-PSK Modem Reference Design
 
-This repository contains an executable complex-baseband reference design for an
-8-PSK modem with the requested parameters:
+This repository contains a complete Verilog RTL implementation plus an
+executable Python complex-baseband reference design for an 8-PSK modem with the
+requested parameters:
 
 - PRBS31 input data source
 - 3 Gbps input bit rate
@@ -74,6 +75,11 @@ For symbol-spaced estimation, the unambiguous acquisition range is roughly
 ## Repository Layout
 
 ```text
+hdl/
+  rtl/         # Verilog-2001 modem RTL
+  tb/          # self-checking Verilog testbench
+  Makefile     # Icarus Verilog simulation flow
+
 src/eight_psk_modem/
   channel.py   # frequency-offset and AWGN helpers
   config.py    # requested rate and SRRC configuration
@@ -85,6 +91,24 @@ src/eight_psk_modem/
 examples/simulate_link.py
 tests/test_eight_psk_modem.py
 ```
+
+## Verilog RTL
+
+The Verilog implementation is in `hdl/rtl`:
+
+- `psk8_tx.v`: PRBS31 source, natural 8-PSK mapper, 4x upsample, SRRC TX filter
+- `psk8_rx.v`: receiver NCO frequency correction, SRRC matched filter, demapper
+- `psk8_modem_top.v`: integrated modem with explicit complex DAC/ADC ports
+
+Run the self-checking Verilog loopback simulation:
+
+```bash
+cd hdl
+make sim
+```
+
+The testbench injects an approximately +10 MHz carrier-frequency offset and
+programs the receiver with the inverse correction word.
 
 ## Run
 
