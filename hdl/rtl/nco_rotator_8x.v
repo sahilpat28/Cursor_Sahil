@@ -1,48 +1,92 @@
-// Complex NCO rotator for receiver frequency correction or testbench CFO.
+// 8-sample-per-clock complex NCO rotator.
 //
-// phase_inc is a signed 16-bit tuning word:
-//   phase_inc = round(freq_hz / sample_rate_hz * 2^16)
-// For 4 GSPS, one LSB is approximately 61.035 kHz.
+// This block runs at the 500 MHz RTL clock and rotates eight consecutive
+// 4-GSPS samples per clock. The tuning word is still per 4-GSPS sample:
 //
-// Output is combinational for the current input sample and current phase. The
-// phase accumulator advances on each valid sample.
+//   phase_inc = round(freq_hz / 4.0e9 * 2^16)
+//
+// For +10 MHz at 4 GSPS, phase_inc = +164. For receiver correction of a
+// +10 MHz offset, program -164.
+//
+// Data format:
+//   input/output I/Q lanes = signed Q1.15
+//   packed vector lane N = bits [16*N +: 16]
 
 `timescale 1ns/1ps
 
-module nco_rotator (
+module nco_rotator_8x (
     input  wire                    clk,
     input  wire                    rst,
     input  wire                    in_valid,
     input  wire                    phase_clear,
     input  wire signed [15:0]      phase_inc,
-    input  wire signed [15:0]      i_in,
-    input  wire signed [15:0]      q_in,
-    output wire                    out_valid,
-    output wire signed [15:0]      i_out,
-    output wire signed [15:0]      q_out
+    input  wire signed [127:0]     i_in,
+    input  wire signed [127:0]     q_in,
+    output reg                     out_valid,
+    output reg  signed [127:0]     i_out,
+    output reg  signed [127:0]     q_out
 );
+    localparam integer LANES = 8;
+
     reg [15:0] phase_acc;
-    wire [4:0] lut_index = phase_acc[15:11];
-    wire signed [15:0] cos_val = cos_lut(lut_index);
-    wire signed [15:0] sin_val = sin_lut(lut_index);
+    reg signed [15:0] next_i [0:LANES-1];
+    reg signed [15:0] next_q [0:LANES-1];
+    reg signed [15:0] sample_i;
+    reg signed [15:0] sample_q;
+    reg [15:0] lane_phase;
+    reg signed [31:0] lane_phase_full;
+    reg signed [15:0] cos_val;
+    reg signed [15:0] sin_val;
+    reg signed [31:0] i_cos;
+    reg signed [31:0] q_sin;
+    reg signed [31:0] i_sin;
+    reg signed [31:0] q_cos;
+    reg signed [32:0] i_mix;
+    reg signed [32:0] q_mix;
+    integer lane;
+    integer n;
 
-    wire signed [31:0] i_cos = $signed(i_in) * $signed(cos_val);
-    wire signed [31:0] q_sin = $signed(q_in) * $signed(sin_val);
-    wire signed [31:0] i_sin = $signed(i_in) * $signed(sin_val);
-    wire signed [31:0] q_cos = $signed(q_in) * $signed(cos_val);
+    wire signed [18:0] phase_advance = $signed(phase_inc) * 19'sd8;
 
-    wire signed [32:0] i_mix = $signed({i_cos[31], i_cos}) - $signed({q_sin[31], q_sin});
-    wire signed [32:0] q_mix = $signed({i_sin[31], i_sin}) + $signed({q_cos[31], q_cos});
+    always @* begin
+        for (lane = 0; lane < LANES; lane = lane + 1) begin
+            lane_phase_full = $signed({1'b0, phase_acc})
+                            + ($signed(phase_inc) * lane);
+            lane_phase = lane_phase_full[15:0];
+            cos_val = cos_lut(lane_phase[15:11]);
+            sin_val = sin_lut(lane_phase[15:11]);
 
-    assign out_valid = in_valid;
-    assign i_out = sat_q15(i_mix);
-    assign q_out = sat_q15(q_mix);
+            sample_i = i_in[lane * 16 +: 16];
+            sample_q = q_in[lane * 16 +: 16];
+
+            i_cos = $signed(sample_i) * $signed(cos_val);
+            q_sin = $signed(sample_q) * $signed(sin_val);
+            i_sin = $signed(sample_i) * $signed(sin_val);
+            q_cos = $signed(sample_q) * $signed(cos_val);
+
+            i_mix = $signed({i_cos[31], i_cos}) - $signed({q_sin[31], q_sin});
+            q_mix = $signed({i_sin[31], i_sin}) + $signed({q_cos[31], q_cos});
+
+            next_i[lane] = sat_q15(i_mix);
+            next_q[lane] = sat_q15(q_mix);
+        end
+    end
 
     always @(posedge clk) begin
         if (rst || phase_clear) begin
             phase_acc <= 16'd0;
+            out_valid <= 1'b0;
+            i_out <= 128'sd0;
+            q_out <= 128'sd0;
         end else if (in_valid) begin
-            phase_acc <= phase_acc + phase_inc;
+            phase_acc <= phase_acc + phase_advance[15:0];
+            for (n = 0; n < LANES; n = n + 1) begin
+                i_out[n * 16 +: 16] <= next_i[n];
+                q_out[n * 16 +: 16] <= next_q[n];
+            end
+            out_valid <= 1'b1;
+        end else begin
+            out_valid <= 1'b0;
         end
     end
 

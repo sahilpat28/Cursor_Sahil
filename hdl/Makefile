@@ -4,8 +4,8 @@ VVP ?= vvp
 RTL = \
 	rtl/psk8_mapper.v \
 	rtl/psk8_demapper.v \
-	rtl/srrc_fir.v \
-	rtl/nco_rotator.v \
+	rtl/srrc_fir_8x.v \
+	rtl/nco_rotator_8x.v \
 	rtl/psk8_tx.v \
 	rtl/psk8_rx.v \
 	rtl/psk8_modem_top.v

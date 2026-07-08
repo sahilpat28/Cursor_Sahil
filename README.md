@@ -8,6 +8,7 @@ requested parameters:
 - 3 Gbps input bit rate
 - 8-PSK natural-code mapper
 - 4 GSPS ADC/DAC sample rate
+- 500 MHz RTL clock with 8 complex samples per clock
 - SRRC pulse shaping enabled with 0.35 rolloff
 - Receiver frequency correction
 
@@ -20,7 +21,10 @@ bit rate       = 3.0 Gbps
 bits/symbol    = 3
 symbol rate    = 1.0 Gbaud
 ADC/DAC rate   = 4.0 GSPS
+RTL clock      = 500 MHz
+samples/clock  = 8
 oversampling   = 4 samples/symbol
+symbols/clock  = 2
 SRRC rolloff   = 0.35
 ```
 
@@ -78,6 +82,7 @@ For symbol-spaced estimation, the unambiguous acquisition range is roughly
 hdl/
   rtl/         # Verilog-2001 modem RTL
   tb/          # self-checking Verilog testbench
+  constraints/ # generic 500 MHz clock constraint
   Makefile     # Icarus Verilog simulation flow
 
 src/eight_psk_modem/
@@ -94,11 +99,13 @@ tests/test_eight_psk_modem.py
 
 ## Verilog RTL
 
-The Verilog implementation is in `hdl/rtl`:
+The Verilog implementation is in `hdl/rtl` and is clocked at 500 MHz. It moves
+eight consecutive complex Q1.15 samples per clock on packed DAC/ADC buses, so it
+maintains the requested 4 GSPS converter throughput without a 4 GHz RTL clock.
 
 - `psk8_tx.v`: PRBS31 source, natural 8-PSK mapper, 4x upsample, SRRC TX filter
 - `psk8_rx.v`: receiver NCO frequency correction, SRRC matched filter, demapper
-- `psk8_modem_top.v`: integrated modem with explicit complex DAC/ADC ports
+- `psk8_modem_top.v`: integrated modem with explicit packed complex DAC/ADC ports
 
 Run the self-checking Verilog loopback simulation:
 

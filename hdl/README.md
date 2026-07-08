@@ -6,6 +6,8 @@ This directory contains synthesizable Verilog-2001 RTL for the requested modem:
 - 8-PSK natural-code mapper
 - 3 Gbps bit rate as 1 Gbaud at 3 bits/symbol
 - 4 GSPS-equivalent complex ADC/DAC sample interface
+- 500 MHz RTL clock
+- 8 complex samples per RTL clock
 - 4 samples/symbol
 - SRRC transmit and receive filtering with 0.35 rolloff
 - Receiver frequency correction with a programmable NCO rotator
@@ -15,26 +17,46 @@ This directory contains synthesizable Verilog-2001 RTL for the requested modem:
 ```text
 rtl/psk8_mapper.v      Natural-code 8-PSK mapper, Q1.15 I/Q
 rtl/psk8_demapper.v    Hard-decision natural-code 8-PSK demapper
-rtl/srrc_fir.v         41-tap beta=0.35 SRRC FIR, 4 samples/symbol
-rtl/nco_rotator.v      Complex NCO rotator for CFO injection/correction
+rtl/srrc_fir_8x.v      8-sample/clock 41-tap beta=0.35 SRRC FIR
+rtl/nco_rotator_8x.v   8-sample/clock complex NCO rotator
 rtl/psk8_tx.v          PRBS31 + mapper + SRRC TX
 rtl/psk8_rx.v          CFO correction + SRRC matched filter + demapper
 rtl/psk8_modem_top.v   Integrated TX/RX datapath
 tb/tb_psk8_modem.v     Self-checking loopback simulation
+constraints/psk8_modem_500mhz.sdc
+                       Generic 2 ns clock constraint
 ```
 
 ## Clocking and Rates
 
-The RTL uses one `clk` tick for one complex ADC/DAC sample.
+The RTL clock is 500 MHz. Each clock processes eight consecutive complex
+samples, so the sample throughput remains 4 GSPS:
 
 ```text
+RTL clock rate      = 500 MHz
+samples/clock       = 8 complex I/Q samples
 ADC/DAC sample rate = 4.0 GSPS
 8-PSK bits/symbol  = 3
 symbol rate        = 3.0 Gbps / 3 = 1.0 Gbaud
 samples/symbol     = 4.0 GSPS / 1.0 Gbaud = 4
+symbols/clock       = 8 samples/clock / 4 samples/symbol = 2
 ```
 
-The transmitter launches one natural-code 8-PSK symbol every four valid samples.
+The transmitter launches two natural-code 8-PSK symbols per 500 MHz clock:
+
+```text
+lane 0 = symbol 0 sample
+lane 4 = symbol 1 sample
+all other TX upsample lanes are zero before SRRC filtering
+```
+
+Packed I/Q buses use this lane ordering:
+
+```text
+lane N = bits [16*N +: 16]
+lane 0 = earliest sample in the block
+lane 7 = latest sample in the block
+```
 
 ## Fixed-Point Formats
 
@@ -52,6 +74,10 @@ For a 4 GSPS sample rate:
 ```text
 rx_phase_inc = round(-frequency_offset_hz / 4.0e9 * 2^16)
 ```
+
+The tuning word is per 4-GSPS sample, not per 500 MHz block. Internally, the
+8-lane NCO advances the phase for each lane and advances the accumulator by
+eight sample steps per RTL clock.
 
 Example for a +10 MHz carrier offset:
 
@@ -74,17 +100,22 @@ make sim
 Expected result:
 
 ```text
-PASS: recovered 512 PRBS31 8-PSK symbols with CFO correction
+PASS: recovered 1024 PRBS31 8-PSK symbols at 500 MHz RTL clock with CFO correction
 ```
 
 ## Integration Notes
 
-`psk8_modem_top.v` exposes separate complex DAC and ADC ports. Connect the DAC
-outputs to the transmit mixed-signal path, and connect the receive mixed-signal
-path to the ADC inputs. If your hardware uses passband DAC/ADC samples instead
-of complex baseband I/Q, add DUC/DDC blocks around this modem.
+`psk8_modem_top.v` exposes separate packed complex DAC and ADC sample-block
+ports. Connect the DAC outputs to the transmit mixed-signal path, and connect
+the receive mixed-signal path to the ADC inputs. If your hardware uses passband
+DAC/ADC samples instead of complex baseband I/Q, add DUC/DDC blocks around this
+modem.
 
 The included receiver has a configurable symbol sampling phase. In a production
 receiver, replace or drive this with timing recovery if the ADC sample phase is
 not deterministic.
+
+The supplied SDC file constrains the RTL `clk` port to 2.000 ns. Final timing
+closure still depends on the target FPGA/ASIC library, multiplier mapping,
+floorplanning, and retiming settings used by the integration flow.
 
