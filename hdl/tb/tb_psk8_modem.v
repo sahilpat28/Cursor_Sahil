@@ -42,8 +42,8 @@ module tb_psk8_modem;
     always #5 clk = ~clk;
 
     psk8_modem_top #(
-        .RX_SYMBOL_SAMPLE_PHASE(2'd1),
-        .RX_STARTUP_SAMPLES(41)
+        .RX_SYMBOL_SAMPLE_PHASE(2'd0),
+        .RX_STARTUP_SAMPLES(40)
     ) dut (
         .clk(clk),
         .rst(rst),
