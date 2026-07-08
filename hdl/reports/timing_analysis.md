@@ -107,6 +107,12 @@ If Quartus still reports 1094 I/O pins, the project is still using
 `psk8_modem_quartus_top`, or open the provided
 `hdl/synth/quartus/psk8_modem_agilex7.qpf` project.
 
+If Quartus reports `Cyclone 10 GX` or device `10CX220YF780I5G`, the compile is
+not using the provided Agilex 7 project assignments. Use
+`hdl/synth/quartus/psk8_modem_agilex7.qpf` or
+`quartus_sh -t hdl/synth/quartus/run_quartus_compile.tcl`, and confirm Agilex 7
+device support is installed in Quartus Prime Pro 26.1.
+
 The Agilex 7 Reset Release IP critical warning is expected until the final
 board-level design instantiates the Quartus Reset Release IP. Add one instance
 from `Basic Functions > Configuration and Programming > Reset Release IP` and

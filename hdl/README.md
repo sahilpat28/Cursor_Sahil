@@ -154,6 +154,11 @@ The Quartus flow writes timing and utilization reports under
 `hdl/reports/quartus/`. See `hdl/reports/timing_analysis.md` for the latest
 validation status.
 
+If Quartus shows `Cyclone 10 GX` or device `10CX220YF780I5G`, you are not using
+the provided Agilex project settings. Open
+`hdl/synth/quartus/psk8_modem_agilex7.qpf` or rerun the Tcl script above. Also
+confirm that Quartus Prime Pro 26.1 has Agilex 7 device support installed.
+
 ## Integration Notes
 
 `psk8_modem_top.v` exposes separate packed complex DAC and ADC sample-block

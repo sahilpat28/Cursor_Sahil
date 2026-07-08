@@ -33,11 +33,14 @@ set device_opn AGIB027R31B1E1VC
 
 cd $work_dir
 
+# Always create a clean project. This prevents stale assignments from a
+# manually-created or previous project, such as a Cyclone 10 GX DEVICE setting,
+# from surviving into the timing run.
 if {[project_exists $project_name]} {
-    project_open -revision $revision_name $project_name
-} else {
-    project_new -revision $revision_name $project_name
+    file delete -force ${project_name}.qpf ${revision_name}.qsf \
+        db incremental_db output_files
 }
+project_new -revision $revision_name $project_name
 
 set_global_assignment -name FAMILY "Agilex 7"
 set_global_assignment -name DEVICE $device_opn
