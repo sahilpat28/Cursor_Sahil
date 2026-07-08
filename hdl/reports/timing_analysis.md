@@ -102,6 +102,16 @@ wrapper exposes only 68 control/status pins, which avoids the reported
 Use `psk8_modem_top` as the reusable core when connecting to real converter or
 F-Tile/JESD/interface IP in the board-level design.
 
+If Quartus still reports 1094 I/O pins, the project is still using
+`psk8_modem_top` as the top-level entity. Set the top-level entity to
+`psk8_modem_quartus_top`, or open the provided
+`hdl/synth/quartus/psk8_modem_agilex7.qpf` project.
+
+The Agilex 7 Reset Release IP critical warning is expected until the final
+board-level design instantiates the Quartus Reset Release IP. Add one instance
+from `Basic Functions > Configuration and Programming > Reset Release IP` and
+use its `nINIT_DONE` output to gate the system reset in hardware.
+
 The runnable Quartus flow is provided at:
 
 ```text

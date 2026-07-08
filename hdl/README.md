@@ -170,3 +170,23 @@ The supplied Quartus SDC file constrains the RTL `clk` port to 2.000 ns. Final
 timing closure still depends on Quartus fitter placement, clock resource
 selection, pin/interface constraints, and any board-level integration logic.
 
+## Agilex 7 Reset Release IP
+
+Quartus may emit this critical warning for Agilex 7 devices:
+
+```text
+Use the Reset Release IP in Agilex 7 designs to ensure a successful configuration.
+```
+
+For final hardware integration, add one Reset Release IP instance from the
+Quartus IP Catalog:
+
+```text
+Basic Functions > Configuration and Programming > Reset Release IP
+```
+
+Use its `nINIT_DONE` output to hold your modem/system reset asserted until the
+FPGA has fully entered user mode. The standalone `psk8_modem_quartus_top`
+wrapper keeps a normal `rst` input so it can be compiled without generated IP
+files; the board-level wrapper should gate that reset with Reset Release IP.
+

@@ -1,0 +1,3 @@
+QUARTUS_VERSION = "26.1"
+PROJECT_REVISION = "psk8_modem_quartus_top"
+

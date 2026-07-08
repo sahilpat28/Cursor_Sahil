@@ -16,6 +16,8 @@ hdl/reports/quartus/*.rpt
 *.rpt
 *.qpf
 *.qsf
+!hdl/synth/quartus/*.qpf
+!hdl/synth/quartus/*.qsf
 *.qws
 *.sof
 *.pof

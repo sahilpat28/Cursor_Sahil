@@ -8,6 +8,10 @@
 # Usage from repository root on a machine with Quartus Prime Pro 26.1 installed:
 #   quartus_sh -t hdl/synth/quartus/run_quartus_compile.tcl
 #
+# Do not manually set psk8_modem_top as the Quartus top-level entity for a
+# standalone compile. This script intentionally uses psk8_modem_quartus_top so
+# the wide sample buses remain internal and do not consume package I/O pins.
+#
 # Reports are written under:
 #   hdl/reports/quartus/
 
@@ -22,7 +26,7 @@ set report_dir [file join $repo_root hdl reports quartus]
 file mkdir $work_dir
 file mkdir $report_dir
 
-set project_name psk8_modem_agilex7_500mhz
+set project_name psk8_modem_agilex7
 set revision_name psk8_modem_quartus_top
 set top_name psk8_modem_quartus_top
 set device_opn AGIB027R31B1E1VC
@@ -58,6 +62,21 @@ set_global_assignment -name AUTO_DSP_RECOGNITION ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_COMBO_LOGIC ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_DUPLICATION ON
 set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_RETIMING ON
+
+# Standalone core timing build: keep all wrapper ports virtual so the fitter
+# does not try to consume package pins or require board I/O standards. Remove
+# or replace these assignments in the final board-level project.
+set_instance_assignment -name VIRTUAL_PIN ON -to clk
+set_instance_assignment -name VIRTUAL_PIN ON -to rst
+set_instance_assignment -name VIRTUAL_PIN ON -to block_valid
+set_instance_assignment -name VIRTUAL_PIN ON -to seed_load
+set_instance_assignment -name VIRTUAL_PIN ON -to "prbs_seed[*]"
+set_instance_assignment -name VIRTUAL_PIN ON -to "rx_phase_inc[*]"
+set_instance_assignment -name VIRTUAL_PIN ON -to rx_phase_clear
+set_instance_assignment -name VIRTUAL_PIN ON -to "tx_bits[*]"
+set_instance_assignment -name VIRTUAL_PIN ON -to "tx_symbol_valid[*]"
+set_instance_assignment -name VIRTUAL_PIN ON -to "rx_bits[*]"
+set_instance_assignment -name VIRTUAL_PIN ON -to "rx_bits_valid[*]"
 
 export_assignments
 
