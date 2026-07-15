@@ -1,0 +1,313 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2025  Altera Corporation. All rights reserved.
+# Your use of Altera Corporation's design tools, logic functions 
+# and other software and tools, and any partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Altera Program License 
+# Subscription Agreement, the Altera Quartus Prime License Agreement,
+# the Altera IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Altera and sold by Altera or its authorized distributors.  Please
+# refer to the Altera Software License Subscription Agreements 
+# on the Quartus Prime software download page.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 25.1.0 Build 129 03/26/2025 SC Pro Edition
+# Date created = 13:54:34  June 02, 2026
+#
+# -------------------------------------------------------------------------- #
+set_global_assignment -name TOP_LEVEL_ENTITY top
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "13:54:33  JUNE 02, 2026"
+set_global_assignment -name LAST_QUARTUS_VERSION "26.1.0 Pro Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP "-40"
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
+set_global_assignment -name DEVICE A3CW135BM16AI6S
+set_global_assignment -name FAMILY "Agilex 3"
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
+set_global_assignment -name BOARD default
+set_location_assignment PIN_C2 -to mem_0_mem_ca[0] -comment IOBANK_3A_B
+set_location_assignment PIN_D3 -to mem_0_mem_ca[1] -comment IOBANK_3A_B
+set_location_assignment PIN_C3 -to mem_0_mem_ca[2] -comment IOBANK_3A_B
+set_location_assignment PIN_B3 -to mem_0_mem_ca[3] -comment IOBANK_3A_B
+set_location_assignment PIN_A6 -to mem_0_mem_ca[4] -comment IOBANK_3A_B
+set_location_assignment PIN_B5 -to mem_0_mem_ca[5] -comment IOBANK_3A_B
+set_location_assignment PIN_AH27 -to clk_clk -comment IOBANK_5B
+set_location_assignment PIN_A4 -to mem_0_mem_cke[0] -comment IOBANK_3A_B
+set_location_assignment PIN_C7 -to mem_0_mem_cs[0] -comment IOBANK_3A_B
+set_location_assignment PIN_B11 -to mem_0_mem_dmi[0] -comment IOBANK_3A_B
+set_location_assignment PIN_D13 -to mem_0_mem_dmi[1] -comment IOBANK_3A_B
+set_location_assignment PIN_A9 -to mem_0_mem_dq[0] -comment IOBANK_3A_B
+set_location_assignment PIN_B9 -to mem_0_mem_dq[1] -comment IOBANK_3A_B
+set_location_assignment PIN_A8 -to mem_0_mem_dq[2] -comment IOBANK_3A_B
+set_location_assignment PIN_B8 -to mem_0_mem_dq[3] -comment IOBANK_3A_B
+set_location_assignment PIN_B14 -to mem_0_mem_dq[4] -comment IOBANK_3A_B
+set_location_assignment PIN_A14 -to mem_0_mem_dq[5] -comment IOBANK_3A_B
+set_location_assignment PIN_B13 -to mem_0_mem_dq[6] -comment IOBANK_3A_B
+set_location_assignment PIN_A13 -to mem_0_mem_dq[7] -comment IOBANK_3A_B
+set_global_assignment -name POWER_APPLY_THERMAL_MARGIN ADDITIONAL
+set_global_assignment -name DEVICE_INITIALIZATION_CLOCK OSC_CLK_1_25MHZ
+set_global_assignment -name IP_SEARCH_PATHS ip/system_bd_axi_adrv9001/**/*
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/util_pulse_gen.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/util_pipeline_stage.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/util_ext_sync.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/util_delay.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/util_dec256sinc24b.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/util_axis_upscale.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_xfer_status.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_xfer_cntrl.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_tdd_cntrl.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_pmod.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_hdmi_tx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_hdmi_rx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_delay_cntrl.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_dac_common.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_dac_channel.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_clock_mon.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_clkgen.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_axi.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_adc_common.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/up_adc_channel.v
+set_global_assignment -name VHDL_FILE axi_adrv9001/common/pl330_dma_fifo.vhd
+set_global_assignment -name VHDL_FILE axi_adrv9001/common/dma_fifo.vhd
+set_global_assignment -name VHDL_FILE axi_adrv9001/common/axi_streaming_dma_tx_fifo.vhd
+set_global_assignment -name VHDL_FILE axi_adrv9001/common/axi_streaming_dma_rx_fifo.vhd
+set_global_assignment -name VHDL_FILE axi_adrv9001/common/axi_ctrlif.vhd
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_xcvr_rx_if.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_upack.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_tdd_control.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_sysref_gen.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_ss_444to422.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_ss_422to444.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_rst.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_pps_receiver.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_pnmon.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_pngen.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_perfect_shuffle.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_pack.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_mux_core.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_mux.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_mem_dual.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_mem_asym.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_mem.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_iqcor.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_iobuf.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_g2b.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_edge_detect.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_dds_sine_cordic.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_dds_sine.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_dds_cordic_pipe.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_dds_2.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_dds_1.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_dds.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_datafmt.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_csc_RGB2CrYCb.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_csc_CrYCb2RGB.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_csc.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_bus_mux.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_b2g.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_axis_inf_rx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_adl5904_rst.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_addsub.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/common/ad_3w_spi.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/intel/adrv9001_tx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/intel/adrv9001_rx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_xfer_status.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_xfer_cntrl.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_tdd_cntrl.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_delay_cntrl.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_dac_common.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_dac_channel.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_clock_mon.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_axi.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_adc_common.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/up_adc_channel.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/system_bd_axi_adrv9001_altera_gpio_2300_owtnpwq.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/system_bd_axi_adrv9001_altera_gpio_2300_jk2q5bi.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/sync_bits.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/periphery_clk_buf.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_tx_channel.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_tx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_tdd.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_sync_ctrl.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_sync.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_rx_channel.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_rx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_if.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001_core.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/axi_adrv9001.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_tx_link.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_tx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_rx_link.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_rx.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_pack.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_gpio_out.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_gpio_in.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_aligner8.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/adrv9001_aligner4.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_tdd_control.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_rst.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_pnmon.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_pngen.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_mul.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_dds_sine_cordic.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_dds_sine.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_dds_cordic_pipe.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_dds_2.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_dds_1.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_dds.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_datafmt.v
+set_global_assignment -name VERILOG_FILE axi_adrv9001/ad_addsub.v
+set_global_assignment -name SOURCE_FILE top.qsf
+set_global_assignment -name IP_FILE ip/hps_sys/hps_sys_clock_in.ip
+set_global_assignment -name IP_FILE ip/hps_sys/hps_sys_reset_in.ip
+set_global_assignment -name QSYS_FILE hps_sys.qsys
+set_global_assignment -name IP_FILE ip/hps_sys/hps_sys_intel_agilex_5_soc_0.ip
+set_global_assignment -name IP_FILE ip/hps_sys/hps_sys_emif_io96b_hps_0.ip
+set_global_assignment -name VERILOG_FILE top.v
+set_global_assignment -name IP_FILE ip/hps_sys/hps_sys_intel_onchip_memory_0.ip
+set_location_assignment PIN_K5 -to mem_0_mem_dmi[2] -comment IOBANK_3A_T
+set_location_assignment PIN_L7 -to mem_0_mem_dmi[3] -comment IOBANK_3A_T
+set_location_assignment PIN_D10 -to mem_0_mem_dq[8] -comment IOBANK_3A_B
+set_location_assignment PIN_C10 -to mem_0_mem_dq[9] -comment IOBANK_3A_B
+set_location_assignment PIN_C8 -to mem_0_mem_dq[10] -comment IOBANK_3A_B
+set_location_assignment PIN_D9 -to mem_0_mem_dq[11] -comment IOBANK_3A_B
+set_location_assignment PIN_D15 -to mem_0_mem_dq[12] -comment IOBANK_3A_B
+set_location_assignment PIN_C15 -to mem_0_mem_dq[13] -comment IOBANK_3A_B
+set_location_assignment PIN_D14 -to mem_0_mem_dq[14] -comment IOBANK_3A_B
+set_location_assignment PIN_C13 -to mem_0_mem_dq[15] -comment IOBANK_3A_B
+set_location_assignment PIN_J5 -to mem_0_mem_dq[16] -comment IOBANK_3A_T
+set_location_assignment PIN_H5 -to mem_0_mem_dq[17] -comment IOBANK_3A_T
+set_location_assignment PIN_H3 -to mem_0_mem_dq[18] -comment IOBANK_3A_T
+set_location_assignment PIN_G4 -to mem_0_mem_dq[19] -comment IOBANK_3A_T
+set_location_assignment PIN_L3 -to mem_0_mem_dq[20] -comment IOBANK_3A_T
+set_location_assignment PIN_L4 -to mem_0_mem_dq[21] -comment IOBANK_3A_T
+set_location_assignment PIN_M3 -to mem_0_mem_dq[22] -comment IOBANK_3A_T
+set_location_assignment PIN_M4 -to mem_0_mem_dq[23] -comment IOBANK_3A_T
+set_location_assignment PIN_H7 -to mem_0_mem_dq[24] -comment IOBANK_3A_T
+set_location_assignment PIN_H6 -to mem_0_mem_dq[25] -comment IOBANK_3A_T
+set_location_assignment PIN_G6 -to mem_0_mem_dq[26] -comment IOBANK_3A_T
+set_location_assignment PIN_G5 -to mem_0_mem_dq[27] -comment IOBANK_3A_T
+set_location_assignment PIN_M6 -to mem_0_mem_dq[28] -comment IOBANK_3A_T
+set_location_assignment PIN_L6 -to mem_0_mem_dq[29] -comment IOBANK_3A_T
+set_location_assignment PIN_M5 -to mem_0_mem_dq[30] -comment IOBANK_3A_T
+set_location_assignment PIN_N5 -to mem_0_mem_dq[31] -comment IOBANK_3A_T
+set_location_assignment PIN_A11 -to mem_0_mem_dqs_c[0] -comment IOBANK_3A_B
+set_location_assignment PIN_B10 -to mem_0_mem_dqs_t[0] -comment IOBANK_3A_B
+set_location_assignment PIN_D12 -to mem_0_mem_dqs_t[1] -comment IOBANK_3A_B
+set_location_assignment PIN_C11 -to mem_0_mem_dqs_c[1] -comment IOBANK_3A_B
+set_location_assignment PIN_J4 -to mem_0_mem_dqs_t[2] -comment IOBANK_3A_T
+set_location_assignment PIN_J3 -to mem_0_mem_dqs_c[2] -comment IOBANK_3A_T
+set_location_assignment PIN_K7 -to mem_0_mem_dqs_t[3] -comment IOBANK_3A_T
+set_location_assignment PIN_J7 -to mem_0_mem_dqs_c[3] -comment IOBANK_3A_T
+set_location_assignment PIN_E10 -to mem_ck_0_mem_ck_c[0] -comment IOBANK_3A_B
+set_location_assignment PIN_E9 -to mem_ck_0_mem_ck_t[0] -comment IOBANK_3A_B
+set_location_assignment PIN_E15 -to mem_reset_n_mem_reset_n -comment IOBANK_3A_B
+set_location_assignment PIN_E14 -to oct_0_oct_rzqin -comment IOBANK_3A_B
+set_location_assignment PIN_A7 -to ref_clk_clk -comment IOBANK_3A_B
+set_global_assignment -name IP_FILE i2c1.ip
+set_location_assignment PIN_AF22 -to AC_BCLK1 -comment IOBANK_5A
+set_location_assignment PIN_AG20 -to AC_IRQ -comment IOBANK_5A
+set_location_assignment PIN_AG19 -to AC_SDINS1 -comment IOBANK_5A
+set_location_assignment PIN_AF19 -to AC_SDOUTS1 -comment IOBANK_5A
+set_location_assignment PIN_AF21 -to AC_VOLUME -comment IOBANK_5A
+set_location_assignment PIN_AJ19 -to AMBE_RESET -comment IOBANK_5A
+set_location_assignment PIN_AH23 -to AMBE_RST -comment IOBANK_5A
+set_location_assignment PIN_AH22 -to AMBE_RX -comment IOBANK_5A
+set_location_assignment PIN_AG23 -to AMBE_TX -comment IOBANK_5A
+set_global_assignment -name IP_FILE gpios.ip
+set_location_assignment PIN_AH20 -to KEY_RST -comment IOBANK_5A
+set_location_assignment PIN_AJ22 -to DIS_CD -comment IOBANK_5A
+set_location_assignment PIN_AJ20 -to DIS_RES -comment IOBANK_5A
+set_location_assignment PIN_AH18 -to DIS_CS -comment IOBANK_5A
+set_location_assignment PIN_AG21 -to DIS_SCLK -comment IOBANK_5A
+set_location_assignment PIN_AF24 -to DIS_SDIN -comment IOBANK_5A
+set_location_assignment PIN_AG24 -to DIS_SDOUT -comment IOBANK_5A
+set_location_assignment PIN_AF23 -to KEYPAD_INT -comment IOBANK_5A
+set_location_assignment PIN_AJ24 -to GPS_RESET_N -comment IOBANK_5A
+set_location_assignment PIN_AH21 -to GPS_PPS_SYNC_CLK -comment IOBANK_5A
+set_location_assignment PIN_AJ23 -to GPS_1pps -comment IOBANK_5A
+set_location_assignment PIN_AH26 -to FPGA_UART_RX -comment IOBANK_5B
+set_location_assignment PIN_AK24 -to FPGA_UART_TX -comment IOBANK_5B
+set_location_assignment PIN_AH25 -to GPS_UART_RX -comment IOBANK_5B
+set_location_assignment PIN_AJ25 -to GPS_UART_TX -comment IOBANK_5B
+set_location_assignment PIN_AJ27 -to SPARE_GPIO1 -comment IOBANK_5B
+set_location_assignment PIN_AF26 -to SPARE_GPIO2 -comment IOBANK_5B
+set_location_assignment PIN_AK25 -to SPARE_GPIO3 -comment IOBANK_5B
+set_location_assignment PIN_AE25 -to SPARE_GPIO4 -comment IOBANK_5B
+set_location_assignment PIN_AG26 -to SPARE_GPIO5 -comment IOBANK_5B
+set_location_assignment PIN_AK19 -to TTR_CTRL1 -comment IOBANK_5B
+set_location_assignment PIN_AK22 -to TTR_CTRL2 -comment IOBANK_5B
+set_location_assignment PIN_AK21 -to i2c_scl -comment IOBANK_5B
+set_location_assignment PIN_AK27 -to i2c_sda -comment IOBANK_5B
+set_location_assignment PIN_T3 -to adrv9001_tx2_strobe_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_R4 -to adrv9001_tx2_strobe_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_U5 -to adrv9001_tx2_qdata_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_T4 -to adrv9001_tx2_qdata_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_U4 -to adrv9001_tx2_idata_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_U3 -to adrv9001_tx2_idata_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_R2 -to adrv9001_tx2_dclk_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_T1 -to adrv9001_tx2_dclk_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_T6 -to adrv9001_tx1_strobe_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_T7 -to adrv9001_tx1_strobe_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_R5 -to adrv9001_tx1_qdata_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_R6 -to adrv9001_tx1_qdata_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_V5 -to adrv9001_tx1_idata_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_U6 -to adrv9001_tx1_idata_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_AB5 -to adrv9001_tx1_dclk_out_p -comment IOBANK_2A_T
+set_location_assignment PIN_AB6 -to adrv9001_tx1_dclk_out_n -comment IOBANK_2A_T
+set_location_assignment PIN_AJ5 -to adrv9001_rx2_strobe_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AK5 -to adrv9001_rx2_strobe_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AK4 -to adrv9001_rx2_qdata_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AJ4 -to adrv9001_rx2_qdata_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AH2 -to adrv9001_rx2_idata_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AG3 -to adrv9001_rx2_idata_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AD2 -to adrv9001_rx1_strobe_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AE1 -to adrv9001_rx1_strobe_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AC1 -to adrv9001_rx1_qdata_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AC2 -to adrv9001_rx1_qdata_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_Y2 -to adrv9001_rx1_idata_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AA1 -to adrv9001_rx1_idata_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AK7 -to spi_en_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AJ8 -to spi_do_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AK6 -to spi_dio_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AJ7 -to spi_clk_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AD3 -to rzq -comment IOBANK_2A_B
+set_location_assignment PIN_Y5 -to reset_b_1 -comment IOBANK_2A_B
+set_location_assignment PIN_W4 -to mode_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AH6 -to mcs_p_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AG6 -to mcs_p_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AA3 -to gp_int_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AF7 -to dgpio_3 -comment IOBANK_2A_B
+set_location_assignment PIN_AE7 -to dgpio_2 -comment IOBANK_2A_B
+set_location_assignment PIN_AF6 -to dgpio_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AE6 -to dgpio_0 -comment IOBANK_2A_B
+set_location_assignment PIN_AG4 -to dev_clk_out -comment IOBANK_2A_B
+set_location_assignment PIN_AF3 -to dev_clk_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AE4 -to dev_clk_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_Y4 -to aux_dac_3 -comment IOBANK_2A_B
+set_location_assignment PIN_AF1 -to agpio_3 -comment IOBANK_2A_B
+set_location_assignment PIN_AE2 -to agpio_2 -comment IOBANK_2A_B
+set_location_assignment PIN_AG1 -to agpio_1 -comment IOBANK_2A_B
+set_location_assignment PIN_AF2 -to agpio_0 -comment IOBANK_2A_B
+set_location_assignment PIN_W3 -to adrv9001_tx2_enable -comment IOBANK_2A_T
+set_location_assignment PIN_N2 -to adrv9001_tx2_dclk_in_p -comment IOBANK_2A_T
+set_location_assignment PIN_N1 -to adrv9001_tx2_dclk_in_n -comment IOBANK_2A_T
+set_location_assignment PIN_W5 -to adrv9001_tx1_enable -comment IOBANK_2A_T
+set_location_assignment PIN_AC6 -to adrv9001_tx1_dclk_in_p -comment IOBANK_2A_T
+set_location_assignment PIN_AC5 -to adrv9001_tx1_dclk_in_n -comment IOBANK_2A_T
+set_location_assignment PIN_AH3 -to adrv9001_rx2_enable -comment IOBANK_2A_B
+set_location_assignment PIN_AB4 -to adrv9001_rx2_dclk_in_p -comment IOBANK_2A_B
+set_location_assignment PIN_AC3 -to adrv9001_rx2_dclk_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AA2 -to adrv9001_rx1_enable -comment IOBANK_2A_B
+set_location_assignment PIN_AE5 -to adrv9001_rx1_dclk_in_n -comment IOBANK_2A_B
+set_location_assignment PIN_AD5 -to adrv9001_rx1_dclk_in_p -comment IOBANK_2A_B
+set_global_assignment -name IP_FILE gpio2_hsio.ip
+set_global_assignment -name VERILOG_FILE spi_4wire_master.v
