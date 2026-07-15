@@ -280,7 +280,24 @@ For two physical cameras:
 python3 examples/agx5_multiviewer.py --cam 2 --lines 2160 --frame-rate 30 --receiver-type coe
 ```
 
-If CoE is unstable, test with Linux receiver:
+### 25G CoE Stability Workaround on AGX Thor
+
+For the 25G demo on AGX Thor, use CoE mode demos only. If running the demo repeatedly, refresh the MGBE interface before every run after the first one:
+
+```bash
+sudo ip link set mgbe0_0 down
+sudo ip link set mgbe0_0 up
+```
+
+Equivalent one-line command:
+
+```bash
+sudo ip link set mgbe0_0 down ; sudo ip link set mgbe0_0 up
+```
+
+This workaround was recommended for AGX Thor 25GbE demos to avoid issues seen on repeated CoE runs.
+
+For debugging only, if CoE remains unstable, test with Linux receiver:
 
 ```bash
 python3 examples/agx5_multiviewer.py --cam 2 --lines 1080 --frame-rate 30 --receiver-type linux
