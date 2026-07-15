@@ -1,18 +1,35 @@
-# Holoscan Sensor Bridge Bring-up Notes
+# Holoscan Sensor Bridge Bring-up Guide
+
 ## NVIDIA AGX Thor + Agilex 5 Modular Development Kit
 
-This document records the bring-up steps, issues encountered, debug observations, and fixes used while running the Altera/NVIDIA Holoscan Sensor Bridge demo with NVIDIA AGX Thor as host and Agilex 5 Modular Development Kit as the FPGA platform.
+This guide summarizes the customer bring-up flow used for the Altera/NVIDIA Holoscan Sensor Bridge demo on NVIDIA AGX Thor with Agilex 5 Modular Development Kits. It covers the working 10GbE and 25GbE paths, the issues encountered, and the fixes applied.
 
 ---
 
-## 1. Hardware and Software Setup
+## 1. Reference Documents
+
+- Jetson AGX Thor ISO installation:  
+  <https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/quick_start.html#>
+
+- Holoscan Sensor Bridge host setup, AGX Thor tab:  
+  <https://docs.nvidia.com/holoscan/sensor-bridge/2.5.0/setup.html#sd-tab-item-3>
+
+- Altera HSB 25GbE reference design:  
+  <https://github.com/altera-fpga/holoscan-sensor-bridge/tree/altera-release-2.6.0/fpga/altera/AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE>
+
+- Altera HSB 10GbE reference design:  
+  <https://github.com/altera-fpga/holoscan-sensor-bridge/tree/altera-release-2.6.0/fpga/altera/AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE>
+
+---
+
+## 2. System Used
 
 ### Host
 
 - NVIDIA Jetson AGX Thor Developer Kit
 - JetPack 7.2 / L4T R39.2
 
-Verify with:
+Verify:
 
 ```bash
 cat /etc/nv_tegra_release
@@ -24,35 +41,55 @@ Expected:
 # R39 (release), REVISION: 2.0
 ```
 
-### FPGA Boards / Designs Used
+### FPGA Images
 
-Two Agilex 5 designs were tested.
-
-#### 10GbE Design
+10GbE / Group B:
 
 ```text
 AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof
 ```
 
-Repository path:
-
-```text
-fpga/altera/AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE
-```
-
-#### 25GbE Design
+25GbE / Group A:
 
 ```text
 AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof
 ```
 
-Repository path:
+---
+
+## 3. AGX Thor Base Installation
+
+Follow the Jetson AGX Thor ISO quick start guide.
+
+High-level flow:
+
+1. Download the Jetson AGX Thor ISO image.
+2. Create the bootable USB installer.
+3. Boot AGX Thor from the USB installer.
+4. Install the BSP to NVMe.
+5. Remove the USB installer.
+6. Boot from NVMe and complete Ubuntu OEM setup.
+7. Verify JetPack/L4T version.
+
+Reference:
 
 ```text
-fpga/altera/AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE
+https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/quick_start.html#
 ```
 
-### Repository Used
+---
+
+## 4. Host Setup for Holoscan Sensor Bridge
+
+Use the AGX Thor tab in the Holoscan Sensor Bridge host setup guide.
+
+Reference:
+
+```text
+https://docs.nvidia.com/holoscan/sensor-bridge/2.5.0/setup.html#sd-tab-item-3
+```
+
+Clone the Altera release branch:
 
 ```bash
 git clone -b altera-release-2.6.0 https://github.com/altera-fpga/holoscan-sensor-bridge.git
@@ -60,82 +97,38 @@ cd holoscan-sensor-bridge
 git lfs pull
 ```
 
----
-
-## 2. Docker Build and Demo Container
-
-On AGX Thor:
+Build the demo container:
 
 ```bash
-cd /home/alterademo/holoscandemo25G/holoscan-sensor-bridge
 sh docker/build.sh --igpu
 ```
 
-The first Docker build can take a significant amount of time.
-
-After the image is built:
+Start the demo container:
 
 ```bash
 xhost +
 sh docker/demo.sh
 ```
 
-Inside the container, tools such as `hololink-enumerate` are installed in:
-
-```bash
-/usr/local/bin/hololink-enumerate
-```
-
-Use:
+Inside the container, use:
 
 ```bash
 hololink-enumerate
 ```
 
-Do not use this path inside the demo container:
-
-```bash
-./tools/enumerate/hololink-enumerate
-```
+The tool is installed under `/usr/local/bin`, so `./tools/enumerate/hololink-enumerate` may not exist in the container.
 
 ---
 
-## 3. 10GbE Bring-up
+## 5. Common Network Configuration
 
-### 3.1 Program FPGA
-
-Program the Group B / 10GbE SOF:
+The FPGA/HSB default IP is:
 
 ```text
-AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof
+192.168.0.2
 ```
 
-Example Quartus command:
-
-```bash
-quartus_pgm -c 1 -m jtag -o "p;AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof"
-```
-
-### 3.2 Check Thor Ethernet Link
-
-On AGX Thor host:
-
-```bash
-for i in 0 1 2 3; do
-  echo "---- mgbe${i}_0 ----"
-  sudo ethtool mgbe${i}_0 | grep -E "Speed|Link detected"
-done
-```
-
-Expected for a working 10G setup:
-
-```text
----- mgbe0_0 ----
-Speed: 10000Mb/s
-Link detected: yes
-```
-
-### 3.3 Configure Thor IP
+Configure Thor:
 
 ```bash
 EN0=mgbe0_0
@@ -146,72 +139,59 @@ sudo nmcli connection modify hololink-$EN0 +ipv4.routes 192.168.0.2/32
 sudo nmcli connection up hololink-$EN0
 ```
 
-Check route:
-
-```bash
-ip route | grep 192.168.0
-```
-
-Expected:
-
-```text
-192.168.0.0/24 dev mgbe0_0 ...
-192.168.0.2 dev mgbe0_0 ...
-```
-
-Ping FPGA:
+Test:
 
 ```bash
 ping 192.168.0.2
 ```
 
-Expected:
-
-```text
-64 bytes from 192.168.0.2
-```
-
-### 3.4 Enumerate HSB
-
-Inside Docker:
+Check link status:
 
 ```bash
-hololink-enumerate
+for i in 0 1 2 3; do
+  echo "---- mgbe${i}_0 ----"
+  sudo ethtool mgbe${i}_0 | grep -E "Speed|Link detected"
+done
 ```
 
-Successful output example:
+---
+
+## 6. 10GbE Demo Flow
+
+Program the 10GbE FPGA image:
+
+```text
+AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof
+```
+
+Expected Thor link:
+
+```text
+mgbe0_0
+Speed: 10000Mb/s
+Link detected: yes
+```
+
+Successful HSB enumeration example:
 
 ```text
 mac_id=CA:FE:C0:FF:EE:10
 hsb_ip_version=0x2603
-fpga_crc=0x0
 ip_address=192.168.0.2
 fpga_uuid=7b1fa8c7-31aa-44b6-abcc-eac134461fdc
-serial_number=01000000000000
 interface=mgbe0_0
-board=N/A
 ```
 
-This confirms:
-
-```text
-Ethernet link: OK
-HSB enumeration: OK
-FPGA reachable: OK
-```
-
-### 3.5 Run Camera Demo
-
-Single camera:
+Run camera test:
 
 ```bash
 python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30
 ```
 
-Camera 1:
+Headless validation:
 
 ```bash
-python3 examples/linux_agx5_player.py --cam 1 --lines 1080 --frame-rate 30
+python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30 --headless --frame-limit 100
 ```
 
 Stereo:
@@ -220,593 +200,22 @@ Stereo:
 python3 examples/linux_agx5_player_stereo.py
 ```
 
-Headless test:
-
-```bash
-python3 examples/linux_agx5_player.py --headless --frame-limit 100 --cam 0 --lines 1080 --frame-rate 30
-```
-
 ---
 
-## 4. Issues Encountered During 10G Bring-up
+## 7. 25GbE Demo Flow
 
-### Issue 1: No Ethernet Link / No Carrier
+### Important
 
-Observed:
+AGX Thor does not support runtime switching between 10GbE x4 and 25GbE x4 through `nmcli` or normal Linux network settings. The Thor boot image / QSPI boot slot must be switched.
 
-```text
-Speed: 10000Mb/s
-Link detected: no
-```
-
-or:
-
-```text
-NO-CARRIER
-Destination Host Unreachable
-```
-
-Ping output:
-
-```text
-From 192.168.0.101 icmp_seq=1 Destination Host Unreachable
-```
-
-Meaning:
-
-- `192.168.0.101` is Thor's own IP.
-- Thor is saying it cannot reach the FPGA at `192.168.0.2`.
-- This is a physical/link issue, not Docker or Holoscan.
-
-Resolution:
-
-- Confirm correct FPGA SOF.
-- Confirm correct SFP/QSFP cable.
-- Confirm correct breakout leg.
-- Confirm correct Thor interface.
-- Use the 10G FPGA design when Thor is in default 10G mode.
-
-### Issue 2: Wrong Tool Path
-
-Command failed:
-
-```bash
-./tools/enumerate/hololink-enumerate
-```
-
-Error:
-
-```text
-No such file or directory
-```
-
-Resolution:
-
-```bash
-which hololink-enumerate
-```
-
-Output:
-
-```text
-/usr/local/bin/hololink-enumerate
-```
-
-Use:
-
-```bash
-hololink-enumerate
-```
-
-### Issue 3: Camera I2C Transaction Error
-
-Observed:
-
-```text
-hololink._hololink.TransactionError: i2c_transaction i2c_address=0x37
-```
-
-and for camera 1:
-
-```text
-hololink._hololink.TransactionError: i2c_transaction i2c_address=0x1a
-```
-
-Meaning:
-
-- FPGA/HSB path is working.
-- Camera sensor is not responding over I2C.
-- On early production Agilex 5 MDK boards, this can be caused by the carrier MAX10 firmware not applying power to the MIPI connectors.
-- Without MIPI connector power, camera I2C communication is impossible and Holoscan applications report transaction errors.
-
-Checks performed:
-
-- Camera cable orientation.
-- Pin 1 to pin 1 alignment.
-- Correct MIPI connector.
-- Camera power/reset sequencing.
-- Reprogram FPGA after camera connection.
-
-Root cause found during this bring-up:
-
-- Early production MDK boards, both Group A and Group B, shipped with a bug in the MAX10 image.
-- The buggy MAX10 image does not apply power to the MIPI connectors.
-- Customer release production boards are expected to ship with the fixed MAX10 image and should be plug-and-play.
-- Currently available / early boards may need the MAX10 image reflashed.
-
-Resolution that fixed the camera I2C transaction errors:
-
-1. Switch the MAX10 onto the JTAG chain by setting `SW4` on the carrier board to `ON`. This is the single switch nearest the HDMI connector.
-2. Use Quartus Programmer GUI to reflash MAX10 with:
-
-   ```text
-   max10_top_rtl_v1p1p6_fw_v2p0p1.pof
-   ```
-
-3. Power off the board.
-4. To see the FPGA on the JTAG chain again, set `SW4` back to `OFF`.
-
-After reflashing the MAX10 image and restoring the normal JTAG chain, camera I2C configuration succeeded.
-
-Additional note:
-
-- A problem with initial production MDK batches is that the USB hub controlling the carrier micro USB is susceptible to ESD.
-- This is expected to be resolved in future batches.
-- If the carrier micro USB is not detected, for example Windows fails to read descriptors, use the standard JTAG connector and a Byte Blaster instead.
-
-Successful camera configuration log:
-
-```text
-Configuring camera with frame format: Width=1920, Height=1080, Framerate=30, Pixel Format=PixelFormat.RAW_10
-Starting camera
-Stopping camera
-```
-
-### Issue 4: GUI / Holoviz Failure
-
-Observed:
-
-```text
-Failed to initialize glfw
-Authorization required, but no authorization protocol specified
-XDG_RUNTIME_DIR is invalid or not set in the environment
-```
-
-Meaning:
-
-- Camera and streaming path may be working.
-- Display permission is failing.
-
-Resolution on Thor host:
-
-```bash
-xhost +local:root
-xhost +local:docker
-xhost +
-```
-
-Restart Docker:
-
-```bash
-sh docker/demo.sh
-```
-
-Inside Docker:
-
-```bash
-export XDG_RUNTIME_DIR=/tmp/runtime-root
-mkdir -p $XDG_RUNTIME_DIR
-chmod 700 $XDG_RUNTIME_DIR
-```
-
-Then run the demo again.
-
-### Issue 5: Kernel Receiver Buffer Warning
-
-Observed:
-
-```text
-Kernel receiver buffer size is too small; performance will be unreliable.
-Resolve this with "echo 2621440 | sudo tee /proc/sys/net/core/rmem_max"
-```
-
-Resolution on Thor host:
-
-```bash
-echo 2621440 | sudo tee /proc/sys/net/core/rmem_max
-```
-
-For 4K mode, use a larger buffer:
-
-```bash
-echo 10420224 | sudo tee /proc/sys/net/core/rmem_max
-```
-
----
-
-## 5. 25GbE Bring-up
-
-### 5.1 Initial 25G Problem
-
-Initially the 25G design did not link.
-
-Observed:
-
-```text
-Speed: 10000Mb/s
-Link detected: no
-```
-
-Root cause:
-
-- AGX Thor defaults to `10GbE x4` mode on the QSFP/MGBE ports.
-- The 25G FPGA design requires `25GbE x4`.
-- Thor does not support runtime switching between 10G and 25G using normal Linux network settings.
-- `nmcli`, IP settings, Docker, and FPGA reprogramming alone cannot switch Thor to 25G.
-
-### 5.2 25G Switching Method
-
-Altera provided capsule files for switching Thor bootloader/QSPI configuration between 10G and 25G.
-
-Required files:
+Capsule files used:
 
 ```text
 Tegra_Thor_BL_7.2_10G.Cap
 Tegra_Thor_BL_7.2_25G.Cap
 ```
 
-JetPack requirement:
-
-```text
-JetPack 7.2 / L4T R39.2
-```
-
-Verified using:
-
-```bash
-cat /etc/nv_tegra_release
-```
-
-Output:
-
-```text
-# R39 (release), REVISION: 2.0
-```
-
-### 5.3 Current Slot Before Switching
-
-Before switching, check:
-
-```bash
-sudo nvbootctrl get-current-slot
-cat /sys/devices/platform/bus@0/*/net/mgbe*/speed
-```
-
-Output before switching:
-
-```text
-1
-10000
-10000
-10000
-10000
-```
-
-Recorded:
-
-```text
-slot 1 = 10G
-```
-
-### 5.4 Apply 25G Capsule
-
-Copy capsule files to Thor home directory:
-
-```bash
-cd ~
-ls -lh *.Cap
-```
-
-Then apply the 25G capsule:
-
-```bash
-sudo nv_bootloader_capsule_updater.sh -q ./Tegra_Thor_BL_7.2_25G.Cap
-sudo reboot
-```
-
-After reboot:
-
-```bash
-sudo nvbootctrl get-current-slot
-cat /sys/devices/platform/bus@0/*/net/mgbe*/speed
-```
-
-Output:
-
-```text
-0
-25000
-25000
-25000
-25000
-```
-
-Recorded:
-
-```text
-slot 0 = 25G
-slot 1 = 10G
-```
-
-### 5.5 Reverting Back to 10G
-
-Since 10G is slot 1:
-
-```bash
-sudo nvbootctrl set-active-boot-slot 1
-sudo reboot
-```
-
-Verify:
-
-```bash
-cat /sys/devices/platform/bus@0/*/net/mgbe*/speed
-```
-
-Expected:
-
-```text
-10000
-10000
-10000
-10000
-```
-
-### 5.6 Switching Back to 25G
-
-Since 25G is slot 0:
-
-```bash
-sudo nvbootctrl set-active-boot-slot 0
-sudo reboot
-```
-
-Verify:
-
-```bash
-cat /sys/devices/platform/bus@0/*/net/mgbe*/speed
-```
-
-Expected:
-
-```text
-25000
-25000
-25000
-25000
-```
-
----
-
-## 6. 25G FPGA Demo Flow
-
-Once Thor is in 25G mode:
-
-```text
-slot 0 active
-MGBE speeds = 25000
-```
-
-Program the 25G FPGA:
-
-```text
-AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof
-```
-
-Check link:
-
-```bash
-for i in 0 1 2 3; do
-  echo "---- mgbe${i}_0 ----"
-  sudo ethtool mgbe${i}_0 | grep -E "Speed|Link detected"
-done
-```
-
-Expected:
-
-```text
-Speed: 25000Mb/s
-Link detected: yes
-```
-
-Configure IP:
-
-```bash
-EN0=mgbe0_0
-
-sudo nmcli connection delete hololink-$EN0 2>/dev/null || true
-sudo nmcli con add con-name hololink-$EN0 ifname $EN0 type ethernet ip4 192.168.0.101/24
-sudo nmcli connection modify hololink-$EN0 +ipv4.routes 192.168.0.2/32
-sudo nmcli connection up hololink-$EN0
-```
-
-Ping:
-
-```bash
-ping 192.168.0.2
-```
-
-Enter container:
-
-```bash
-cd /home/alterademo/holoscandemo25G/holoscan-sensor-bridge
-xhost +
-sh docker/demo.sh
-```
-
-Inside container:
-
-```bash
-hololink-enumerate
-```
-
-Run demo:
-
-```bash
-python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30
-```
-
-Stereo:
-
-```bash
-python3 examples/linux_agx5_player_stereo.py
-```
-
----
-
-## 7. Current Known Good State
-
-### 10G
-
-```text
-slot 1 = 10G
-FPGA image = AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof
-MGBE speed = 10000
-HSB enumerate = PASS
-Camera I2C = PASS
-Headless streaming = PASS
-GUI requires xhost/XDG setup
-```
-
-### 25G
-
-```text
-slot 0 = 25G
-FPGA image = AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof
-MGBE speed = 25000
-25G mode enabled successfully
-```
-
----
-
-## 8. Useful Debug Commands
-
-### Check JetPack / L4T
-
-```bash
-cat /etc/nv_tegra_release
-```
-
-### Check MGBE Speeds
-
-```bash
-cat /sys/devices/platform/bus@0/*/net/mgbe*/speed
-```
-
-### Check Active Boot Slot
-
-```bash
-sudo nvbootctrl get-current-slot
-```
-
-### Check Link Status
-
-```bash
-for i in 0 1 2 3; do
-  echo "---- mgbe${i}_0 ----"
-  sudo ethtool mgbe${i}_0 | grep -E "Speed|Link detected"
-done
-```
-
-### Configure IP
-
-```bash
-EN0=mgbe0_0
-
-sudo nmcli connection delete hololink-$EN0 2>/dev/null || true
-sudo nmcli con add con-name hololink-$EN0 ifname $EN0 type ethernet ip4 192.168.0.101/24
-sudo nmcli connection modify hololink-$EN0 +ipv4.routes 192.168.0.2/32
-sudo nmcli connection up hololink-$EN0
-```
-
-### Ping FPGA
-
-```bash
-ping 192.168.0.2
-```
-
-### Enumerate HSB
-
-```bash
-hololink-enumerate
-```
-
-### Run Single Camera
-
-```bash
-python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30
-```
-
-### Run Headless
-
-```bash
-python3 examples/linux_agx5_player.py --headless --frame-limit 100 --cam 0 --lines 1080 --frame-rate 30
-```
-
-### Run Stereo
-
-```bash
-python3 examples/linux_agx5_player_stereo.py
-```
-
-### Fix GUI Permission
-
-On Thor host:
-
-```bash
-xhost +local:root
-xhost +local:docker
-xhost +
-```
-
-Inside Docker:
-
-```bash
-export XDG_RUNTIME_DIR=/tmp/runtime-root
-mkdir -p $XDG_RUNTIME_DIR
-chmod 700 $XDG_RUNTIME_DIR
-```
-
-### Fix Receiver Buffer Warning
-
-```bash
-echo 2621440 | sudo tee /proc/sys/net/core/rmem_max
-```
-
-For larger frames:
-
-```bash
-echo 10420224 | sudo tee /proc/sys/net/core/rmem_max
-```
-
----
-
-## 9. Lessons Learned
-
-1. Thor default QSFP mode is 10G.
-2. The 25G FPGA image will not link unless Thor is booted in 25G mode.
-3. 10G/25G switching is not runtime-configurable using `nmcli`.
-4. Capsule-based slot switching allows 10G/25G switching without wiping the Linux rootfs.
-5. `hololink-enumerate` proves FPGA/HSB communication.
-6. Camera I2C errors are separate from Ethernet link errors.
-7. GUI/Holoviz failures are often X11 authorization problems, not camera/FPGA problems.
-8. Always use `Ctrl+C` to stop apps, not `Ctrl+Z`.
-9. `.sof` programming is volatile; reprogram FPGA after a board power cycle.
-10. Record boot slot mapping before switching modes.
-
----
-
-## 10. Final Slot Mapping From This Bring-up
+Current slot mapping from this bring-up:
 
 ```text
 slot 0 = 25G
@@ -826,3 +235,193 @@ Switch to 10G:
 sudo nvbootctrl set-active-boot-slot 1
 sudo reboot
 ```
+
+Check active slot and speed:
+
+```bash
+sudo nvbootctrl get-current-slot
+cat /sys/devices/platform/bus@0/*/net/mgbe*/speed
+```
+
+Expected for 25G:
+
+```text
+0
+25000
+25000
+25000
+25000
+```
+
+Program the 25GbE FPGA image:
+
+```text
+AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof
+```
+
+Expected Thor link:
+
+```text
+mgbe0_0
+Speed: 25000Mb/s
+Link detected: yes
+```
+
+Run:
+
+```bash
+hololink-enumerate
+python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30
+```
+
+For two physical cameras:
+
+```bash
+python3 examples/agx5_multiviewer.py --cam 2 --lines 2160 --frame-rate 30 --receiver-type coe
+```
+
+If CoE is unstable, test with Linux receiver:
+
+```bash
+python3 examples/agx5_multiviewer.py --cam 2 --lines 1080 --frame-rate 30 --receiver-type linux
+```
+
+---
+
+## 8. MAX10 MIPI Power Fix
+
+### Symptom
+
+Holoscan applications reached the FPGA/HSB, but camera configuration failed with I2C transaction errors:
+
+```text
+hololink._hololink.TransactionError: i2c_transaction i2c_address=0x37
+hololink._hololink.TransactionError: i2c_transaction i2c_address=0x1a
+```
+
+### Root Cause
+
+Early production MDK boards, both Group A and Group B, shipped with a bug in the MAX10 image. The buggy MAX10 image does not apply power to the MIPI connectors. Without MIPI connector power, camera I2C communication is impossible.
+
+Customer release production boards are expected to ship with a fixed MAX10 image and should be plug-and-play. Currently available early boards may need MAX10 reflashing.
+
+### Fix Applied
+
+1. Switch MAX10 onto the JTAG chain by setting `SW4` on the carrier board to `ON`. This is the single switch nearest the HDMI connector.
+2. Use Quartus Programmer GUI to reflash MAX10 with:
+
+   ```text
+   max10_top_rtl_v1p1p6_fw_v2p0p1.pof
+   ```
+
+3. Power off the board.
+4. Set `SW4` back to `OFF` so the FPGA appears on the JTAG chain again.
+
+After this MAX10 update, camera I2C configuration succeeded.
+
+### Additional Note
+
+Initial production MDK batches may have a carrier micro USB hub that is susceptible to ESD. If the carrier micro USB is not detected, for example Windows fails to read descriptors, use the standard JTAG connector and a Byte Blaster.
+
+---
+
+## 9. AI Demo Examples
+
+### YOLOv8 Body Pose
+
+Inside container:
+
+```bash
+apt-get update && apt-get install -y ffmpeg
+pip3 install ultralytics onnx
+
+cd examples
+yolo export model=yolov8n-pose.pt format=onnx
+trtexec --onnx=yolov8n-pose.onnx --saveEngine=yolov8n-pose.engine.fp32
+cd -
+```
+
+Run:
+
+```bash
+python3 examples/linux_body_pose_estimation_agx5.py --cam 0 --lines 1080 --frame-rate 30
+```
+
+### TAO PeopleNet
+
+Download model:
+
+```bash
+curl -L 'https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/peoplenet/pruned_quantized_decrypted_v2.3.3/files?redirect=true&path=resnet34_peoplenet_int8.onnx' -o examples/resnet34_peoplenet_int8.onnx
+```
+
+Run:
+
+```bash
+python3 examples/linux_tao_peoplenet_agx5.py --cam 0 --lines 1080 --frame-rate 30
+```
+
+First run builds a TensorRT engine and can take several minutes.
+
+If the PeopleNet AGX5 example crashes in `InferenceOp`, disable metadata in `examples/linux_tao_peoplenet_agx5.py`:
+
+```python
+self.is_metadata_enabled = False
+```
+
+---
+
+## 10. Display and Runtime Notes
+
+If Holoviz/GLFW fails:
+
+```text
+Failed to initialize glfw
+Authorization required, but no authorization protocol specified
+XDG_RUNTIME_DIR is invalid or not set
+```
+
+Run on Thor host before starting Docker:
+
+```bash
+xhost +local:root
+xhost +local:docker
+xhost +
+```
+
+Inside Docker:
+
+```bash
+export XDG_RUNTIME_DIR=/tmp/runtime-root
+mkdir -p $XDG_RUNTIME_DIR
+chmod 700 $XDG_RUNTIME_DIR
+```
+
+For receiver buffer warnings:
+
+```bash
+echo 10420224 | sudo tee /proc/sys/net/core/rmem_max
+```
+
+Inside the container as root, omit `sudo`:
+
+```bash
+echo 10420224 > /proc/sys/net/core/rmem_max
+```
+
+Use `Ctrl+C` to stop demos. Avoid `Ctrl+Z`, which suspends jobs and can leave resources open.
+
+---
+
+## 11. Known Issues and Lessons Learned
+
+- Thor defaults to 10GbE mode.
+- 25GbE FPGA images need Thor booted in 25GbE mode.
+- 10G/25G mode switching requires boot slot / capsule handling, not `nmcli`.
+- Early MDK boards may need MAX10 reflashing to power MIPI connectors.
+- Camera I2C errors can be caused by missing MIPI connector power, not only cable orientation.
+- `hololink-enumerate` confirms the FPGA/HSB network path.
+- GUI failures are often X11 authorization issues.
+- `.sof` FPGA programming is volatile; reprogram after FPGA board power cycle.
+- For customer demos on AGX Thor, 10GbE and Linux socket mode are the most stable paths. 25GbE CoE is available but may show stability issues under some multi-stream scenarios.
+
