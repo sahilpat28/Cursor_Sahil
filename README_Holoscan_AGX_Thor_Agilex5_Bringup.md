@@ -316,6 +316,8 @@ Meaning:
 
 - FPGA/HSB path is working.
 - Camera sensor is not responding over I2C.
+- On early production Agilex 5 MDK boards, this can be caused by the carrier MAX10 firmware not applying power to the MIPI connectors.
+- Without MIPI connector power, camera I2C communication is impossible and Holoscan applications report transaction errors.
 
 Checks performed:
 
@@ -325,7 +327,32 @@ Checks performed:
 - Camera power/reset sequencing.
 - Reprogram FPGA after camera connection.
 
-The camera I2C started working after reseating/rechecking the camera setup.
+Root cause found during this bring-up:
+
+- Early production MDK boards, both Group A and Group B, shipped with a bug in the MAX10 image.
+- The buggy MAX10 image does not apply power to the MIPI connectors.
+- Customer release production boards are expected to ship with the fixed MAX10 image and should be plug-and-play.
+- Currently available / early boards may need the MAX10 image reflashed.
+
+Resolution that fixed the camera I2C transaction errors:
+
+1. Switch the MAX10 onto the JTAG chain by setting `SW4` on the carrier board to `ON`. This is the single switch nearest the HDMI connector.
+2. Use Quartus Programmer GUI to reflash MAX10 with:
+
+   ```text
+   max10_top_rtl_v1p1p6_fw_v2p0p1.pof
+   ```
+
+3. Power off the board.
+4. To see the FPGA on the JTAG chain again, set `SW4` back to `OFF`.
+
+After reflashing the MAX10 image and restoring the normal JTAG chain, camera I2C configuration succeeded.
+
+Additional note:
+
+- A problem with initial production MDK batches is that the USB hub controlling the carrier micro USB is susceptible to ESD.
+- This is expected to be resolved in future batches.
+- If the carrier micro USB is not detected, for example Windows fails to read descriptors, use the standard JTAG connector and a Byte Blaster instead.
 
 Successful camera configuration log:
 
