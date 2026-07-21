@@ -573,6 +573,7 @@ cd $COREDLA_WORK/runtime
 ```bash
 cd $COREDLA_WORK
 $COREDLA_ROOT/bin/dla_build_example_design.py build \
+  --licensed \
   --output-dir build_agx5_jtag_ed \
   --num-instances 1 \
   --seed 1 \
@@ -598,6 +599,84 @@ quartus_pgm -c 1 -m jtag -o "p;AGX5_Generic.sof"
 ```
 
 JTAG is slow. Use `-nireq=1` for JTAG examples.
+
+## G6. Permanent licensed Docker startup
+
+For a node-locked Altera license, start Docker with host networking, USB pass-through, workspace mount, license mount, and license environment variables.
+
+Create or update this host-side script:
+
+```bash
+mkdir -p ~/bin
+nano ~/bin/start-fpga-ai-suite.sh
+```
+
+Use this content, adjusting the license filename if needed:
+
+```bash
+#!/bin/bash
+set -e
+
+CONTAINER_NAME="fpga-ai-suite-2026"
+IMAGE_NAME="alterafpga/fpgaaisuite:2026.1.1-quartus"
+WORKSPACE="$HOME/fpga-ai-work"
+LICENSE_FILE="$HOME/altera_pro/LR-178044_License.dat"
+
+if [ ! -f "$LICENSE_FILE" ]; then
+    echo "ERROR: License file not found: $LICENSE_FILE"
+    exit 1
+fi
+
+mkdir -p "$WORKSPACE"
+
+if docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
+    echo "Starting existing FPGA AI Suite container..."
+    docker start -ai "$CONTAINER_NAME"
+else
+    echo "Creating new licensed FPGA AI Suite container..."
+    docker run -it \
+      --name "$CONTAINER_NAME" \
+      --network host \
+      --privileged \
+      -v /dev/bus/usb:/dev/bus/usb \
+      -v "$WORKSPACE":/workspace \
+      -v "$LICENSE_FILE":/licenses/altera_license.dat:ro \
+      -e LM_LICENSE_FILE=/licenses/altera_license.dat \
+      -e ALTERAD_LICENSE_FILE=/licenses/altera_license.dat \
+      "$IMAGE_NAME"
+fi
+```
+
+Make it executable:
+
+```bash
+chmod +x ~/bin/start-fpga-ai-suite.sh
+```
+
+Daily startup:
+
+```bash
+~/bin/start-fpga-ai-suite.sh
+```
+
+Inside Docker, verify the license variables and tools:
+
+```bash
+echo $LM_LICENSE_FILE
+echo $ALTERAD_LICENSE_FILE
+ls -lh /licenses/altera_license.dat
+which quartus_pgm
+which system-console
+which lmutil
+```
+
+If `system-console` or `lmutil` is not in PATH, add:
+
+```bash
+echo 'export PATH=/opt/altera/syscon/bin:/opt/altera/qcore/linux64:$PATH' >> ~/.bashrc
+echo 'export QUARTUS_ROOTDIR=/opt/altera/quartus' >> ~/.bashrc
+source ~/.bashrc
+```
 
 ---
 
@@ -697,7 +776,113 @@ Inside Docker:
 sudo chown -R fpga_ai_suite:fpga_ai_suite /workspace
 ```
 
-## I4. No JTAG hardware available
+## I4. License issue: No valid license for CoreDLA found
+
+Symptoms in `build.log`:
+
+```text
+No valid license for CoreDLA found.
+Building unlicensed version.
+```
+
+First confirm the license file is mounted inside Docker:
+
+```bash
+echo $LM_LICENSE_FILE
+echo $ALTERAD_LICENSE_FILE
+ls -lh /licenses/altera_license.dat
+```
+
+Find `lmutil` if needed:
+
+```bash
+find /opt/altera -name lmutil 2>/dev/null
+```
+
+In the Quartus Docker image used here, `lmutil` was located at:
+
+```text
+/opt/altera/qcore/linux64/lmutil
+```
+
+Add it to PATH:
+
+```bash
+export PATH=/opt/altera/qcore/linux64:$PATH
+```
+
+Check the container-visible host ID:
+
+```bash
+lmutil lmhostid
+```
+
+Check the FPGA AI Suite/CoreDLA features from the license. The useful feature IDs observed for FPGA AI Suite were:
+
+```text
+6AF8_018B
+6AF7_018B
+```
+
+Run diagnostics:
+
+```bash
+lmutil lmdiag -c /licenses/altera_license.dat 6AF8_018B
+lmutil lmdiag -c /licenses/altera_license.dat 6AF7_018B
+```
+
+Success looks like:
+
+```text
+This is the correct node for this node-locked license
+```
+
+If you see:
+
+```text
+Invalid host
+```
+
+then the license is locked to a different NIC/host ID. Generate or rehost the license using the real Linux host Ethernet MAC, not the Docker virtual MAC. Confirm host MACs on the Linux host with:
+
+```bash
+ip link
+```
+
+For this setup, the corrected license was generated for primary computer ID:
+
+```text
+e89744bdaefd
+```
+
+For node-locked licenses in Docker, start the container with:
+
+```bash
+--network host
+```
+
+so FlexLM can see the host network identity.
+
+For the Agilex 5 JTAG design build, force the licensed IP path with:
+
+```bash
+$COREDLA_ROOT/bin/dla_build_example_design.py build \
+  --licensed \
+  --output-dir build_agx5_jtag_ed \
+  --num-instances 1 \
+  --seed 1 \
+  agx5e_modular_jtag \
+  $COREDLA_ROOT/example_architectures/AGX5_Generic.arch
+```
+
+The build log should include:
+
+```text
+Created licensed IP.
+Building licensed version.
+```
+
+## I5. No JTAG hardware available
 
 Possible causes:
 
@@ -712,7 +897,7 @@ Use container command with:
 --privileged -v /dev/bus/usb:/dev/bus/usb
 ```
 
-## I5. Accuracy check fails but emulator says PASSED
+## I6. Accuracy check fails but emulator says PASSED
 
 If emulator prints:
 
