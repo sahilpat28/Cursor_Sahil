@@ -121,7 +121,44 @@ Restart later:
 docker start -ai fpga-ai-suite-2026
 ```
 
-## A6. Verify inside Docker
+## A6. How to start FPGA AI Suite each time on Windows
+
+After Docker Desktop is running, open PowerShell and start the existing container:
+
+```powershell
+docker start -ai fpga-ai-suite-2026
+```
+
+You are inside FPGA AI Suite when the prompt changes from a Windows prompt like:
+
+```text
+PS C:\Users\name>
+```
+
+to a Linux container prompt like:
+
+```text
+fpga_ai_suite@container_id:~$
+```
+
+Then go to your workspace and reload the local FPGA AI Suite work environment:
+
+```bash
+cd /workspace/quickstart
+source ./coredla_work.sh
+```
+
+If the workspace has not been created yet, use the workspace setup section later in this guide.
+
+To exit the container:
+
+```bash
+exit
+```
+
+Do not create a new container every day unless you intentionally want a clean environment. Use `docker start -ai` for daily work.
+
+## A7. Verify inside Docker
 
 Prompt should look like:
 
@@ -224,13 +261,48 @@ Restart later:
 docker start -ai fpga-ai-suite-2026
 ```
 
+## B6. How to start FPGA AI Suite each time on Linux
+
+Open a terminal and start the existing container:
+
+```bash
+docker start -ai fpga-ai-suite-2026
+```
+
+You are inside FPGA AI Suite when the prompt changes from the host prompt, for example:
+
+```text
+sahilpat@sahilpat:~$
+```
+
+to the container prompt, for example:
+
+```text
+fpga_ai_suite@container_id:~$
+```
+
+Reload your working directory environment:
+
+```bash
+cd /workspace/quickstart
+source ./coredla_work.sh
+```
+
+If you need USB-JTAG access and the original container was not created with USB pass-through, recreate it with `--privileged -v /dev/bus/usb:/dev/bus/usb`.
+
+To exit the container:
+
+```bash
+exit
+```
+
 If you need to recreate the container:
 
 ```bash
 docker rm fpga-ai-suite-2026
 ```
 
-## B6. Verify inside Docker
+## B7. Verify inside Docker
 
 ```bash
 python3 -c "import openvino; print(openvino.__version__)"
