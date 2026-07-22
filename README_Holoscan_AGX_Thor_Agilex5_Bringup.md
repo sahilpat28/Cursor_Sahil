@@ -35,6 +35,11 @@ Verify:
 cat /etc/nv_tegra_release
 ```
 
+What this does / why required:
+
+- Confirms that the Thor is running the expected JetPack/L4T release.
+- The 10G/25G switching capsule procedure used in this guide is for JetPack 7.2 / L4T R39.2.
+
 Expected:
 
 ```text
@@ -97,11 +102,21 @@ cd holoscan-sensor-bridge
 git lfs pull
 ```
 
+What this does / why required:
+
+- `git clone -b altera-release-2.6.0` gets the Altera-specific Holoscan Sensor Bridge release with the AGX5 example applications.
+- `git lfs pull` downloads large model/data/binary assets tracked by Git LFS.
+
 Build the demo container:
 
 ```bash
 sh docker/build.sh --igpu
 ```
+
+What this does / why required:
+
+- Builds the Holoscan Sensor Bridge demo image for AGX Thor's integrated GPU path.
+- The first build can take significant time because it downloads base images, installs dependencies, and builds the Hololink software.
 
 Start the demo container:
 
@@ -110,11 +125,21 @@ xhost +
 sh docker/demo.sh
 ```
 
+What this does / why required:
+
+- `xhost +` allows GUI applications in the container to connect to the Thor desktop display.
+- `sh docker/demo.sh` starts the prebuilt demo container with host networking, GPU access, device access, and repository mounts.
+
 Inside the container, use:
 
 ```bash
 hololink-enumerate
 ```
+
+What this does / why required:
+
+- Discovers Holoscan Sensor Bridge devices on the configured network.
+- A successful enumerate proves the Ethernet link, IP route, and FPGA HSB endpoint are working before camera demos are started.
 
 The tool is installed under `/usr/local/bin`, so `./tools/enumerate/hololink-enumerate` may not exist in the container.
 
@@ -139,11 +164,24 @@ sudo nmcli connection modify hololink-$EN0 +ipv4.routes 192.168.0.2/32
 sudo nmcli connection up hololink-$EN0
 ```
 
+What this does / why required:
+
+- `EN0=mgbe0_0` selects the Thor MGBE port connected to the FPGA.
+- `nmcli connection delete` removes any stale Hololink profile so the IP setup is clean.
+- `nmcli con add` assigns Thor the static host IP `192.168.0.101/24`.
+- `+ipv4.routes 192.168.0.2/32` adds a direct route to the FPGA/HSB IP.
+- `connection up` activates the interface profile.
+
 Test:
 
 ```bash
 ping 192.168.0.2
 ```
+
+What this does / why required:
+
+- Confirms basic IP reachability to the FPGA.
+- If this fails with `Destination Host Unreachable`, debug link/cable/FPGA programming before running Holoscan applications.
 
 Check link status:
 
@@ -153,6 +191,12 @@ for i in 0 1 2 3; do
   sudo ethtool mgbe${i}_0 | grep -E "Speed|Link detected"
 done
 ```
+
+What this does / why required:
+
+- Reports which Thor MGBE port has carrier and at what speed.
+- For 10G, expect `Speed: 10000Mb/s` and `Link detected: yes`.
+- For 25G, expect `Speed: 25000Mb/s` and `Link detected: yes`.
 
 ---
 
@@ -188,17 +232,31 @@ Run camera test:
 python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30
 ```
 
+What this does / why required:
+
+- Starts a visible single-camera pipeline using camera 0.
+- `1080p30` is a conservative first demo setting and is easier to debug than starting at maximum resolution/frame rate.
+
 Headless validation:
 
 ```bash
 python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30 --headless --frame-limit 100
 ```
 
+What this does / why required:
+
+- Runs the camera pipeline without opening a display window.
+- `--frame-limit 100` exits automatically after 100 frames, which is useful for quick validation or remote debugging.
+
 Stereo:
 
 ```bash
 python3 examples/linux_agx5_player_stereo.py
 ```
+
+What this does / why required:
+
+- Runs both physical cameras in the stereo example after each camera works individually.
 
 ---
 
@@ -229,6 +287,11 @@ sudo nvbootctrl set-active-boot-slot 0
 sudo reboot
 ```
 
+What this does / why required:
+
+- Selects the Thor boot slot that contains the 25GbE-capable bootloader/QSPI configuration.
+- A reboot is required because AGX Thor does not switch MGBE 10G/25G mode at runtime.
+
 Switch to 10G:
 
 ```bash
@@ -236,12 +299,22 @@ sudo nvbootctrl set-active-boot-slot 1
 sudo reboot
 ```
 
+What this does / why required:
+
+- Selects the Thor boot slot that contains the 10GbE configuration.
+- Use this to return to the stable 10G demo path.
+
 Check active slot and speed:
 
 ```bash
 sudo nvbootctrl get-current-slot
 cat /sys/devices/platform/bus@0/*/net/mgbe*/speed
 ```
+
+What this does / why required:
+
+- `nvbootctrl get-current-slot` shows which boot slot is active.
+- The `speed` files confirm whether the MGBE ports are configured as 10G or 25G after reboot.
 
 Expected for 25G:
 
@@ -274,11 +347,22 @@ hololink-enumerate
 python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30
 ```
 
+What this does / why required:
+
+- First confirms that the FPGA enumerates in 25G mode.
+- Then runs a basic camera pipeline before attempting multi-camera or AI demos.
+
 For two physical cameras:
 
 ```bash
 python3 examples/agx5_multiviewer.py --cam 2 --lines 2160 --frame-rate 30 --receiver-type coe
 ```
+
+What this does / why required:
+
+- Runs the Group A 25G multiviewer with two real cameras.
+- `--receiver-type coe` uses Thor's Camera-over-Ethernet path, which is the recommended 25G demo path.
+- Use `--cam 2` when only two physical cameras are installed. Do not use `--cam 8` unless the demo scenario requires replicated streams and the platform has been validated for it.
 
 ### 25G CoE Stability Workaround on AGX Thor
 
@@ -288,6 +372,11 @@ For the 25G demo on AGX Thor, use CoE mode demos only. If running the demo repea
 sudo ip link set mgbe0_0 down
 sudo ip link set mgbe0_0 up
 ```
+
+What this does / why required:
+
+- Briefly resets the Thor MGBE interface state between repeated 25G CoE demo runs.
+- This avoids repeated-run stability issues observed on AGX Thor with 25G CoE demos.
 
 Equivalent one-line command:
 
@@ -302,6 +391,11 @@ For debugging only, if CoE remains unstable, test with Linux receiver:
 ```bash
 python3 examples/agx5_multiviewer.py --cam 2 --lines 1080 --frame-rate 30 --receiver-type linux
 ```
+
+What this does / why required:
+
+- Forces the Linux socket receiver instead of CoE.
+- This is useful as a diagnostic fallback, but CoE mode is the intended 25G demo path on Thor.
 
 ---
 
@@ -358,11 +452,21 @@ trtexec --onnx=yolov8n-pose.onnx --saveEngine=yolov8n-pose.engine.fp32
 cd -
 ```
 
+What this does / why required:
+
+- Installs temporary model conversion dependencies inside the container.
+- Exports the YOLOv8 pose model to ONNX.
+- Builds a TensorRT engine so the body-pose demo can run efficiently on Thor.
+
 Run:
 
 ```bash
 python3 examples/linux_body_pose_estimation_agx5.py --cam 0 --lines 1080 --frame-rate 30
 ```
+
+What this does / why required:
+
+- Runs live camera capture plus YOLOv8 body-pose inference and overlay visualization.
 
 ### TAO PeopleNet
 
@@ -372,11 +476,21 @@ Download model:
 curl -L 'https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/peoplenet/pruned_quantized_decrypted_v2.3.3/files?redirect=true&path=resnet34_peoplenet_int8.onnx' -o examples/resnet34_peoplenet_int8.onnx
 ```
 
+What this does / why required:
+
+- Downloads the TAO PeopleNet ONNX model into the `examples` directory where the AGX5 script expects it.
+- `curl -L` follows the NGC redirect URL.
+
 Run:
 
 ```bash
 python3 examples/linux_tao_peoplenet_agx5.py --cam 0 --lines 1080 --frame-rate 30
 ```
+
+What this does / why required:
+
+- Runs live camera capture plus PeopleNet inference.
+- The first run builds and caches a TensorRT engine, so it can take several minutes before the window appears.
 
 First run builds a TensorRT engine and can take several minutes.
 
@@ -406,6 +520,11 @@ xhost +local:docker
 xhost +
 ```
 
+What this does / why required:
+
+- Grants the root user/container permission to open GUI windows on the Thor desktop.
+- Required for Holoviz display windows.
+
 Inside Docker:
 
 ```bash
@@ -414,11 +533,21 @@ mkdir -p $XDG_RUNTIME_DIR
 chmod 700 $XDG_RUNTIME_DIR
 ```
 
+What this does / why required:
+
+- Creates a valid runtime directory for GUI/Vulkan/GLFW components inside the container.
+- Prevents `XDG_RUNTIME_DIR is invalid or not set` errors.
+
 For receiver buffer warnings:
 
 ```bash
 echo 10420224 | sudo tee /proc/sys/net/core/rmem_max
 ```
+
+What this does / why required:
+
+- Increases the Linux receive buffer limit.
+- Helps avoid dropped packets or unreliable performance in socket-based receiver demos.
 
 Inside the container as root, omit `sudo`:
 

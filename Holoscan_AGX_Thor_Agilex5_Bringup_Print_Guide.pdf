@@ -3,7 +3,7 @@
 << /Type /Catalog /Pages 2 0 R >>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R] /Count 7 >>
+<< /Type /Pages /Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R] /Count 9 >>
 endobj
 3 0 obj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
@@ -15,315 +15,425 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Courier >>
 endobj
 6 0 obj
-<< /Length 2670 >>
+<< /Length 2862 >>
 stream
 BT /F2 18 Tf 54 742.00 Td (Holoscan Sensor Bridge Bring-up Guide) Tj ET
-BT /F2 14 Tf 54 708.00 Td (NVIDIA AGX Thor + Agilex 5 Modular Development Kit) Tj ET
-BT /F1 9.3 Tf 54 678.00 Td (This guide summarizes the customer bring-up flow used for the Altera/NVIDIA Holoscan Sensor Bridge demo) Tj ET
-BT /F1 9.3 Tf 54 666.00 Td (  on NVIDIA AGX Thor with Agilex 5 Modular Development Kits. It covers the working 10GbE and 25GbE paths,) Tj ET
-BT /F1 9.3 Tf 54 654.00 Td (  the issues encountered, and the fixes applied.) Tj ET
-BT /F1 9.3 Tf 54 630.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 606.00 Td (1. Reference Documents) Tj ET
-BT /F1 9.3 Tf 54 576.00 Td (- Jetson AGX Thor ISO installation:) Tj ET
-BT /F1 9.3 Tf 54 564.00 Td (  <https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/quick_start.html#>) Tj ET
-BT /F1 9.3 Tf 54 540.00 Td (- Holoscan Sensor Bridge host setup, AGX Thor tab:) Tj ET
-BT /F1 9.3 Tf 54 528.00 Td (  <https://docs.nvidia.com/holoscan/sensor-bridge/2.5.0/setup.html#sd-tab-item-3>) Tj ET
-BT /F1 9.3 Tf 54 504.00 Td (- Altera HSB 25GbE reference design:) Tj ET
-BT /F1 9.3 Tf 54 492.00 Td (  <https://github.com/altera-fpga/holoscan-sensor-bridge/tree/altera-) Tj ET
-BT /F1 9.3 Tf 54 480.00 Td (    release-2.6.0/fpga/altera/AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE>) Tj ET
-BT /F1 9.3 Tf 54 456.00 Td (- Altera HSB 10GbE reference design:) Tj ET
-BT /F1 9.3 Tf 54 444.00 Td (  <https://github.com/altera-fpga/holoscan-sensor-bridge/tree/altera-) Tj ET
-BT /F1 9.3 Tf 54 432.00 Td (    release-2.6.0/fpga/altera/AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE>) Tj ET
-BT /F1 9.3 Tf 54 408.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 384.00 Td (2. System Used) Tj ET
-BT /F2 11 Tf 54 354.00 Td (Host) Tj ET
-BT /F1 9.3 Tf 54 328.00 Td (- NVIDIA Jetson AGX Thor Developer Kit) Tj ET
-BT /F1 9.3 Tf 54 316.00 Td (- JetPack 7.2 / L4T R39.2) Tj ET
-BT /F1 9.3 Tf 54 292.00 Td (Verify:) Tj ET
-BT /F3 8 Tf 54 268.00 Td (cat /etc/nv_tegra_release) Tj ET
-BT /F1 9.3 Tf 54 246.00 Td (Expected:) Tj ET
-BT /F3 8 Tf 54 222.00 Td (# R39 \(release\), REVISION: 2.0) Tj ET
-BT /F2 11 Tf 54 200.00 Td (FPGA Images) Tj ET
-BT /F1 9.3 Tf 54 174.00 Td (10GbE / Group B:) Tj ET
-BT /F3 8 Tf 54 150.00 Td (AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof) Tj ET
-BT /F1 9.3 Tf 54 128.00 Td (25GbE / Group A:) Tj ET
-BT /F3 8 Tf 54 104.00 Td (AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof) Tj ET
-BT /F1 9.3 Tf 54 82.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F1 8 Tf 498 28 Td (Page 1 of 7) Tj ET
+BT /F2 14 Tf 54 708.60 Td (NVIDIA AGX Thor + Agilex 5 Modular Development Kit) Tj ET
+BT /F1 9.0 Tf 54 679.20 Td (This guide summarizes the customer bring-up flow used for the Altera/NVIDIA Holoscan Sensor Bridge demo on) Tj ET
+BT /F1 9.0 Tf 54 667.80 Td (  NVIDIA AGX Thor with Agilex 5 Modular Development Kits. It covers the working 10GbE and 25GbE paths, the) Tj ET
+BT /F1 9.0 Tf 54 656.40 Td (  issues encountered, and the fixes applied.) Tj ET
+BT /F1 9.0 Tf 54 633.60 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 610.80 Td (1. Reference Documents) Tj ET
+BT /F1 9.0 Tf 54 581.40 Td (- Jetson AGX Thor ISO installation:) Tj ET
+BT /F1 9.0 Tf 54 570.00 Td (  <https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/quick_start.html#>) Tj ET
+BT /F1 9.0 Tf 54 547.20 Td (- Holoscan Sensor Bridge host setup, AGX Thor tab:) Tj ET
+BT /F1 9.0 Tf 54 535.80 Td (  <https://docs.nvidia.com/holoscan/sensor-bridge/2.5.0/setup.html#sd-tab-item-3>) Tj ET
+BT /F1 9.0 Tf 54 513.00 Td (- Altera HSB 25GbE reference design:) Tj ET
+BT /F1 9.0 Tf 54 501.60 Td (  <https://github.com/altera-fpga/holoscan-sensor-bridge/tree/altera-) Tj ET
+BT /F1 9.0 Tf 54 490.20 Td (    release-2.6.0/fpga/altera/AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE>) Tj ET
+BT /F1 9.0 Tf 54 467.40 Td (- Altera HSB 10GbE reference design:) Tj ET
+BT /F1 9.0 Tf 54 456.00 Td (  <https://github.com/altera-fpga/holoscan-sensor-bridge/tree/altera-) Tj ET
+BT /F1 9.0 Tf 54 444.60 Td (    release-2.6.0/fpga/altera/AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE>) Tj ET
+BT /F1 9.0 Tf 54 421.80 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 399.00 Td (2. System Used) Tj ET
+BT /F2 11 Tf 54 369.60 Td (Host) Tj ET
+BT /F1 9.0 Tf 54 344.20 Td (- NVIDIA Jetson AGX Thor Developer Kit) Tj ET
+BT /F1 9.0 Tf 54 332.80 Td (- JetPack 7.2 / L4T R39.2) Tj ET
+BT /F1 9.0 Tf 54 310.00 Td (Verify:) Tj ET
+BT /F3 7.8 Tf 54 287.20 Td (cat /etc/nv_tegra_release) Tj ET
+BT /F1 9.0 Tf 54 266.20 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 243.40 Td (- Confirms that the Thor is running the expected JetPack/L4T release.) Tj ET
+BT /F1 9.0 Tf 54 232.00 Td (- The 10G/25G switching capsule procedure used in this guide is for JetPack 7.2 / L4T R39.2.) Tj ET
+BT /F1 9.0 Tf 54 209.20 Td (Expected:) Tj ET
+BT /F3 7.8 Tf 54 186.40 Td (# R39 \(release\), REVISION: 2.0) Tj ET
+BT /F2 11 Tf 54 165.40 Td (FPGA Images) Tj ET
+BT /F1 9.0 Tf 54 140.00 Td (10GbE / Group B:) Tj ET
+BT /F3 7.8 Tf 54 117.20 Td (AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof) Tj ET
+BT /F1 9.0 Tf 54 96.20 Td (25GbE / Group A:) Tj ET
+BT /F3 7.8 Tf 54 73.40 Td (AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 1 of 9) Tj ET
 endstream
 endobj
 7 0 obj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 6 0 R >>
 endobj
 8 0 obj
-<< /Length 2517 >>
+<< /Length 3017 >>
 stream
-BT /F2 14 Tf 54 742.00 Td (3. AGX Thor Base Installation) Tj ET
-BT /F1 9.3 Tf 54 712.00 Td (Follow the Jetson AGX Thor ISO quick start guide.) Tj ET
-BT /F1 9.3 Tf 54 688.00 Td (High-level flow:) Tj ET
-BT /F1 9.3 Tf 54 664.00 Td (1. Download the Jetson AGX Thor ISO image.) Tj ET
-BT /F1 9.3 Tf 54 652.00 Td (2. Create the bootable USB installer.) Tj ET
-BT /F1 9.3 Tf 54 640.00 Td (3. Boot AGX Thor from the USB installer.) Tj ET
-BT /F1 9.3 Tf 54 628.00 Td (4. Install the BSP to NVMe.) Tj ET
-BT /F1 9.3 Tf 54 616.00 Td (5. Remove the USB installer.) Tj ET
-BT /F1 9.3 Tf 54 604.00 Td (6. Boot from NVMe and complete Ubuntu OEM setup.) Tj ET
-BT /F1 9.3 Tf 54 592.00 Td (7. Verify JetPack/L4T version.) Tj ET
-BT /F1 9.3 Tf 54 568.00 Td (Reference:) Tj ET
-BT /F3 8 Tf 54 544.00 Td (https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/quick_start.html#) Tj ET
-BT /F1 9.3 Tf 54 522.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 498.00 Td (4. Host Setup for Holoscan Sensor Bridge) Tj ET
-BT /F1 9.3 Tf 54 468.00 Td (Use the AGX Thor tab in the Holoscan Sensor Bridge host setup guide.) Tj ET
-BT /F1 9.3 Tf 54 444.00 Td (Reference:) Tj ET
-BT /F3 8 Tf 54 420.00 Td (https://docs.nvidia.com/holoscan/sensor-bridge/2.5.0/setup.html#sd-tab-item-3) Tj ET
-BT /F1 9.3 Tf 54 398.00 Td (Clone the Altera release branch:) Tj ET
-BT /F3 8 Tf 54 374.00 Td (git clone -b altera-release-2.6.0 https://github.com/altera-fpga/holoscan-sensor-bridge.git) Tj ET
-BT /F3 8 Tf 54 364.00 Td (cd holoscan-sensor-bridge) Tj ET
-BT /F3 8 Tf 54 354.00 Td (git lfs pull) Tj ET
-BT /F1 9.3 Tf 54 332.00 Td (Build the demo container:) Tj ET
-BT /F3 8 Tf 54 308.00 Td (sh docker/build.sh --igpu) Tj ET
-BT /F1 9.3 Tf 54 286.00 Td (Start the demo container:) Tj ET
-BT /F3 8 Tf 54 262.00 Td (xhost +) Tj ET
-BT /F3 8 Tf 54 252.00 Td (sh docker/demo.sh) Tj ET
-BT /F1 9.3 Tf 54 230.00 Td (Inside the container, use:) Tj ET
-BT /F3 8 Tf 54 206.00 Td (hololink-enumerate) Tj ET
-BT /F1 9.3 Tf 54 184.00 Td (The tool is installed under /usr/local/bin, so ./tools/enumerate/hololink-enumerate may not exist in the) Tj ET
-BT /F1 9.3 Tf 54 172.00 Td (  container.) Tj ET
-BT /F1 9.3 Tf 54 148.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 124.00 Td (5. Common Network Configuration) Tj ET
-BT /F1 9.3 Tf 54 94.00 Td (The FPGA/HSB default IP is:) Tj ET
-BT /F3 8 Tf 54 70.00 Td (192.168.0.2) Tj ET
-BT /F1 8 Tf 498 28 Td (Page 2 of 7) Tj ET
+BT /F1 9.0 Tf 54 742.00 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 719.20 Td (3. AGX Thor Base Installation) Tj ET
+BT /F1 9.0 Tf 54 689.80 Td (Follow the Jetson AGX Thor ISO quick start guide.) Tj ET
+BT /F1 9.0 Tf 54 667.00 Td (High-level flow:) Tj ET
+BT /F1 9.0 Tf 54 644.20 Td (1. Download the Jetson AGX Thor ISO image.) Tj ET
+BT /F1 9.0 Tf 54 632.80 Td (2. Create the bootable USB installer.) Tj ET
+BT /F1 9.0 Tf 54 621.40 Td (3. Boot AGX Thor from the USB installer.) Tj ET
+BT /F1 9.0 Tf 54 610.00 Td (4. Install the BSP to NVMe.) Tj ET
+BT /F1 9.0 Tf 54 598.60 Td (5. Remove the USB installer.) Tj ET
+BT /F1 9.0 Tf 54 587.20 Td (6. Boot from NVMe and complete Ubuntu OEM setup.) Tj ET
+BT /F1 9.0 Tf 54 575.80 Td (7. Verify JetPack/L4T version.) Tj ET
+BT /F1 9.0 Tf 54 553.00 Td (Reference:) Tj ET
+BT /F3 7.8 Tf 54 530.20 Td (https://docs.nvidia.com/jetson/agx-thor-devkit/user-guide/latest/quick_start.html#) Tj ET
+BT /F1 9.0 Tf 54 509.20 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 486.40 Td (4. Host Setup for Holoscan Sensor Bridge) Tj ET
+BT /F1 9.0 Tf 54 457.00 Td (Use the AGX Thor tab in the Holoscan Sensor Bridge host setup guide.) Tj ET
+BT /F1 9.0 Tf 54 434.20 Td (Reference:) Tj ET
+BT /F3 7.8 Tf 54 411.40 Td (https://docs.nvidia.com/holoscan/sensor-bridge/2.5.0/setup.html#sd-tab-item-3) Tj ET
+BT /F1 9.0 Tf 54 390.40 Td (Clone the Altera release branch:) Tj ET
+BT /F3 7.8 Tf 54 367.60 Td (git clone -b altera-release-2.6.0 https://github.com/altera-fpga/holoscan-sensor-bridge.git) Tj ET
+BT /F3 7.8 Tf 54 358.00 Td (cd holoscan-sensor-bridge) Tj ET
+BT /F3 7.8 Tf 54 348.40 Td (git lfs pull) Tj ET
+BT /F1 9.0 Tf 54 327.40 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 304.60 Td (- git clone -b altera-release-2.6.0 gets the Altera-specific Holoscan Sensor Bridge release with the AGX5) Tj ET
+BT /F1 9.0 Tf 54 293.20 Td (  example applications.) Tj ET
+BT /F1 9.0 Tf 54 281.80 Td (- git lfs pull downloads large model/data/binary assets tracked by Git LFS.) Tj ET
+BT /F1 9.0 Tf 54 259.00 Td (Build the demo container:) Tj ET
+BT /F3 7.8 Tf 54 236.20 Td (sh docker/build.sh --igpu) Tj ET
+BT /F1 9.0 Tf 54 215.20 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 192.40 Td (- Builds the Holoscan Sensor Bridge demo image for AGX Thor's integrated GPU path.) Tj ET
+BT /F1 9.0 Tf 54 181.00 Td (- The first build can take significant time because it downloads base images, installs dependencies, and) Tj ET
+BT /F1 9.0 Tf 54 169.60 Td (  builds the Hololink software.) Tj ET
+BT /F1 9.0 Tf 54 146.80 Td (Start the demo container:) Tj ET
+BT /F3 7.8 Tf 54 124.00 Td (xhost +) Tj ET
+BT /F3 7.8 Tf 54 114.40 Td (sh docker/demo.sh) Tj ET
+BT /F1 9.0 Tf 54 93.40 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 70.60 Td (- xhost + allows GUI applications in the container to connect to the Thor desktop display.) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 2 of 9) Tj ET
 endstream
 endobj
 9 0 obj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 8 0 R >>
 endobj
 10 0 obj
-<< /Length 2485 >>
+<< /Length 3279 >>
 stream
-BT /F1 9.3 Tf 54 730.00 Td (Configure Thor:) Tj ET
-BT /F3 8 Tf 54 706.00 Td (EN0=mgbe0_0) Tj ET
-BT /F3 8 Tf 54 686.00 Td (sudo nmcli connection delete hololink-$EN0 2>/dev/null || true) Tj ET
-BT /F3 8 Tf 54 676.00 Td (sudo nmcli con add con-name hololink-$EN0 ifname $EN0 type ethernet ip4 192.168.0.101/24) Tj ET
-BT /F3 8 Tf 54 666.00 Td (sudo nmcli connection modify hololink-$EN0 +ipv4.routes 192.168.0.2/32) Tj ET
-BT /F3 8 Tf 54 656.00 Td (sudo nmcli connection up hololink-$EN0) Tj ET
-BT /F1 9.3 Tf 54 634.00 Td (Test:) Tj ET
-BT /F3 8 Tf 54 610.00 Td (ping 192.168.0.2) Tj ET
-BT /F1 9.3 Tf 54 588.00 Td (Check link status:) Tj ET
-BT /F3 8 Tf 54 564.00 Td (for i in 0 1 2 3; do) Tj ET
-BT /F3 8 Tf 54 554.00 Td (  echo "---- mgbe${i}_0 ----") Tj ET
-BT /F3 8 Tf 54 544.00 Td (  sudo ethtool mgbe${i}_0 | grep -E "Speed|Link detected") Tj ET
-BT /F3 8 Tf 54 534.00 Td (done) Tj ET
-BT /F1 9.3 Tf 54 512.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 488.00 Td (6. 10GbE Demo Flow) Tj ET
-BT /F1 9.3 Tf 54 458.00 Td (Program the 10GbE FPGA image:) Tj ET
-BT /F3 8 Tf 54 434.00 Td (AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof) Tj ET
-BT /F1 9.3 Tf 54 412.00 Td (Expected Thor link:) Tj ET
-BT /F3 8 Tf 54 388.00 Td (mgbe0_0) Tj ET
-BT /F3 8 Tf 54 378.00 Td (Speed: 10000Mb/s) Tj ET
-BT /F3 8 Tf 54 368.00 Td (Link detected: yes) Tj ET
-BT /F1 9.3 Tf 54 346.00 Td (Successful HSB enumeration example:) Tj ET
-BT /F3 8 Tf 54 322.00 Td (mac_id=CA:FE:C0:FF:EE:10) Tj ET
-BT /F3 8 Tf 54 312.00 Td (hsb_ip_version=0x2603) Tj ET
-BT /F3 8 Tf 54 302.00 Td (ip_address=192.168.0.2) Tj ET
-BT /F3 8 Tf 54 292.00 Td (fpga_uuid=7b1fa8c7-31aa-44b6-abcc-eac134461fdc) Tj ET
-BT /F3 8 Tf 54 282.00 Td (interface=mgbe0_0) Tj ET
-BT /F1 9.3 Tf 54 260.00 Td (Run camera test:) Tj ET
-BT /F3 8 Tf 54 236.00 Td (python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
-BT /F1 9.3 Tf 54 214.00 Td (Headless validation:) Tj ET
-BT /F3 8 Tf 54 190.00 Td (python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30 --headless --frame-limit 100) Tj ET
-BT /F1 9.3 Tf 54 168.00 Td (Stereo:) Tj ET
-BT /F3 8 Tf 54 144.00 Td (python3 examples/linux_agx5_player_stereo.py) Tj ET
-BT /F1 9.3 Tf 54 122.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 98.00 Td (7. 25GbE Demo Flow) Tj ET
-BT /F2 11 Tf 54 68.00 Td (Important) Tj ET
-BT /F1 8 Tf 498 28 Td (Page 3 of 7) Tj ET
+BT /F1 9.0 Tf 54 742.00 Td (- sh docker/demo.sh starts the prebuilt demo container with host networking, GPU access, device access, and) Tj ET
+BT /F1 9.0 Tf 54 730.60 Td (  repository mounts.) Tj ET
+BT /F1 9.0 Tf 54 707.80 Td (Inside the container, use:) Tj ET
+BT /F3 7.8 Tf 54 685.00 Td (hololink-enumerate) Tj ET
+BT /F1 9.0 Tf 54 664.00 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 641.20 Td (- Discovers Holoscan Sensor Bridge devices on the configured network.) Tj ET
+BT /F1 9.0 Tf 54 629.80 Td (- A successful enumerate proves the Ethernet link, IP route, and FPGA HSB endpoint are working before) Tj ET
+BT /F1 9.0 Tf 54 618.40 Td (  camera demos are started.) Tj ET
+BT /F1 9.0 Tf 54 595.60 Td (The tool is installed under /usr/local/bin, so ./tools/enumerate/hololink-enumerate may not exist in the) Tj ET
+BT /F1 9.0 Tf 54 584.20 Td (  container.) Tj ET
+BT /F1 9.0 Tf 54 561.40 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 538.60 Td (5. Common Network Configuration) Tj ET
+BT /F1 9.0 Tf 54 509.20 Td (The FPGA/HSB default IP is:) Tj ET
+BT /F3 7.8 Tf 54 486.40 Td (192.168.0.2) Tj ET
+BT /F1 9.0 Tf 54 465.40 Td (Configure Thor:) Tj ET
+BT /F3 7.8 Tf 54 442.60 Td (EN0=mgbe0_0) Tj ET
+BT /F3 7.8 Tf 54 423.40 Td (sudo nmcli connection delete hololink-$EN0 2>/dev/null || true) Tj ET
+BT /F3 7.8 Tf 54 413.80 Td (sudo nmcli con add con-name hololink-$EN0 ifname $EN0 type ethernet ip4 192.168.0.101/24) Tj ET
+BT /F3 7.8 Tf 54 404.20 Td (sudo nmcli connection modify hololink-$EN0 +ipv4.routes 192.168.0.2/32) Tj ET
+BT /F3 7.8 Tf 54 394.60 Td (sudo nmcli connection up hololink-$EN0) Tj ET
+BT /F1 9.0 Tf 54 373.60 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 350.80 Td (- EN0=mgbe0_0 selects the Thor MGBE port connected to the FPGA.) Tj ET
+BT /F1 9.0 Tf 54 339.40 Td (- nmcli connection delete removes any stale Hololink profile so the IP setup is clean.) Tj ET
+BT /F1 9.0 Tf 54 328.00 Td (- nmcli con add assigns Thor the static host IP 192.168.0.101/24.) Tj ET
+BT /F1 9.0 Tf 54 316.60 Td (- +ipv4.routes 192.168.0.2/32 adds a direct route to the FPGA/HSB IP.) Tj ET
+BT /F1 9.0 Tf 54 305.20 Td (- connection up activates the interface profile.) Tj ET
+BT /F1 9.0 Tf 54 282.40 Td (Test:) Tj ET
+BT /F3 7.8 Tf 54 259.60 Td (ping 192.168.0.2) Tj ET
+BT /F1 9.0 Tf 54 238.60 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 215.80 Td (- Confirms basic IP reachability to the FPGA.) Tj ET
+BT /F1 9.0 Tf 54 204.40 Td (- If this fails with Destination Host Unreachable, debug link/cable/FPGA programming before running) Tj ET
+BT /F1 9.0 Tf 54 193.00 Td (  Holoscan applications.) Tj ET
+BT /F1 9.0 Tf 54 170.20 Td (Check link status:) Tj ET
+BT /F3 7.8 Tf 54 147.40 Td (for i in 0 1 2 3; do) Tj ET
+BT /F3 7.8 Tf 54 137.80 Td (  echo "---- mgbe${i}_0 ----") Tj ET
+BT /F3 7.8 Tf 54 128.20 Td (  sudo ethtool mgbe${i}_0 | grep -E "Speed|Link detected") Tj ET
+BT /F3 7.8 Tf 54 118.60 Td (done) Tj ET
+BT /F1 9.0 Tf 54 97.60 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 74.80 Td (- Reports which Thor MGBE port has carrier and at what speed.) Tj ET
+BT /F1 9.0 Tf 54 63.40 Td (- For 10G, expect Speed: 10000Mb/s and Link detected: yes.) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 3 of 9) Tj ET
 endstream
 endobj
 11 0 obj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 10 0 R >>
 endobj
 12 0 obj
-<< /Length 2449 >>
+<< /Length 2860 >>
 stream
-BT /F1 9.3 Tf 54 730.00 Td (AGX Thor does not support runtime switching between 10GbE x4 and 25GbE x4 through nmcli or normal Linux) Tj ET
-BT /F1 9.3 Tf 54 718.00 Td (  network settings. The Thor boot image / QSPI boot slot must be switched.) Tj ET
-BT /F1 9.3 Tf 54 694.00 Td (Capsule files used:) Tj ET
-BT /F3 8 Tf 54 670.00 Td (Tegra_Thor_BL_7.2_10G.Cap) Tj ET
-BT /F3 8 Tf 54 660.00 Td (Tegra_Thor_BL_7.2_25G.Cap) Tj ET
-BT /F1 9.3 Tf 54 638.00 Td (Current slot mapping from this bring-up:) Tj ET
-BT /F3 8 Tf 54 614.00 Td (slot 0 = 25G) Tj ET
-BT /F3 8 Tf 54 604.00 Td (slot 1 = 10G) Tj ET
-BT /F1 9.3 Tf 54 582.00 Td (Switch to 25G:) Tj ET
-BT /F3 8 Tf 54 558.00 Td (sudo nvbootctrl set-active-boot-slot 0) Tj ET
-BT /F3 8 Tf 54 548.00 Td (sudo reboot) Tj ET
-BT /F1 9.3 Tf 54 526.00 Td (Switch to 10G:) Tj ET
-BT /F3 8 Tf 54 502.00 Td (sudo nvbootctrl set-active-boot-slot 1) Tj ET
-BT /F3 8 Tf 54 492.00 Td (sudo reboot) Tj ET
-BT /F1 9.3 Tf 54 470.00 Td (Check active slot and speed:) Tj ET
-BT /F3 8 Tf 54 446.00 Td (sudo nvbootctrl get-current-slot) Tj ET
-BT /F3 8 Tf 54 436.00 Td (cat /sys/devices/platform/bus@0/*/net/mgbe*/speed) Tj ET
-BT /F1 9.3 Tf 54 414.00 Td (Expected for 25G:) Tj ET
-BT /F3 8 Tf 54 390.00 Td (0) Tj ET
-BT /F3 8 Tf 54 380.00 Td (25000) Tj ET
-BT /F3 8 Tf 54 370.00 Td (25000) Tj ET
-BT /F3 8 Tf 54 360.00 Td (25000) Tj ET
-BT /F3 8 Tf 54 350.00 Td (25000) Tj ET
-BT /F1 9.3 Tf 54 328.00 Td (Program the 25GbE FPGA image:) Tj ET
-BT /F3 8 Tf 54 304.00 Td (AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof) Tj ET
-BT /F1 9.3 Tf 54 282.00 Td (Expected Thor link:) Tj ET
-BT /F3 8 Tf 54 258.00 Td (mgbe0_0) Tj ET
-BT /F3 8 Tf 54 248.00 Td (Speed: 25000Mb/s) Tj ET
-BT /F3 8 Tf 54 238.00 Td (Link detected: yes) Tj ET
-BT /F1 9.3 Tf 54 216.00 Td (Run:) Tj ET
-BT /F3 8 Tf 54 192.00 Td (hololink-enumerate) Tj ET
-BT /F3 8 Tf 54 182.00 Td (python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
-BT /F1 9.3 Tf 54 160.00 Td (For two physical cameras:) Tj ET
-BT /F3 8 Tf 54 136.00 Td (python3 examples/agx5_multiviewer.py --cam 2 --lines 2160 --frame-rate 30 --receiver-type coe) Tj ET
-BT /F2 11 Tf 54 114.00 Td (25G CoE Stability Workaround on AGX Thor) Tj ET
-BT /F1 9.3 Tf 54 88.00 Td (For the 25G demo on AGX Thor, use CoE mode demos only. If running the demo repeatedly, refresh the MGBE) Tj ET
-BT /F1 9.3 Tf 54 76.00 Td (  interface before every run after the first one:) Tj ET
-BT /F1 8 Tf 498 28 Td (Page 4 of 7) Tj ET
+BT /F1 9.0 Tf 54 742.00 Td (- For 25G, expect Speed: 25000Mb/s and Link detected: yes.) Tj ET
+BT /F1 9.0 Tf 54 719.20 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 696.40 Td (6. 10GbE Demo Flow) Tj ET
+BT /F1 9.0 Tf 54 667.00 Td (Program the 10GbE FPGA image:) Tj ET
+BT /F3 7.8 Tf 54 644.20 Td (AGX_5E_065B_Modular_DevKit_HSB_MIPI_10GbE.sof) Tj ET
+BT /F1 9.0 Tf 54 623.20 Td (Expected Thor link:) Tj ET
+BT /F3 7.8 Tf 54 600.40 Td (mgbe0_0) Tj ET
+BT /F3 7.8 Tf 54 590.80 Td (Speed: 10000Mb/s) Tj ET
+BT /F3 7.8 Tf 54 581.20 Td (Link detected: yes) Tj ET
+BT /F1 9.0 Tf 54 560.20 Td (Successful HSB enumeration example:) Tj ET
+BT /F3 7.8 Tf 54 537.40 Td (mac_id=CA:FE:C0:FF:EE:10) Tj ET
+BT /F3 7.8 Tf 54 527.80 Td (hsb_ip_version=0x2603) Tj ET
+BT /F3 7.8 Tf 54 518.20 Td (ip_address=192.168.0.2) Tj ET
+BT /F3 7.8 Tf 54 508.60 Td (fpga_uuid=7b1fa8c7-31aa-44b6-abcc-eac134461fdc) Tj ET
+BT /F3 7.8 Tf 54 499.00 Td (interface=mgbe0_0) Tj ET
+BT /F1 9.0 Tf 54 478.00 Td (Run camera test:) Tj ET
+BT /F3 7.8 Tf 54 455.20 Td (python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
+BT /F1 9.0 Tf 54 434.20 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 411.40 Td (- Starts a visible single-camera pipeline using camera 0.) Tj ET
+BT /F1 9.0 Tf 54 400.00 Td (- 1080p30 is a conservative first demo setting and is easier to debug than starting at maximum) Tj ET
+BT /F1 9.0 Tf 54 388.60 Td (  resolution/frame rate.) Tj ET
+BT /F1 9.0 Tf 54 365.80 Td (Headless validation:) Tj ET
+BT /F3 7.8 Tf 54 343.00 Td (python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30 --headless --frame-limit 100) Tj ET
+BT /F1 9.0 Tf 54 322.00 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 299.20 Td (- Runs the camera pipeline without opening a display window.) Tj ET
+BT /F1 9.0 Tf 54 287.80 Td (- --frame-limit 100 exits automatically after 100 frames, which is useful for quick validation or remote) Tj ET
+BT /F1 9.0 Tf 54 276.40 Td (  debugging.) Tj ET
+BT /F1 9.0 Tf 54 253.60 Td (Stereo:) Tj ET
+BT /F3 7.8 Tf 54 230.80 Td (python3 examples/linux_agx5_player_stereo.py) Tj ET
+BT /F1 9.0 Tf 54 209.80 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 187.00 Td (- Runs both physical cameras in the stereo example after each camera works individually.) Tj ET
+BT /F1 9.0 Tf 54 164.20 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 141.40 Td (7. 25GbE Demo Flow) Tj ET
+BT /F2 11 Tf 54 112.00 Td (Important) Tj ET
+BT /F1 9.0 Tf 54 86.60 Td (AGX Thor does not support runtime switching between 10GbE x4 and 25GbE x4 through nmcli or normal Linux) Tj ET
+BT /F1 9.0 Tf 54 75.20 Td (  network settings. The Thor boot image / QSPI boot slot must be switched.) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 4 of 9) Tj ET
 endstream
 endobj
 13 0 obj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 12 0 R >>
 endobj
 14 0 obj
-<< /Length 3157 >>
+<< /Length 2679 >>
 stream
-BT /F3 8 Tf 54 742.00 Td (sudo ip link set mgbe0_0 down) Tj ET
-BT /F3 8 Tf 54 732.00 Td (sudo ip link set mgbe0_0 up) Tj ET
-BT /F1 9.3 Tf 54 710.00 Td (Equivalent one-line command:) Tj ET
-BT /F3 8 Tf 54 686.00 Td (sudo ip link set mgbe0_0 down ; sudo ip link set mgbe0_0 up) Tj ET
-BT /F1 9.3 Tf 54 664.00 Td (This workaround was recommended for AGX Thor 25GbE demos to avoid issues seen on repeated CoE runs.) Tj ET
-BT /F1 9.3 Tf 54 640.00 Td (For debugging only, if CoE remains unstable, test with Linux receiver:) Tj ET
-BT /F3 8 Tf 54 616.00 Td (python3 examples/agx5_multiviewer.py --cam 2 --lines 1080 --frame-rate 30 --receiver-type linux) Tj ET
-BT /F1 9.3 Tf 54 594.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 570.00 Td (8. MAX10 MIPI Power Fix) Tj ET
-BT /F2 11 Tf 54 540.00 Td (Symptom) Tj ET
-BT /F1 9.3 Tf 54 514.00 Td (Holoscan applications reached the FPGA/HSB, but camera configuration failed with I2C transaction errors:) Tj ET
-BT /F3 8 Tf 54 490.00 Td (hololink._hololink.TransactionError: i2c_transaction i2c_address=0x37) Tj ET
-BT /F3 8 Tf 54 480.00 Td (hololink._hololink.TransactionError: i2c_transaction i2c_address=0x1a) Tj ET
-BT /F2 11 Tf 54 458.00 Td (Root Cause) Tj ET
-BT /F1 9.3 Tf 54 432.00 Td (Early production MDK boards, both Group A and Group B, shipped with a bug in the MAX10 image. The buggy) Tj ET
-BT /F1 9.3 Tf 54 420.00 Td (  MAX10 image does not apply power to the MIPI connectors. Without MIPI connector power, camera I2C) Tj ET
-BT /F1 9.3 Tf 54 408.00 Td (  communication is impossible.) Tj ET
-BT /F1 9.3 Tf 54 384.00 Td (Customer release production boards are expected to ship with a fixed MAX10 image and should be plug-and-) Tj ET
-BT /F1 9.3 Tf 54 372.00 Td (  play. Currently available early boards may need MAX10 reflashing.) Tj ET
-BT /F2 11 Tf 54 348.00 Td (Fix Applied) Tj ET
-BT /F1 9.3 Tf 54 322.00 Td (1. Switch MAX10 onto the JTAG chain by setting SW4 on the carrier board to ON. This is the single switch) Tj ET
-BT /F1 9.3 Tf 54 310.00 Td (  nearest the HDMI connector.) Tj ET
-BT /F1 9.3 Tf 54 298.00 Td (2. Use Quartus Programmer GUI to reflash MAX10 with:) Tj ET
-BT /F3 8 Tf 54 274.00 Td (   max10_top_rtl_v1p1p6_fw_v2p0p1.pof) Tj ET
-BT /F1 9.3 Tf 54 252.00 Td (3. Power off the board.) Tj ET
-BT /F1 9.3 Tf 54 240.00 Td (4. Set SW4 back to OFF so the FPGA appears on the JTAG chain again.) Tj ET
-BT /F1 9.3 Tf 54 216.00 Td (After this MAX10 update, camera I2C configuration succeeded.) Tj ET
-BT /F2 11 Tf 54 192.00 Td (Additional Note) Tj ET
-BT /F1 9.3 Tf 54 166.00 Td (Initial production MDK batches may have a carrier micro USB hub that is susceptible to ESD. If the) Tj ET
-BT /F1 9.3 Tf 54 154.00 Td (  carrier micro USB is not detected, for example Windows fails to read descriptors, use the standard JTAG) Tj ET
-BT /F1 9.3 Tf 54 142.00 Td (  connector and a Byte Blaster.) Tj ET
-BT /F1 9.3 Tf 54 118.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 94.00 Td (9. AI Demo Examples) Tj ET
-BT /F2 11 Tf 54 64.00 Td (YOLOv8 Body Pose) Tj ET
-BT /F1 8 Tf 498 28 Td (Page 5 of 7) Tj ET
+BT /F1 9.0 Tf 54 742.00 Td (Capsule files used:) Tj ET
+BT /F3 7.8 Tf 54 719.20 Td (Tegra_Thor_BL_7.2_10G.Cap) Tj ET
+BT /F3 7.8 Tf 54 709.60 Td (Tegra_Thor_BL_7.2_25G.Cap) Tj ET
+BT /F1 9.0 Tf 54 688.60 Td (Current slot mapping from this bring-up:) Tj ET
+BT /F3 7.8 Tf 54 665.80 Td (slot 0 = 25G) Tj ET
+BT /F3 7.8 Tf 54 656.20 Td (slot 1 = 10G) Tj ET
+BT /F1 9.0 Tf 54 635.20 Td (Switch to 25G:) Tj ET
+BT /F3 7.8 Tf 54 612.40 Td (sudo nvbootctrl set-active-boot-slot 0) Tj ET
+BT /F3 7.8 Tf 54 602.80 Td (sudo reboot) Tj ET
+BT /F1 9.0 Tf 54 581.80 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 559.00 Td (- Selects the Thor boot slot that contains the 25GbE-capable bootloader/QSPI configuration.) Tj ET
+BT /F1 9.0 Tf 54 547.60 Td (- A reboot is required because AGX Thor does not switch MGBE 10G/25G mode at runtime.) Tj ET
+BT /F1 9.0 Tf 54 524.80 Td (Switch to 10G:) Tj ET
+BT /F3 7.8 Tf 54 502.00 Td (sudo nvbootctrl set-active-boot-slot 1) Tj ET
+BT /F3 7.8 Tf 54 492.40 Td (sudo reboot) Tj ET
+BT /F1 9.0 Tf 54 471.40 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 448.60 Td (- Selects the Thor boot slot that contains the 10GbE configuration.) Tj ET
+BT /F1 9.0 Tf 54 437.20 Td (- Use this to return to the stable 10G demo path.) Tj ET
+BT /F1 9.0 Tf 54 414.40 Td (Check active slot and speed:) Tj ET
+BT /F3 7.8 Tf 54 391.60 Td (sudo nvbootctrl get-current-slot) Tj ET
+BT /F3 7.8 Tf 54 382.00 Td (cat /sys/devices/platform/bus@0/*/net/mgbe*/speed) Tj ET
+BT /F1 9.0 Tf 54 361.00 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 338.20 Td (- nvbootctrl get-current-slot shows which boot slot is active.) Tj ET
+BT /F1 9.0 Tf 54 326.80 Td (- The speed files confirm whether the MGBE ports are configured as 10G or 25G after reboot.) Tj ET
+BT /F1 9.0 Tf 54 304.00 Td (Expected for 25G:) Tj ET
+BT /F3 7.8 Tf 54 281.20 Td (0) Tj ET
+BT /F3 7.8 Tf 54 271.60 Td (25000) Tj ET
+BT /F3 7.8 Tf 54 262.00 Td (25000) Tj ET
+BT /F3 7.8 Tf 54 252.40 Td (25000) Tj ET
+BT /F3 7.8 Tf 54 242.80 Td (25000) Tj ET
+BT /F1 9.0 Tf 54 221.80 Td (Program the 25GbE FPGA image:) Tj ET
+BT /F3 7.8 Tf 54 199.00 Td (AGX_5E_065A_Modular_DevKit_HSB_MIPI_25GbE.sof) Tj ET
+BT /F1 9.0 Tf 54 178.00 Td (Expected Thor link:) Tj ET
+BT /F3 7.8 Tf 54 155.20 Td (mgbe0_0) Tj ET
+BT /F3 7.8 Tf 54 145.60 Td (Speed: 25000Mb/s) Tj ET
+BT /F3 7.8 Tf 54 136.00 Td (Link detected: yes) Tj ET
+BT /F1 9.0 Tf 54 115.00 Td (Run:) Tj ET
+BT /F3 7.8 Tf 54 92.20 Td (hololink-enumerate) Tj ET
+BT /F3 7.8 Tf 54 82.60 Td (python3 examples/linux_agx5_player.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
+BT /F1 9.0 Tf 54 61.60 Td (What this does / why required:) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 5 of 9) Tj ET
 endstream
 endobj
 15 0 obj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 14 0 R >>
 endobj
 16 0 obj
-<< /Length 2691 >>
+<< /Length 3470 >>
 stream
-BT /F1 9.3 Tf 54 730.00 Td (Inside container:) Tj ET
-BT /F3 8 Tf 54 706.00 Td (apt-get update && apt-get install -y ffmpeg) Tj ET
-BT /F3 8 Tf 54 696.00 Td (pip3 install ultralytics onnx) Tj ET
-BT /F3 8 Tf 54 676.00 Td (cd examples) Tj ET
-BT /F3 8 Tf 54 666.00 Td (yolo export model=yolov8n-pose.pt format=onnx) Tj ET
-BT /F3 8 Tf 54 656.00 Td (trtexec --onnx=yolov8n-pose.onnx --saveEngine=yolov8n-pose.engine.fp32) Tj ET
-BT /F3 8 Tf 54 646.00 Td (cd -) Tj ET
-BT /F1 9.3 Tf 54 624.00 Td (Run:) Tj ET
-BT /F3 8 Tf 54 600.00 Td (python3 examples/linux_body_pose_estimation_agx5.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
-BT /F2 11 Tf 54 578.00 Td (TAO PeopleNet) Tj ET
-BT /F1 9.3 Tf 54 552.00 Td (Download model:) Tj ET
-BT /F3 8 Tf 54 528.00 Td (curl -L 'https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/peoplenet/pruned_quantized_decrypted_v2) Tj ET
-BT /F3 8 Tf 54 518.00 Td (.3.3/files?redirect=true&path=resnet34_peoplenet_int8.onnx' -o examples/resnet34_peoplenet_int8.onnx) Tj ET
-BT /F1 9.3 Tf 54 496.00 Td (Run:) Tj ET
-BT /F3 8 Tf 54 472.00 Td (python3 examples/linux_tao_peoplenet_agx5.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
-BT /F1 9.3 Tf 54 450.00 Td (First run builds a TensorRT engine and can take several minutes.) Tj ET
-BT /F1 9.3 Tf 54 426.00 Td (If the PeopleNet AGX5 example crashes in InferenceOp, disable metadata in) Tj ET
-BT /F1 9.3 Tf 54 414.00 Td (  examples/linux_tao_peoplenet_agx5.py:) Tj ET
-BT /F3 8 Tf 54 390.00 Td (self.is_metadata_enabled = False) Tj ET
-BT /F1 9.3 Tf 54 368.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 344.00 Td (10. Display and Runtime Notes) Tj ET
-BT /F1 9.3 Tf 54 314.00 Td (If Holoviz/GLFW fails:) Tj ET
-BT /F3 8 Tf 54 290.00 Td (Failed to initialize glfw) Tj ET
-BT /F3 8 Tf 54 280.00 Td (Authorization required, but no authorization protocol specified) Tj ET
-BT /F3 8 Tf 54 270.00 Td (XDG_RUNTIME_DIR is invalid or not set) Tj ET
-BT /F1 9.3 Tf 54 248.00 Td (Run on Thor host before starting Docker:) Tj ET
-BT /F3 8 Tf 54 224.00 Td (xhost +local:root) Tj ET
-BT /F3 8 Tf 54 214.00 Td (xhost +local:docker) Tj ET
-BT /F3 8 Tf 54 204.00 Td (xhost +) Tj ET
-BT /F1 9.3 Tf 54 182.00 Td (Inside Docker:) Tj ET
-BT /F3 8 Tf 54 158.00 Td (export XDG_RUNTIME_DIR=/tmp/runtime-root) Tj ET
-BT /F3 8 Tf 54 148.00 Td (mkdir -p $XDG_RUNTIME_DIR) Tj ET
-BT /F3 8 Tf 54 138.00 Td (chmod 700 $XDG_RUNTIME_DIR) Tj ET
-BT /F1 9.3 Tf 54 116.00 Td (For receiver buffer warnings:) Tj ET
-BT /F3 8 Tf 54 92.00 Td (echo 10420224 | sudo tee /proc/sys/net/core/rmem_max) Tj ET
-BT /F1 9.3 Tf 54 70.00 Td (Inside the container as root, omit sudo:) Tj ET
-BT /F1 8 Tf 498 28 Td (Page 6 of 7) Tj ET
+BT /F1 9.0 Tf 54 730.60 Td (- First confirms that the FPGA enumerates in 25G mode.) Tj ET
+BT /F1 9.0 Tf 54 719.20 Td (- Then runs a basic camera pipeline before attempting multi-camera or AI demos.) Tj ET
+BT /F1 9.0 Tf 54 696.40 Td (For two physical cameras:) Tj ET
+BT /F3 7.8 Tf 54 673.60 Td (python3 examples/agx5_multiviewer.py --cam 2 --lines 2160 --frame-rate 30 --receiver-type coe) Tj ET
+BT /F1 9.0 Tf 54 652.60 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 629.80 Td (- Runs the Group A 25G multiviewer with two real cameras.) Tj ET
+BT /F1 9.0 Tf 54 618.40 Td (- --receiver-type coe uses Thor's Camera-over-Ethernet path, which is the recommended 25G demo path.) Tj ET
+BT /F1 9.0 Tf 54 607.00 Td (- Use --cam 2 when only two physical cameras are installed. Do not use --cam 8 unless the demo scenario) Tj ET
+BT /F1 9.0 Tf 54 595.60 Td (  requires replicated streams and the platform has been validated for it.) Tj ET
+BT /F2 11 Tf 54 572.80 Td (25G CoE Stability Workaround on AGX Thor) Tj ET
+BT /F1 9.0 Tf 54 547.40 Td (For the 25G demo on AGX Thor, use CoE mode demos only. If running the demo repeatedly, refresh the MGBE) Tj ET
+BT /F1 9.0 Tf 54 536.00 Td (  interface before every run after the first one:) Tj ET
+BT /F3 7.8 Tf 54 513.20 Td (sudo ip link set mgbe0_0 down) Tj ET
+BT /F3 7.8 Tf 54 503.60 Td (sudo ip link set mgbe0_0 up) Tj ET
+BT /F1 9.0 Tf 54 482.60 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 459.80 Td (- Briefly resets the Thor MGBE interface state between repeated 25G CoE demo runs.) Tj ET
+BT /F1 9.0 Tf 54 448.40 Td (- This avoids repeated-run stability issues observed on AGX Thor with 25G CoE demos.) Tj ET
+BT /F1 9.0 Tf 54 425.60 Td (Equivalent one-line command:) Tj ET
+BT /F3 7.8 Tf 54 402.80 Td (sudo ip link set mgbe0_0 down ; sudo ip link set mgbe0_0 up) Tj ET
+BT /F1 9.0 Tf 54 381.80 Td (This workaround was recommended for AGX Thor 25GbE demos to avoid issues seen on repeated CoE runs.) Tj ET
+BT /F1 9.0 Tf 54 359.00 Td (For debugging only, if CoE remains unstable, test with Linux receiver:) Tj ET
+BT /F3 7.8 Tf 54 336.20 Td (python3 examples/agx5_multiviewer.py --cam 2 --lines 1080 --frame-rate 30 --receiver-type linux) Tj ET
+BT /F1 9.0 Tf 54 315.20 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 292.40 Td (- Forces the Linux socket receiver instead of CoE.) Tj ET
+BT /F1 9.0 Tf 54 281.00 Td (- This is useful as a diagnostic fallback, but CoE mode is the intended 25G demo path on Thor.) Tj ET
+BT /F1 9.0 Tf 54 258.20 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 235.40 Td (8. MAX10 MIPI Power Fix) Tj ET
+BT /F2 11 Tf 54 206.00 Td (Symptom) Tj ET
+BT /F1 9.0 Tf 54 180.60 Td (Holoscan applications reached the FPGA/HSB, but camera configuration failed with I2C transaction errors:) Tj ET
+BT /F3 7.8 Tf 54 157.80 Td (hololink._hololink.TransactionError: i2c_transaction i2c_address=0x37) Tj ET
+BT /F3 7.8 Tf 54 148.20 Td (hololink._hololink.TransactionError: i2c_transaction i2c_address=0x1a) Tj ET
+BT /F2 11 Tf 54 127.20 Td (Root Cause) Tj ET
+BT /F1 9.0 Tf 54 101.80 Td (Early production MDK boards, both Group A and Group B, shipped with a bug in the MAX10 image. The buggy) Tj ET
+BT /F1 9.0 Tf 54 90.40 Td (  MAX10 image does not apply power to the MIPI connectors. Without MIPI connector power, camera I2C) Tj ET
+BT /F1 9.0 Tf 54 79.00 Td (  communication is impossible.) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 6 of 9) Tj ET
 endstream
 endobj
 17 0 obj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 16 0 R >>
 endobj
 18 0 obj
-<< /Length 1466 >>
+<< /Length 3190 >>
 stream
-BT /F3 8 Tf 54 730.00 Td (echo 10420224 > /proc/sys/net/core/rmem_max) Tj ET
-BT /F1 9.3 Tf 54 708.00 Td (Use Ctrl+C to stop demos. Avoid Ctrl+Z, which suspends jobs and can leave resources open.) Tj ET
-BT /F1 9.3 Tf 54 684.00 Td (------------------------------------------------------------------------------) Tj ET
-BT /F2 14 Tf 54 660.00 Td (11. Known Issues and Lessons Learned) Tj ET
-BT /F1 9.3 Tf 54 630.00 Td (- Thor defaults to 10GbE mode.) Tj ET
-BT /F1 9.3 Tf 54 618.00 Td (- 25GbE FPGA images need Thor booted in 25GbE mode.) Tj ET
-BT /F1 9.3 Tf 54 606.00 Td (- 10G/25G mode switching requires boot slot / capsule handling, not nmcli.) Tj ET
-BT /F1 9.3 Tf 54 594.00 Td (- Early MDK boards may need MAX10 reflashing to power MIPI connectors.) Tj ET
-BT /F1 9.3 Tf 54 582.00 Td (- Camera I2C errors can be caused by missing MIPI connector power, not only cable orientation.) Tj ET
-BT /F1 9.3 Tf 54 570.00 Td (- hololink-enumerate confirms the FPGA/HSB network path.) Tj ET
-BT /F1 9.3 Tf 54 558.00 Td (- GUI failures are often X11 authorization issues.) Tj ET
-BT /F1 9.3 Tf 54 546.00 Td (- .sof FPGA programming is volatile; reprogram after FPGA board power cycle.) Tj ET
-BT /F1 9.3 Tf 54 534.00 Td (- For customer demos on AGX Thor, 10GbE and Linux socket mode are the most stable paths. 25GbE CoE is) Tj ET
-BT /F1 9.3 Tf 54 522.00 Td (  available but may show stability issues under some multi-stream scenarios.) Tj ET
-BT /F1 8 Tf 498 28 Td (Page 7 of 7) Tj ET
+BT /F1 9.0 Tf 54 742.00 Td (Customer release production boards are expected to ship with a fixed MAX10 image and should be plug-and-) Tj ET
+BT /F1 9.0 Tf 54 730.60 Td (  play. Currently available early boards may need MAX10 reflashing.) Tj ET
+BT /F2 11 Tf 54 707.80 Td (Fix Applied) Tj ET
+BT /F1 9.0 Tf 54 682.40 Td (1. Switch MAX10 onto the JTAG chain by setting SW4 on the carrier board to ON. This is the single switch) Tj ET
+BT /F1 9.0 Tf 54 671.00 Td (  nearest the HDMI connector.) Tj ET
+BT /F1 9.0 Tf 54 659.60 Td (2. Use Quartus Programmer GUI to reflash MAX10 with:) Tj ET
+BT /F3 7.8 Tf 54 636.80 Td (   max10_top_rtl_v1p1p6_fw_v2p0p1.pof) Tj ET
+BT /F1 9.0 Tf 54 615.80 Td (3. Power off the board.) Tj ET
+BT /F1 9.0 Tf 54 604.40 Td (4. Set SW4 back to OFF so the FPGA appears on the JTAG chain again.) Tj ET
+BT /F1 9.0 Tf 54 581.60 Td (After this MAX10 update, camera I2C configuration succeeded.) Tj ET
+BT /F2 11 Tf 54 558.80 Td (Additional Note) Tj ET
+BT /F1 9.0 Tf 54 533.40 Td (Initial production MDK batches may have a carrier micro USB hub that is susceptible to ESD. If the carrier) Tj ET
+BT /F1 9.0 Tf 54 522.00 Td (  micro USB is not detected, for example Windows fails to read descriptors, use the standard JTAG connector) Tj ET
+BT /F1 9.0 Tf 54 510.60 Td (  and a Byte Blaster.) Tj ET
+BT /F1 9.0 Tf 54 487.80 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 465.00 Td (9. AI Demo Examples) Tj ET
+BT /F2 11 Tf 54 435.60 Td (YOLOv8 Body Pose) Tj ET
+BT /F1 9.0 Tf 54 410.20 Td (Inside container:) Tj ET
+BT /F3 7.8 Tf 54 387.40 Td (apt-get update && apt-get install -y ffmpeg) Tj ET
+BT /F3 7.8 Tf 54 377.80 Td (pip3 install ultralytics onnx) Tj ET
+BT /F3 7.8 Tf 54 358.60 Td (cd examples) Tj ET
+BT /F3 7.8 Tf 54 349.00 Td (yolo export model=yolov8n-pose.pt format=onnx) Tj ET
+BT /F3 7.8 Tf 54 339.40 Td (trtexec --onnx=yolov8n-pose.onnx --saveEngine=yolov8n-pose.engine.fp32) Tj ET
+BT /F3 7.8 Tf 54 329.80 Td (cd -) Tj ET
+BT /F1 9.0 Tf 54 308.80 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 286.00 Td (- Installs temporary model conversion dependencies inside the container.) Tj ET
+BT /F1 9.0 Tf 54 274.60 Td (- Exports the YOLOv8 pose model to ONNX.) Tj ET
+BT /F1 9.0 Tf 54 263.20 Td (- Builds a TensorRT engine so the body-pose demo can run efficiently on Thor.) Tj ET
+BT /F1 9.0 Tf 54 240.40 Td (Run:) Tj ET
+BT /F3 7.8 Tf 54 217.60 Td (python3 examples/linux_body_pose_estimation_agx5.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
+BT /F1 9.0 Tf 54 196.60 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 173.80 Td (- Runs live camera capture plus YOLOv8 body-pose inference and overlay visualization.) Tj ET
+BT /F2 11 Tf 54 151.00 Td (TAO PeopleNet) Tj ET
+BT /F1 9.0 Tf 54 125.60 Td (Download model:) Tj ET
+BT /F3 7.8 Tf 54 102.80 Td (curl -L 'https://api.ngc.nvidia.com/v2/models/org/nvidia/team/tao/peoplenet/pruned_quantized_decrypted_v2.3) Tj ET
+BT /F3 7.8 Tf 54 93.20 Td (.3/files?redirect=true&path=resnet34_peoplenet_int8.onnx' -o examples/resnet34_peoplenet_int8.onnx) Tj ET
+BT /F1 9.0 Tf 54 72.20 Td (What this does / why required:) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 7 of 9) Tj ET
 endstream
 endobj
 19 0 obj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 18 0 R >>
 endobj
+20 0 obj
+<< /Length 3007 >>
+stream
+BT /F1 9.0 Tf 54 730.60 Td (- Downloads the TAO PeopleNet ONNX model into the examples directory where the AGX5 script expects it.) Tj ET
+BT /F1 9.0 Tf 54 719.20 Td (- curl -L follows the NGC redirect URL.) Tj ET
+BT /F1 9.0 Tf 54 696.40 Td (Run:) Tj ET
+BT /F3 7.8 Tf 54 673.60 Td (python3 examples/linux_tao_peoplenet_agx5.py --cam 0 --lines 1080 --frame-rate 30) Tj ET
+BT /F1 9.0 Tf 54 652.60 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 629.80 Td (- Runs live camera capture plus PeopleNet inference.) Tj ET
+BT /F1 9.0 Tf 54 618.40 Td (- The first run builds and caches a TensorRT engine, so it can take several minutes before the window) Tj ET
+BT /F1 9.0 Tf 54 607.00 Td (  appears.) Tj ET
+BT /F1 9.0 Tf 54 584.20 Td (First run builds a TensorRT engine and can take several minutes.) Tj ET
+BT /F1 9.0 Tf 54 561.40 Td (If the PeopleNet AGX5 example crashes in InferenceOp, disable metadata in) Tj ET
+BT /F1 9.0 Tf 54 550.00 Td (  examples/linux_tao_peoplenet_agx5.py:) Tj ET
+BT /F3 7.8 Tf 54 527.20 Td (self.is_metadata_enabled = False) Tj ET
+BT /F1 9.0 Tf 54 506.20 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 483.40 Td (10. Display and Runtime Notes) Tj ET
+BT /F1 9.0 Tf 54 454.00 Td (If Holoviz/GLFW fails:) Tj ET
+BT /F3 7.8 Tf 54 431.20 Td (Failed to initialize glfw) Tj ET
+BT /F3 7.8 Tf 54 421.60 Td (Authorization required, but no authorization protocol specified) Tj ET
+BT /F3 7.8 Tf 54 412.00 Td (XDG_RUNTIME_DIR is invalid or not set) Tj ET
+BT /F1 9.0 Tf 54 391.00 Td (Run on Thor host before starting Docker:) Tj ET
+BT /F3 7.8 Tf 54 368.20 Td (xhost +local:root) Tj ET
+BT /F3 7.8 Tf 54 358.60 Td (xhost +local:docker) Tj ET
+BT /F3 7.8 Tf 54 349.00 Td (xhost +) Tj ET
+BT /F1 9.0 Tf 54 328.00 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 305.20 Td (- Grants the root user/container permission to open GUI windows on the Thor desktop.) Tj ET
+BT /F1 9.0 Tf 54 293.80 Td (- Required for Holoviz display windows.) Tj ET
+BT /F1 9.0 Tf 54 271.00 Td (Inside Docker:) Tj ET
+BT /F3 7.8 Tf 54 248.20 Td (export XDG_RUNTIME_DIR=/tmp/runtime-root) Tj ET
+BT /F3 7.8 Tf 54 238.60 Td (mkdir -p $XDG_RUNTIME_DIR) Tj ET
+BT /F3 7.8 Tf 54 229.00 Td (chmod 700 $XDG_RUNTIME_DIR) Tj ET
+BT /F1 9.0 Tf 54 208.00 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 185.20 Td (- Creates a valid runtime directory for GUI/Vulkan/GLFW components inside the container.) Tj ET
+BT /F1 9.0 Tf 54 173.80 Td (- Prevents XDG_RUNTIME_DIR is invalid or not set errors.) Tj ET
+BT /F1 9.0 Tf 54 151.00 Td (For receiver buffer warnings:) Tj ET
+BT /F3 7.8 Tf 54 128.20 Td (echo 10420224 | sudo tee /proc/sys/net/core/rmem_max) Tj ET
+BT /F1 9.0 Tf 54 107.20 Td (What this does / why required:) Tj ET
+BT /F1 9.0 Tf 54 84.40 Td (- Increases the Linux receive buffer limit.) Tj ET
+BT /F1 9.0 Tf 54 73.00 Td (- Helps avoid dropped packets or unreliable performance in socket-based receiver demos.) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 8 of 9) Tj ET
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 20 0 R >>
+endobj
+22 0 obj
+<< /Length 1544 >>
+stream
+BT /F1 9.0 Tf 54 742.00 Td (Inside the container as root, omit sudo:) Tj ET
+BT /F3 7.8 Tf 54 719.20 Td (echo 10420224 > /proc/sys/net/core/rmem_max) Tj ET
+BT /F1 9.0 Tf 54 698.20 Td (Use Ctrl+C to stop demos. Avoid Ctrl+Z, which suspends jobs and can leave resources open.) Tj ET
+BT /F1 9.0 Tf 54 675.40 Td (------------------------------------------------------------------------------) Tj ET
+BT /F2 14 Tf 54 652.60 Td (11. Known Issues and Lessons Learned) Tj ET
+BT /F1 9.0 Tf 54 623.20 Td (- Thor defaults to 10GbE mode.) Tj ET
+BT /F1 9.0 Tf 54 611.80 Td (- 25GbE FPGA images need Thor booted in 25GbE mode.) Tj ET
+BT /F1 9.0 Tf 54 600.40 Td (- 10G/25G mode switching requires boot slot / capsule handling, not nmcli.) Tj ET
+BT /F1 9.0 Tf 54 589.00 Td (- Early MDK boards may need MAX10 reflashing to power MIPI connectors.) Tj ET
+BT /F1 9.0 Tf 54 577.60 Td (- Camera I2C errors can be caused by missing MIPI connector power, not only cable orientation.) Tj ET
+BT /F1 9.0 Tf 54 566.20 Td (- hololink-enumerate confirms the FPGA/HSB network path.) Tj ET
+BT /F1 9.0 Tf 54 554.80 Td (- GUI failures are often X11 authorization issues.) Tj ET
+BT /F1 9.0 Tf 54 543.40 Td (- .sof FPGA programming is volatile; reprogram after FPGA board power cycle.) Tj ET
+BT /F1 9.0 Tf 54 532.00 Td (- For customer demos on AGX Thor, 10GbE and Linux socket mode are the most stable paths. 25GbE CoE is) Tj ET
+BT /F1 9.0 Tf 54 520.60 Td (  available but may show stability issues under some multi-stream scenarios.) Tj ET
+BT /F1 8 Tf 498 28 Td (Page 9 of 9) Tj ET
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 22 0 R >>
+endobj
 xref
-0 20
+0 24
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
-0000000156 00000 n 
-0000000226 00000 n 
-0000000301 00000 n 
-0000000369 00000 n 
-0000003091 00000 n 
-0000003237 00000 n 
-0000005806 00000 n 
-0000005952 00000 n 
-0000008490 00000 n 
-0000008638 00000 n 
-0000011140 00000 n 
-0000011288 00000 n 
-0000014498 00000 n 
-0000014646 00000 n 
-0000017390 00000 n 
-0000017538 00000 n 
-0000019057 00000 n 
+0000000170 00000 n 
+0000000240 00000 n 
+0000000315 00000 n 
+0000000383 00000 n 
+0000003297 00000 n 
+0000003443 00000 n 
+0000006512 00000 n 
+0000006658 00000 n 
+0000009990 00000 n 
+0000010138 00000 n 
+0000013051 00000 n 
+0000013199 00000 n 
+0000015931 00000 n 
+0000016079 00000 n 
+0000019602 00000 n 
+0000019750 00000 n 
+0000022993 00000 n 
+0000023141 00000 n 
+0000026201 00000 n 
+0000026349 00000 n 
+0000027946 00000 n 
 trailer
-<< /Size 20 /Root 1 0 R >>
+<< /Size 24 /Root 1 0 R >>
 startxref
-19205
+28094
 %%EOF
