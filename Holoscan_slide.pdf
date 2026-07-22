@@ -1,0 +1,927 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R 25 0 R 27 0 R 29 0 R 31 0 R 33 0 R 35 0 R 37 0 R 39 0 R 41 0 R 43 0 R] /Count 19 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+6 0 obj
+<< /Length 4081 >>
+stream
+BT /F2 18 Tf 50 746.00 Td (Holoscan Sensor Bridge 25G Presentation Speaker Notes) Tj ET
+BT /F2 13 Tf 50 713.20 Td (Detailed slide-by-slide talk track and technical Q&A) Tj ET
+BT /F1 8.8 Tf 50 686.40 Td (Prepared for presenting DFAE_Cert_ILT_2026_HSB.pptx to a technical audience.) Tj ET
+BT /F1 8.8 Tf 50 664.80 Td (Audience assumption: FPGA, embedded, networking, vision, and AI engineers.) Tj ET
+BT /F1 8.8 Tf 50 643.20 Td (Presentation objective:) Tj ET
+BT /F1 8.8 Tf 50 621.60 Td (- Explain why Holoscan Sensor Bridge matters.) Tj ET
+BT /F1 8.8 Tf 50 610.80 Td (- Position Agilex 5 as the deterministic sensor-ingest and Ethernet-transport layer.) Tj ET
+BT /F1 8.8 Tf 50 600.00 Td (- Explain how the NVIDIA host uses Holoscan for processing, visualization, and AI inference.) Tj ET
+BT /F1 8.8 Tf 50 589.20 Td (- Show what was actually brought up on AGX Thor.) Tj ET
+BT /F1 8.8 Tf 50 578.40 Td (- Be transparent about 10G/25G switching, MAX10 firmware, CoE behavior, and demo limitations.) Tj ET
+BT /F1 8.8 Tf 50 556.80 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 535.20 Td (Executive summary for presenter) Tj ET
+BT /F1 8.8 Tf 50 508.40 Td (The presentation should land three main messages:) Tj ET
+BT /F1 8.8 Tf 50 486.80 Td (1. FPGA value:) Tj ET
+BT /F1 8.8 Tf 50 476.00 Td (   Agilex 5 handles real-world sensor interfaces, deterministic ingest, timing, protocol conversion,) Tj ET
+BT /F1 8.8 Tf 50 465.20 Td (     packetization, and Ethernet transport.) Tj ET
+BT /F1 8.8 Tf 50 443.60 Td (2. NVIDIA Holoscan value:) Tj ET
+BT /F1 8.8 Tf 50 432.80 Td (   Holoscan provides the host-side graph framework for GPU accelerated processing, AI inference, and) Tj ET
+BT /F1 8.8 Tf 50 422.00 Td (     visualization.) Tj ET
+BT /F1 8.8 Tf 50 400.40 Td (3. Demo proof:) Tj ET
+BT /F1 8.8 Tf 50 389.60 Td (   The 10GbE and 25GbE Agilex 5 Holoscan Sensor Bridge demos were both brought up on AGX Thor. 10G is the) Tj ET
+BT /F1 8.8 Tf 50 378.80 Td (     simpler stable path. 25G works, but Thor requires boot-slot switching and the CoE interface refresh) Tj ET
+BT /F1 8.8 Tf 50 368.00 Td (     workaround for repeated runs.) Tj ET
+BT /F1 8.8 Tf 50 346.40 Td (Recommended verbal opener:) Tj ET
+BT /F1 8.8 Tf 50 324.80 Td (> Today I will walk through how Agilex 5 bridges high-bandwidth sensor data into NVIDIA Holoscan over Ethernet.) Tj ET
+BT /F1 8.8 Tf 50 314.00 Td (  The FPGA owns deterministic sensor capture and transport; the NVIDIA platform owns GPU processing, AI) Tj ET
+BT /F1 8.8 Tf 50 303.20 Td (  inference, and visualization. I will cover the architecture, available reference designs, the demo setup, and) Tj ET
+BT /F1 8.8 Tf 50 292.40 Td (  the practical bring-up lessons from both 10GbE and 25GbE on AGX Thor.) Tj ET
+BT /F1 8.8 Tf 50 270.80 Td (Recommended closing:) Tj ET
+BT /F1 8.8 Tf 50 249.20 Td (> The key takeaway is that this architecture gives customers a scalable path from custom sensors to GPU) Tj ET
+BT /F1 8.8 Tf 50 238.40 Td (  processing over standard Ethernet. Altera provides the sensor-facing FPGA flexibility and deterministic) Tj ET
+BT /F1 8.8 Tf 50 227.60 Td (  transport, while NVIDIA Holoscan provides the application and AI pipeline on the host.) Tj ET
+BT /F1 8.8 Tf 50 206.00 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 184.40 Td (Slide 1 - Holoscan Sensor Bridge 25G) Tj ET
+BT /F2 10.5 Tf 50 157.60 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 133.80 Td (Introduce the topic and set the technical scope: Holoscan Sensor Bridge using 25GbE-capable Agilex 5 design) Tj ET
+BT /F1 8.8 Tf 50 123.00 Td (  with NVIDIA host processing.) Tj ET
+BT /F2 10.5 Tf 50 101.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 77.60 Td (> This session is about the Holoscan Sensor Bridge 25G demo. We are connecting sensor data into NVIDIA Holoscan) Tj ET
+BT /F1 8.8 Tf 50 66.80 Td (  using an Agilex 5 FPGA as the sensor-ingest and Ethernet-transport bridge. The demo focuses on MIPI camera) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 1 of 19) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 3729 >>
+stream
+BT /F1 8.8 Tf 50 746.00 Td (  capture, FPGA formatting and packetization, Ethernet transport, and host-side Holoscan processing.) Tj ET
+BT /F2 10.5 Tf 50 724.40 Td (Technical details to emphasize) Tj ET
+BT /F1 8.8 Tf 50 700.60 Td (- The FPGA is not only a pass-through device.) Tj ET
+BT /F1 8.8 Tf 50 689.80 Td (- It terminates sensor protocols, formats data, and packetizes it.) Tj ET
+BT /F1 8.8 Tf 50 679.00 Td (- The NVIDIA host receives the stream and runs Holoscan operators.) Tj ET
+BT /F1 8.8 Tf 50 668.20 Td (- 25G is important because modern sensors and multi-camera systems exceed simple 1G/10G bandwidth limits.) Tj ET
+BT /F2 10.5 Tf 50 646.60 Td (Transition) Tj ET
+BT /F1 8.8 Tf 50 622.80 Td (> I will start with Holoscan concepts, then show how the FPGA IP and Altera reference designs fit into that) Tj ET
+BT /F1 8.8 Tf 50 612.00 Td (  model.) Tj ET
+BT /F1 8.8 Tf 50 590.40 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 568.80 Td (Slide 2 - Agenda) Tj ET
+BT /F2 10.5 Tf 50 542.00 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 518.20 Td (Set expectations for the flow of the session.) Tj ET
+BT /F2 10.5 Tf 50 496.60 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 472.80 Td (> The agenda starts with concepts: Holoscan, Holoscan Sensor Bridge, and FPGA-based sensor-to-Ethernet) Tj ET
+BT /F1 8.8 Tf 50 462.00 Td (  conversion. Then I will cover the market relevance, available reference designs, how to select the right) Tj ET
+BT /F1 8.8 Tf 50 451.20 Td (  design, and finally the demo setup, hardware architecture, software flow, and bring-up observations.) Tj ET
+BT /F2 10.5 Tf 50 429.60 Td (Technical details to emphasize) Tj ET
+BT /F1 8.8 Tf 50 405.80 Td (- The audience should expect both architecture and practical bring-up details.) Tj ET
+BT /F1 8.8 Tf 50 395.00 Td (- The later slides include hardware and software internals, not only demo commands.) Tj ET
+BT /F2 10.5 Tf 50 373.40 Td (Suggested pacing) Tj ET
+BT /F1 8.8 Tf 50 349.60 Td (- Slides 3-5: concept and value proposition.) Tj ET
+BT /F1 8.8 Tf 50 338.80 Td (- Slides 6-11: market and design discovery.) Tj ET
+BT /F1 8.8 Tf 50 328.00 Td (- Slides 12-17: demo setup.) Tj ET
+BT /F1 8.8 Tf 50 317.20 Td (- Slides 18-27: FPGA architecture and transport.) Tj ET
+BT /F1 8.8 Tf 50 306.40 Td (- Slides 28-31: software, app flow, and platform caveats.) Tj ET
+BT /F1 8.8 Tf 50 284.80 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 263.20 Td (Slide 3 - Holoscan Overview) Tj ET
+BT /F2 10.5 Tf 50 236.40 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 212.60 Td (Explain the Holoscan programming model: applications, fragments, operators, and data flow.) Tj ET
+BT /F2 10.5 Tf 50 191.00 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 167.20 Td (> Holoscan is NVIDIA's framework for building low-latency streaming AI pipelines. A Holoscan application is) Tj ET
+BT /F1 8.8 Tf 50 156.40 Td (  composed of fragments. A fragment contains a graph of operators, and each operator performs a unit of work.) Tj ET
+BT /F1 8.8 Tf 50 145.60 Td (  Operators receive streaming inputs, process data, and publish outputs to the next operator.) Tj ET
+BT /F2 10.5 Tf 50 124.00 Td (Explain the terms) Tj ET
+BT /F1 8.8 Tf 50 100.20 Td (- Application: complete pipeline.) Tj ET
+BT /F1 8.8 Tf 50 89.40 Td (- Fragment: partition of the application, possibly deployable across systems.) Tj ET
+BT /F1 8.8 Tf 50 78.60 Td (- Operator: computational or IO block.) Tj ET
+BT /F1 8.8 Tf 50 67.80 Td (- Source operator: introduces data into the graph.) Tj ET
+BT /F1 8.8 Tf 50 57.00 Td (- Sink operator: consumes or displays data.) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 2 of 19) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 3826 >>
+stream
+BT /F2 10.5 Tf 50 735.20 Td (Tie to this demo) Tj ET
+BT /F1 8.8 Tf 50 711.40 Td (> In this demo, the Holoscan Sensor Bridge receiver is effectively the source operator. It receives camera) Tj ET
+BT /F1 8.8 Tf 50 700.60 Td (  frames from the FPGA. The image-processing, demosaic, format conversion, and inference blocks are processing) Tj ET
+BT /F1 8.8 Tf 50 689.80 Td (  operators. Holoviz is the visualization sink.) Tj ET
+BT /F2 10.5 Tf 50 668.20 Td (Technical emphasis) Tj ET
+BT /F1 8.8 Tf 50 644.40 Td (- This graph abstraction is useful for real-time sensor systems.) Tj ET
+BT /F1 8.8 Tf 50 633.60 Td (- It separates ingest, preprocessing, inference, and visualization.) Tj ET
+BT /F1 8.8 Tf 50 622.80 Td (- It allows the FPGA transport layer to be integrated into a GPU processing pipeline.) Tj ET
+BT /F2 10.5 Tf 50 601.20 Td (Likely audience question) Tj ET
+BT /F1 8.8 Tf 50 577.40 Td (Q: Is Holoscan only for medical?) Tj ET
+BT /F1 8.8 Tf 50 555.80 Td (A: No. Holoscan originated strongly in medical and edge AI use cases, but the framework applies to any) Tj ET
+BT /F1 8.8 Tf 50 545.00 Td (  streaming sensor pipeline: robotics, industrial vision, broadcast, wireless, aerospace, and defense.) Tj ET
+BT /F1 8.8 Tf 50 523.40 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 501.80 Td (Slide 4 - Holoscan Sensor Bridge IP) Tj ET
+BT /F2 10.5 Tf 50 475.00 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 451.20 Td (Explain what the HSB IP does in the FPGA and how it interacts with host software.) Tj ET
+BT /F2 10.5 Tf 50 429.60 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 405.80 Td (> Holoscan Sensor Bridge has an FPGA IP component and a host software component. The FPGA IP provides both a) Tj ET
+BT /F1 8.8 Tf 50 395.00 Td (  control plane and a data transport plane. The control plane gives host software access to HSB registers,) Tj ET
+BT /F1 8.8 Tf 50 384.20 Td (  external IP registers over APB, and sensor interfaces such as I2C or SPI. The data plane moves frames between) Tj ET
+BT /F1 8.8 Tf 50 373.40 Td (  FPGA and host over high-speed Ethernet.) Tj ET
+BT /F2 10.5 Tf 50 351.80 Td (Key technical points) Tj ET
+BT /F1 8.8 Tf 50 328.00 Td (- HSB IP is open-source NVIDIA FPGA IP under Apache 2.0.) Tj ET
+BT /F1 8.8 Tf 50 317.20 Td (- It provides internal registers and external control interfaces.) Tj ET
+BT /F1 8.8 Tf 50 306.40 Td (- It can control sensors through interfaces such as I2C/SPI.) Tj ET
+BT /F1 8.8 Tf 50 295.60 Td (- It packetizes frame data for Ethernet transport.) Tj ET
+BT /F1 8.8 Tf 50 284.80 Td (- It presents data to Holoscan through CPU or GPU memory.) Tj ET
+BT /F2 10.5 Tf 50 263.20 Td (RoCE versus CoE) Tj ET
+BT /F1 8.8 Tf 50 239.40 Td (> On platforms with ConnectX, HSB can use RoCEv2. AGX Thor does not use RoCEv2 for this path. Thor uses Camera) Tj ET
+BT /F1 8.8 Tf 50 228.60 Td (  over Ethernet, or CoE, which is RDMA-like for receive acceleration.) Tj ET
+BT /F2 10.5 Tf 50 207.00 Td (Important nuance) Tj ET
+BT /F1 8.8 Tf 50 183.20 Td (- CoE is receive-side acceleration only.) Tj ET
+BT /F1 8.8 Tf 50 172.40 Td (- It is not identical to RoCEv2.) Tj ET
+BT /F1 8.8 Tf 50 161.60 Td (- The FPGA packet format must match the host driver expectation.) Tj ET
+BT /F2 10.5 Tf 50 140.00 Td (Likely audience question) Tj ET
+BT /F1 8.8 Tf 50 116.20 Td (Q: Can the same HSB IP support both Linux socket and accelerated paths?) Tj ET
+BT /F1 8.8 Tf 50 94.60 Td (A: Yes, but the FPGA and host configuration must match the chosen transport. Linux socket mode is simpler and) Tj ET
+BT /F1 8.8 Tf 50 83.80 Td (  useful for debug. CoE/RoCE paths are used for higher performance.) Tj ET
+BT /F1 8.8 Tf 50 62.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 3 of 19) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 3454 >>
+stream
+BT /F2 13 Tf 50 735.20 Td (Slide 5 - Altera FPGA-based Sensor-to-Ethernet Converters) Tj ET
+BT /F2 10.5 Tf 50 708.40 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 684.60 Td (Position Altera FPGAs as flexible sensor-ingest and Ethernet conversion devices.) Tj ET
+BT /F2 10.5 Tf 50 663.00 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 639.20 Td (> Altera FPGAs enable sensor-to-Ethernet conversion at the edge. Many sensors do not connect directly to GPU) Tj ET
+BT /F1 8.8 Tf 50 628.40 Td (  platforms. They use interfaces like MIPI CSI, JESD204, LVDS, SLVS-EC, SDI, SPI, I2C, or custom GPIO. The FPGA) Tj ET
+BT /F1 8.8 Tf 50 617.60 Td (  terminates these protocols, optionally preprocesses or synchronizes data, and sends it over Ethernet to GPU or) Tj ET
+BT /F1 8.8 Tf 50 606.80 Td (  CPU compute.) Tj ET
+BT /F2 10.5 Tf 50 585.20 Td (Value proposition) Tj ET
+BT /F1 8.8 Tf 50 561.40 Td (- Ultra-low latency ingest.) Tj ET
+BT /F1 8.8 Tf 50 550.60 Td (- Protocol flexibility.) Tj ET
+BT /F1 8.8 Tf 50 539.80 Td (- Deterministic timing.) Tj ET
+BT /F1 8.8 Tf 50 529.00 Td (- Bandwidth scaling from 10G to 25G, 100G, and beyond.) Tj ET
+BT /F1 8.8 Tf 50 518.20 Td (- Offload preprocessing before the host.) Tj ET
+BT /F1 8.8 Tf 50 507.40 Td (- Reduces system integration complexity.) Tj ET
+BT /F2 10.5 Tf 50 485.80 Td (Strong phrase to use) Tj ET
+BT /F1 8.8 Tf 50 462.00 Td (> The FPGA solves the hard real-time sensor and transport problem; Holoscan solves the host-side GPU processing) Tj ET
+BT /F1 8.8 Tf 50 451.20 Td (  and AI workflow.) Tj ET
+BT /F2 10.5 Tf 50 429.60 Td (Technical audience angle) Tj ET
+BT /F1 8.8 Tf 50 405.80 Td (- Mention that Ethernet decouples sensor location from host location.) Tj ET
+BT /F1 8.8 Tf 50 395.00 Td (- FPGAs can aggregate, timestamp, packetize, and align streams before the host sees them.) Tj ET
+BT /F1 8.8 Tf 50 384.20 Td (- Customers can customize the FPGA for proprietary sensors or custom preprocessing.) Tj ET
+BT /F1 8.8 Tf 50 362.60 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 341.00 Td (Slide 6 - Markets / Use Cases) Tj ET
+BT /F2 10.5 Tf 50 314.20 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 290.40 Td (Show that this architecture applies broadly.) Tj ET
+BT /F2 10.5 Tf 50 268.80 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 245.00 Td (> The architecture is relevant wherever high-rate sensor data needs deterministic capture and GPU-side) Tj ET
+BT /F1 8.8 Tf 50 234.20 Td (  processing. Examples include robotics, industrial inspection, medical imaging, studio production, wireless, and) Tj ET
+BT /F1 8.8 Tf 50 223.40 Td (  defense.) Tj ET
+BT /F2 10.5 Tf 50 201.80 Td (Market-by-market talk track) Tj ET
+BT /F1 8.8 Tf 50 178.00 Td (Robotics:) Tj ET
+BT /F1 8.8 Tf 50 156.40 Td (- Multi-camera, lidar, radar, IMU, and actuator feedback.) Tj ET
+BT /F1 8.8 Tf 50 145.60 Td (- Need timestamping, synchronization, low latency, and sensor fusion.) Tj ET
+BT /F1 8.8 Tf 50 134.80 Td (- FPGA handles deterministic ingest; Holoscan handles perception and AI.) Tj ET
+BT /F1 8.8 Tf 50 113.20 Td (Industrial:) Tj ET
+BT /F1 8.8 Tf 50 91.60 Td (- Machine vision, defect inspection, thermal imaging, vibration monitoring.) Tj ET
+BT /F1 8.8 Tf 50 80.80 Td (- FPGA handles triggering, deterministic capture, and transport.) Tj ET
+BT /F1 8.8 Tf 50 70.00 Td (- Host runs classification, measurement, and visualization.) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 4 of 19) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 3190 >>
+stream
+BT /F1 8.8 Tf 50 746.00 Td (Medical:) Tj ET
+BT /F1 8.8 Tf 50 724.40 Td (- Endoscopy, ultrasound, microscopy, surgical robotics, AI diagnostics.) Tj ET
+BT /F1 8.8 Tf 50 713.60 Td (- FPGA interfaces to specialized imaging sensors.) Tj ET
+BT /F1 8.8 Tf 50 702.80 Td (- Holoscan handles visualization, enhancement, segmentation, inference.) Tj ET
+BT /F1 8.8 Tf 50 681.20 Td (Studio / broadcast:) Tj ET
+BT /F1 8.8 Tf 50 659.60 Td (- Low-latency video ingest, metadata, switching, effects.) Tj ET
+BT /F1 8.8 Tf 50 648.80 Td (- FPGA converts and aligns media streams.) Tj ET
+BT /F1 8.8 Tf 50 627.20 Td (Wireless:) Tj ET
+BT /F1 8.8 Tf 50 605.60 Td (- IQ/baseband data over JESD204 or custom RF paths.) Tj ET
+BT /F1 8.8 Tf 50 594.80 Td (- FPGA packetizes high-rate radio data.) Tj ET
+BT /F1 8.8 Tf 50 584.00 Td (- Host analyzes, visualizes, or runs AI-assisted signal processing.) Tj ET
+BT /F1 8.8 Tf 50 562.40 Td (Defense / aerospace:) Tj ET
+BT /F1 8.8 Tf 50 540.80 Td (- Radar, EO/IR, lidar, SIGINT.) Tj ET
+BT /F1 8.8 Tf 50 530.00 Td (- FPGA provides deterministic capture and transport.) Tj ET
+BT /F1 8.8 Tf 50 519.20 Td (- Host performs sensor fusion or target detection.) Tj ET
+BT /F2 10.5 Tf 50 497.60 Td (Key message) Tj ET
+BT /F1 8.8 Tf 50 473.80 Td (> The same architecture repeats across markets: sensor diversity at the FPGA, compute scalability at the host.) Tj ET
+BT /F1 8.8 Tf 50 452.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 430.60 Td (Slide 7 - Available Today) Tj ET
+BT /F2 10.5 Tf 50 403.80 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 380.00 Td (Show available reference designs and bandwidth options.) Tj ET
+BT /F2 10.5 Tf 50 358.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 334.60 Td (> Altera has multiple Holoscan-related sensor-to-Ethernet reference designs. For Agilex 5, the key designs are) Tj ET
+BT /F1 8.8 Tf 50 323.80 Td (  the Group B 10GbE design and the Group A 25GbE design. These give customers a starting point depending on board) Tj ET
+BT /F1 8.8 Tf 50 313.00 Td (  type, bandwidth, and number of streams.) Tj ET
+BT /F2 10.5 Tf 50 291.40 Td (Explain each design) Tj ET
+BT /F1 8.8 Tf 50 267.60 Td (- Stratix 10 sensor processing kit: earlier HSB-related platform.) Tj ET
+BT /F1 8.8 Tf 50 256.80 Td (- Agilex 5 Group B 10GbE: simpler two-camera path.) Tj ET
+BT /F1 8.8 Tf 50 246.00 Td (- Agilex 5 Group A 25GbE: higher bandwidth, multi-stream, CoE-oriented path.) Tj ET
+BT /F2 10.5 Tf 50 224.40 Td (Customer guidance) Tj ET
+BT /F1 8.8 Tf 50 200.60 Td (> If the customer wants a stable first evaluation, start with 10GbE. If the value proposition is bandwidth,) Tj ET
+BT /F1 8.8 Tf 50 189.80 Td (  multi-stream scaling, or 25G transport, use the Group A 25GbE design.) Tj ET
+BT /F1 8.8 Tf 50 168.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 146.60 Td (Slide 8 - Step by Step Guide) Tj ET
+BT /F2 10.5 Tf 50 119.80 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 96.00 Td (Guide field teams on qualifying customer opportunities.) Tj ET
+BT /F2 10.5 Tf 50 74.40 Td (What to say) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 5 of 19) Tj ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 14 0 R >>
+endobj
+16 0 obj
+<< /Length 3320 >>
+stream
+BT /F1 8.8 Tf 50 746.00 Td (> This is a discovery workflow for customer engagement. Start by identifying customers using GPUs for edge AI) Tj ET
+BT /F1 8.8 Tf 50 735.20 Td (  or high-rate sensor processing. Then understand the sensors, protocols, bandwidth, and AI throughput) Tj ET
+BT /F1 8.8 Tf 50 724.40 Td (  requirement. Finally, map that to an Altera reference design.) Tj ET
+BT /F2 10.5 Tf 50 702.80 Td (Discovery questions) Tj ET
+BT /F1 8.8 Tf 50 679.00 Td (- Which GPU or host platform is used?) Tj ET
+BT /F1 8.8 Tf 50 668.20 Td (- Which sensors are used?) Tj ET
+BT /F1 8.8 Tf 50 657.40 Td (- What are the sensor interfaces?) Tj ET
+BT /F1 8.8 Tf 50 646.60 Td (- How many streams?) Tj ET
+BT /F1 8.8 Tf 50 635.80 Td (- What resolution and frame rate?) Tj ET
+BT /F1 8.8 Tf 50 625.00 Td (- What latency budget?) Tj ET
+BT /F1 8.8 Tf 50 614.20 Td (- What Ethernet speed is required?) Tj ET
+BT /F1 8.8 Tf 50 603.40 Td (- Is FPGA preprocessing needed?) Tj ET
+BT /F1 8.8 Tf 50 592.60 Td (- Does the customer need deterministic trigger/sync?) Tj ET
+BT /F2 10.5 Tf 50 571.00 Td (Technical framing) Tj ET
+BT /F1 8.8 Tf 50 547.20 Td (> The right design is chosen from the data rate and system architecture, not just from the camera type.) Tj ET
+BT /F1 8.8 Tf 50 525.60 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 504.00 Td (Slide 9 - Altera FPGA Developer Site) Tj ET
+BT /F2 10.5 Tf 50 477.20 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 453.40 Td (Point audience to customer-facing collateral.) Tj ET
+BT /F2 10.5 Tf 50 431.80 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 408.00 Td (> The Altera FPGA Developer Site is the first stop for customers. It provides reference design descriptions,) Tj ET
+BT /F1 8.8 Tf 50 397.20 Td (  supported hardware, Quartus version requirements, and links to GitHub documentation.) Tj ET
+BT /F2 10.5 Tf 50 375.60 Td (Why it matters) Tj ET
+BT /F1 8.8 Tf 50 351.80 Td (- Reduces risk of using wrong branch or wrong SOF.) Tj ET
+BT /F1 8.8 Tf 50 341.00 Td (- Provides official README flow.) Tj ET
+BT /F1 8.8 Tf 50 330.20 Td (- Links to design collateral and prebuilt images.) Tj ET
+BT /F2 10.5 Tf 50 308.60 Td (Practical tip) Tj ET
+BT /F1 8.8 Tf 50 284.80 Td (> Always verify the exact FPGA board group and Quartus version before programming a design.) Tj ET
+BT /F1 8.8 Tf 50 263.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 241.60 Td (Slide 10 - Altera GitHub Repository) Tj ET
+BT /F2 10.5 Tf 50 214.80 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 191.00 Td (Explain the GitHub repository as engineering source of truth.) Tj ET
+BT /F2 10.5 Tf 50 169.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 145.60 Td (> GitHub contains the latest source tree, README instructions, example scripts, FPGA design folders, and) Tj ET
+BT /F1 8.8 Tf 50 134.80 Td (  release assets. For this bring-up we used the altera-release-2.6.0 branch.) Tj ET
+BT /F2 10.5 Tf 50 113.20 Td (Designs in branch) Tj ET
+BT /F1 8.8 Tf 50 89.40 Td (- 25GbE design for Agilex 5 Group A MDK.) Tj ET
+BT /F1 8.8 Tf 50 78.60 Td (- 10GbE design for Agilex 5 Group B MDK.) Tj ET
+BT /F1 8.8 Tf 50 67.80 Td (- 10GbE ES variant for earlier Group B hardware.) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 6 of 19) Tj ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 16 0 R >>
+endobj
+18 0 obj
+<< /Length 3028 >>
+stream
+BT /F2 10.5 Tf 50 746.00 Td (Practical warning) Tj ET
+BT /F1 8.8 Tf 50 722.20 Td (> Do not mix the 065A 25G SOF with Thor in 10G mode. Do not mix Group A and Group B images. The link or) Tj ET
+BT /F1 8.8 Tf 50 711.40 Td (  application will fail in ways that look like network issues.) Tj ET
+BT /F1 8.8 Tf 50 689.80 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 668.20 Td (Slide 11 - What's in a Design) Tj ET
+BT /F2 10.5 Tf 50 641.40 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 617.60 Td (Show that the reference design is complete collateral, not just RTL.) Tj ET
+BT /F2 10.5 Tf 50 596.00 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 572.20 Td (> Each design includes overview documentation, hardware and software requirements, prebuilt SOF/JIC files,) Tj ET
+BT /F1 8.8 Tf 50 561.40 Td (  operating instructions, Platform Designer project source, and expansion resources.) Tj ET
+BT /F2 10.5 Tf 50 539.80 Td (Technical value) Tj ET
+BT /F1 8.8 Tf 50 516.00 Td (- Customers can run prebuilt files quickly.) Tj ET
+BT /F1 8.8 Tf 50 505.20 Td (- Customers can modify Platform Designer source later.) Tj ET
+BT /F1 8.8 Tf 50 494.40 Td (- The README includes register maps, hierarchy, constraints, and design assumptions.) Tj ET
+BT /F2 10.5 Tf 50 472.80 Td (Customer positioning) Tj ET
+BT /F1 8.8 Tf 50 449.00 Td (> This supports both evaluation and engineering adoption. Use prebuilt binaries for demo, then use source for) Tj ET
+BT /F1 8.8 Tf 50 438.20 Td (  customization.) Tj ET
+BT /F1 8.8 Tf 50 416.60 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 395.00 Td (Slide 12 - The Demo) Tj ET
+BT /F2 10.5 Tf 50 368.20 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 344.40 Td (Transition to hands-on demonstration.) Tj ET
+BT /F2 10.5 Tf 50 322.80 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 299.00 Td (> Now we move from architecture to the actual demo. The demo has three major parts: programming the FPGA,) Tj ET
+BT /F1 8.8 Tf 50 288.20 Td (  configuring the AGX Thor host, and running Holoscan applications.) Tj ET
+BT /F2 10.5 Tf 50 266.60 Td (Transition) Tj ET
+BT /F1 8.8 Tf 50 242.80 Td (> I will first cover hardware requirements and connections, then software setup and commands.) Tj ET
+BT /F1 8.8 Tf 50 221.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 199.60 Td (Slide 13 - Hardware Requirements) Tj ET
+BT /F2 10.5 Tf 50 172.80 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 149.00 Td (List required physical components.) Tj ET
+BT /F2 10.5 Tf 50 127.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 103.60 Td (> The demo requires the Agilex 5 MDK, IMX678 4K cameras, MIPI cables, camera mounting hardware, a NVIDIA AGX) Tj ET
+BT /F1 8.8 Tf 50 92.80 Td (  Thor or DGX Spark host, and a QSFP28 to 4x SFP28 cable for the Thor connection.) Tj ET
+BT /F2 10.5 Tf 50 71.20 Td (Key technical details) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 7 of 19) Tj ET
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 18 0 R >>
+endobj
+20 0 obj
+<< /Length 3256 >>
+stream
+BT /F1 8.8 Tf 50 746.00 Td (- Group A board is used for 25GbE.) Tj ET
+BT /F1 8.8 Tf 50 735.20 Td (- Group B board is used for 10GbE.) Tj ET
+BT /F1 8.8 Tf 50 724.40 Td (- Camera module used is Framos FSM:GO IMX678C.) Tj ET
+BT /F1 8.8 Tf 50 713.60 Td (- MIPI cable orientation matters.) Tj ET
+BT /F1 8.8 Tf 50 702.80 Td (- QSFP28 breakout lane selection matters.) Tj ET
+BT /F2 10.5 Tf 50 681.20 Td (Bring-up lesson) Tj ET
+BT /F1 8.8 Tf 50 657.40 Td (> For the 25G design, Thor must also be in 25G mode. A 25G FPGA image will not link to Thor if Thor is booted) Tj ET
+BT /F1 8.8 Tf 50 646.60 Td (  in default 10G mode.) Tj ET
+BT /F1 8.8 Tf 50 625.00 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 603.40 Td (Slide 14 - Software Requirements) Tj ET
+BT /F2 10.5 Tf 50 576.60 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 552.80 Td (Identify required software tools.) Tj ET
+BT /F2 10.5 Tf 50 531.20 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 507.40 Td (> On the host, we need JetPack, the Holoscan Sensor Bridge repository, Docker, and Holoscan dependencies. On) Tj ET
+BT /F1 8.8 Tf 50 496.60 Td (  the FPGA side, we need Quartus Programmer 26.1 to program the SOF or JIC.) Tj ET
+BT /F2 10.5 Tf 50 475.00 Td (Important details) Tj ET
+BT /F1 8.8 Tf 50 451.20 Td (- Thor tested with JetPack 7.2 / L4T R39.2.) Tj ET
+BT /F1 8.8 Tf 50 440.40 Td (- HSB Docker build used --igpu for AGX Thor.) Tj ET
+BT /F1 8.8 Tf 50 429.60 Td (- Quartus Programmer is required for FPGA and MAX10 updates.) Tj ET
+BT /F2 10.5 Tf 50 408.00 Td (Verbal correction if slide is generic) Tj ET
+BT /F1 8.8 Tf 50 384.20 Td (> For AGX Thor, use the iGPU Docker build path. Use dGPU only on a host with a discrete NVIDIA GPU.) Tj ET
+BT /F1 8.8 Tf 50 362.60 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 341.00 Td (Slide 15 - Development Kit and Host System Connection Diagram) Tj ET
+BT /F2 10.5 Tf 50 314.20 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 290.40 Td (Explain physical data/control connections.) Tj ET
+BT /F2 10.5 Tf 50 268.80 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 245.00 Td (> Sensor data enters the Agilex board through MIPI. The FPGA formats and packetizes the stream, then sends it) Tj ET
+BT /F1 8.8 Tf 50 234.20 Td (  over Ethernet through the SFP connector to the NVIDIA host. The host also sends control transactions, such as) Tj ET
+BT /F1 8.8 Tf 50 223.40 Td (  camera I2C configuration, through the HSB path.) Tj ET
+BT /F2 10.5 Tf 50 201.80 Td (Debug logic) Tj ET
+BT /F1 8.8 Tf 50 178.00 Td (- If ethtool says no carrier: check cable, FPGA image, Thor mode.) Tj ET
+BT /F1 8.8 Tf 50 167.20 Td (- If ping fails: check IP and link.) Tj ET
+BT /F1 8.8 Tf 50 156.40 Td (- If hololink-enumerate fails: check HSB endpoint/network.) Tj ET
+BT /F1 8.8 Tf 50 145.60 Td (- If camera I2C fails but enumerate works: check MIPI power, MAX10, cable, camera.) Tj ET
+BT /F1 8.8 Tf 50 124.00 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 102.40 Td (Slide 16 - Modular Development Kit Connector) Tj ET
+BT /F2 10.5 Tf 50 75.60 Td (Purpose of the slide) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 8 of 19) Tj ET
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 20 0 R >>
+endobj
+22 0 obj
+<< /Length 2816 >>
+stream
+BT /F1 8.8 Tf 50 746.00 Td (Highlight connector and switch importance.) Tj ET
+BT /F2 10.5 Tf 50 724.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 700.60 Td (> The MDK connector details matter. During bring-up we found that early production MDKs may have a MAX10) Tj ET
+BT /F1 8.8 Tf 50 689.80 Td (  firmware issue where MIPI connector power is not enabled. That causes camera I2C failures even though the FPGA) Tj ET
+BT /F1 8.8 Tf 50 679.00 Td (  and Ethernet path are working.) Tj ET
+BT /F2 10.5 Tf 50 657.40 Td (MAX10 fix) Tj ET
+BT /F1 8.8 Tf 50 633.60 Td (Explain:) Tj ET
+BT /F1 8.8 Tf 50 612.00 Td (1. Set SW4 to ON to put MAX10 on the JTAG chain.) Tj ET
+BT /F1 8.8 Tf 50 601.20 Td (2. Reflash MAX10 with max10_top_rtl_v1p1p6_fw_v2p0p1.pof.) Tj ET
+BT /F1 8.8 Tf 50 590.40 Td (3. Power off the board.) Tj ET
+BT /F1 8.8 Tf 50 579.60 Td (4. Set SW4 back to OFF so FPGA appears on JTAG again.) Tj ET
+BT /F2 10.5 Tf 50 558.00 Td (Key message) Tj ET
+BT /F1 8.8 Tf 50 534.20 Td (> Camera I2C failure is not always software. On early MDKs, it can be missing MIPI connector power due to MAX10) Tj ET
+BT /F1 8.8 Tf 50 523.40 Td (  firmware.) Tj ET
+BT /F1 8.8 Tf 50 501.80 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 480.20 Td (Slide 17 - Run Applications) Tj ET
+BT /F2 10.5 Tf 50 453.40 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 429.60 Td (Explain high-level execution flow.) Tj ET
+BT /F2 10.5 Tf 50 408.00 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 384.20 Td (> There are two sides to running the demo: program the Agilex FPGA and run the Holoscan application on the) Tj ET
+BT /F1 8.8 Tf 50 373.40 Td (  NVIDIA host.) Tj ET
+BT /F2 10.5 Tf 50 351.80 Td (FPGA side) Tj ET
+BT /F1 8.8 Tf 50 328.00 Td (- Program .sof through JTAG for volatile demo.) Tj ET
+BT /F1 8.8 Tf 50 317.20 Td (- Program .jic to flash for non-volatile boot.) Tj ET
+BT /F2 10.5 Tf 50 295.60 Td (Host side) Tj ET
+BT /F1 8.8 Tf 50 271.80 Td (For AGX Thor:) Tj ET
+BT /F3 7.5 Tf 50 250.20 Td (sh docker/build.sh --igpu) Tj ET
+BT /F3 7.5 Tf 50 241.10 Td (sh docker/demo.sh) Tj ET
+BT /F1 8.8 Tf 50 221.20 Td (Then run a camera app.) Tj ET
+BT /F2 10.5 Tf 50 199.60 Td (Correct customer demo command) Tj ET
+BT /F1 8.8 Tf 50 175.80 Td (For two cameras in 25G CoE mode:) Tj ET
+BT /F3 7.5 Tf 50 154.20 Td (python3 examples/agx5_multiviewer.py --cam 2 --lines 2160 --frame-rate 30 --receiver-type coe) Tj ET
+BT /F2 10.5 Tf 50 134.30 Td (Note) Tj ET
+BT /F1 8.8 Tf 50 110.50 Td (The slide may show --cam 8; explain that --cam 8 is for eight logical streams. With two physical cameras, use) Tj ET
+BT /F1 8.8 Tf 50 99.70 Td (  --cam 2.) Tj ET
+BT /F1 8.8 Tf 50 78.10 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 9 of 19) Tj ET
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 22 0 R >>
+endobj
+24 0 obj
+<< /Length 2949 >>
+stream
+BT /F2 13 Tf 50 746.00 Td (Slide 18 - Hardware) Tj ET
+BT /F2 10.5 Tf 50 719.20 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 695.40 Td (Transition into FPGA architecture.) Tj ET
+BT /F2 10.5 Tf 50 673.80 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 650.00 Td (> Now let's look inside the FPGA design to understand how the raw camera data becomes Ethernet packets for the) Tj ET
+BT /F1 8.8 Tf 50 639.20 Td (  Holoscan host.) Tj ET
+BT /F1 8.8 Tf 50 617.60 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 596.00 Td (Slide 19 - The Design) Tj ET
+BT /F2 10.5 Tf 50 569.20 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 545.40 Td (Show high-level FPGA block diagram.) Tj ET
+BT /F2 10.5 Tf 50 523.80 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 500.00 Td (> The design starts with two MIPI camera inputs. Agilex 5 receives the MIPI data, converts it into streaming) Tj ET
+BT /F1 8.8 Tf 50 489.20 Td (  video, packs it into the format expected by HSB software, routes it into the HSB IP, and sends it to the host) Tj ET
+BT /F1 8.8 Tf 50 478.40 Td (  over Ethernet.) Tj ET
+BT /F2 10.5 Tf 50 456.80 Td (Technical breakdown) Tj ET
+BT /F1 8.8 Tf 50 433.00 Td (- IMX678 cameras provide MIPI CSI data.) Tj ET
+BT /F1 8.8 Tf 50 422.20 Td (- MIPI D-PHY receives physical lanes.) Tj ET
+BT /F1 8.8 Tf 50 411.40 Td (- CSI-2 IP converts to internal stream.) Tj ET
+BT /F1 8.8 Tf 50 400.60 Td (- VVP/broadcast logic packs/replicates data.) Tj ET
+BT /F1 8.8 Tf 50 389.80 Td (- HSB IP packetizes and controls transport.) Tj ET
+BT /F1 8.8 Tf 50 379.00 Td (- GTS Ethernet sends data to Thor.) Tj ET
+BT /F2 10.5 Tf 50 357.40 Td (Key message) Tj ET
+BT /F1 8.8 Tf 50 333.60 Td (> Altera logic wraps and adapts around NVIDIA HSB IP to make it usable with Agilex hardware and Altera Ethernet) Tj ET
+BT /F1 8.8 Tf 50 322.80 Td (  IP.) Tj ET
+BT /F1 8.8 Tf 50 301.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 279.60 Td (Slide 20 - Architecture Overview) Tj ET
+BT /F2 10.5 Tf 50 252.80 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 229.00 Td (Explain the Platform Designer subsystem structure.) Tj ET
+BT /F2 10.5 Tf 50 207.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 183.60 Td (> The design is made of four major subsystems: MIPI ingest, VVP broadcast and packing, HSB subsystem, and) Tj ET
+BT /F1 8.8 Tf 50 172.80 Td (  Ethernet subsystem.) Tj ET
+BT /F2 10.5 Tf 50 151.20 Td (Subsystem details) Tj ET
+BT /F1 8.8 Tf 50 127.40 Td (1. MIPI subsystem:) Tj ET
+BT /F1 8.8 Tf 50 116.60 Td (   Receives physical camera streams using MIPI D-PHY and CSI-2 IP.) Tj ET
+BT /F1 8.8 Tf 50 95.00 Td (2. Broadcast/packing subsystem:) Tj ET
+BT /F1 8.8 Tf 50 84.20 Td (   Converts Altera Streaming Video Protocol into tightly packed CSI-style data expected by host software.) Tj ET
+BT /F1 8.8 Tf 50 62.60 Td (3. HSB subsystem:) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 10 of 19) Tj ET
+endstream
+endobj
+25 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 24 0 R >>
+endobj
+26 0 obj
+<< /Length 3294 >>
+stream
+BT /F1 8.8 Tf 50 746.00 Td (   Instantiates NVIDIA HSB IP, exposes SIFs, APB control, I2C, and host interface.) Tj ET
+BT /F1 8.8 Tf 50 724.40 Td (4. Ethernet subsystem:) Tj ET
+BT /F1 8.8 Tf 50 713.60 Td (   Instantiates hardened Ethernet IP and supporting PHY/reset logic.) Tj ET
+BT /F2 10.5 Tf 50 692.00 Td (Important statement) Tj ET
+BT /F1 8.8 Tf 50 668.20 Td (> Control and data both move over Ethernet. The same network path is used for discovery, register access,) Tj ET
+BT /F1 8.8 Tf 50 657.40 Td (  camera configuration, and frame transport.) Tj ET
+BT /F1 8.8 Tf 50 635.80 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 614.20 Td (Slide 21 - Video Interface) Tj ET
+BT /F2 10.5 Tf 50 587.40 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 563.60 Td (Explain how video is represented before HSB.) Tj ET
+BT /F2 10.5 Tf 50 542.00 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 518.20 Td (> The video interface is responsible for taking raw camera data from MIPI and converting it into the packed CSI) Tj ET
+BT /F1 8.8 Tf 50 507.40 Td (  format expected by the HSB host software.) Tj ET
+BT /F2 10.5 Tf 50 485.80 Td (Technical details) Tj ET
+BT /F1 8.8 Tf 50 462.00 Td (- MIPI D-PHY supports two 4-lane receive interfaces.) Tj ET
+BT /F1 8.8 Tf 50 451.20 Td (- CSI-2 receiver supports RAW10 and RAW12.) Tj ET
+BT /F1 8.8 Tf 50 440.40 Td (- IMX678 does not support RAW8 in this demo path.) Tj ET
+BT /F1 8.8 Tf 50 429.60 Td (- ASVP carries four pixels in parallel.) Tj ET
+BT /F1 8.8 Tf 50 418.80 Td (- RAW10 wastes bits in ASVP representation.) Tj ET
+BT /F1 8.8 Tf 50 408.00 Td (- CSI packing removes that inefficiency.) Tj ET
+BT /F2 10.5 Tf 50 386.40 Td (Why packing matters) Tj ET
+BT /F1 8.8 Tf 50 362.60 Td (> The host receiver expects line lengths and pixel packing to match the sensor mode. If the FPGA packing and) Tj ET
+BT /F1 8.8 Tf 50 351.80 Td (  software mode disagree, frames appear corrupted or fail downstream.) Tj ET
+BT /F1 8.8 Tf 50 330.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 308.60 Td (Slide 22 - HSB Subsystem) Tj ET
+BT /F2 10.5 Tf 50 281.80 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 258.00 Td (Explain HSB IP integration.) Tj ET
+BT /F2 10.5 Tf 50 236.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 212.60 Td (> The HSB subsystem instantiates NVIDIA HSB IP and the support logic needed to connect it to Altera video and) Tj ET
+BT /F1 8.8 Tf 50 201.80 Td (  Ethernet blocks.) Tj ET
+BT /F2 10.5 Tf 50 180.20 Td (Technical details) Tj ET
+BT /F1 8.8 Tf 50 156.40 Td (- SIF inputs receive packed video streams.) Tj ET
+BT /F1 8.8 Tf 50 145.60 Td (- APB buses expose control registers.) Tj ET
+BT /F1 8.8 Tf 50 134.80 Td (- I2C peripheral path supports camera control.) Tj ET
+BT /F1 8.8 Tf 50 124.00 Td (- AVST/AXIS shims adapt interface conventions.) Tj ET
+BT /F1 8.8 Tf 50 113.20 Td (- System ID provides build identification.) Tj ET
+BT /F2 10.5 Tf 50 91.60 Td (Important nuance) Tj ET
+BT /F1 8.8 Tf 50 67.80 Td (> The shims are not doing image processing. They adapt bus protocol, byte ordering, and streaming signal) Tj ET
+BT /F1 8.8 Tf 50 57.00 Td (  conventions between Altera and NVIDIA blocks.) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 11 of 19) Tj ET
+endstream
+endobj
+27 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 26 0 R >>
+endobj
+28 0 obj
+<< /Length 2873 >>
+stream
+BT /F1 8.8 Tf 50 735.20 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 713.60 Td (Slide 23 - 10GbE Design vs 25GbE Design) Tj ET
+BT /F2 10.5 Tf 50 686.80 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 663.00 Td (Compare design tradeoffs.) Tj ET
+BT /F2 10.5 Tf 50 641.40 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 617.60 Td (> The 10G design is a simpler two-stream pipeline. The 25G design supports replicated streams and up to eight) Tj ET
+BT /F1 8.8 Tf 50 606.80 Td (  SIF paths, which is useful for bandwidth and multiviewer demonstrations.) Tj ET
+BT /F2 10.5 Tf 50 585.20 Td (Technical differences) Tj ET
+BT /F1 8.8 Tf 50 561.40 Td (10G:) Tj ET
+BT /F1 8.8 Tf 50 539.80 Td (- Two video streams.) Tj ET
+BT /F1 8.8 Tf 50 529.00 Td (- Separate FIFOs.) Tj ET
+BT /F1 8.8 Tf 50 518.20 Td (- Simpler resource profile.) Tj ET
+BT /F1 8.8 Tf 50 507.40 Td (- Good for stable first demo.) Tj ET
+BT /F1 8.8 Tf 50 485.80 Td (25G:) Tj ET
+BT /F1 8.8 Tf 50 464.20 Td (- Streams replicated and presented to eight HSB SIFs.) Tj ET
+BT /F1 8.8 Tf 50 453.40 Td (- FIFOs incorporated into broadcaster IP.) Tj ET
+BT /F1 8.8 Tf 50 442.60 Td (- Higher bandwidth.) Tj ET
+BT /F1 8.8 Tf 50 431.80 Td (- More logic due to CoE packetizer support.) Tj ET
+BT /F2 10.5 Tf 50 410.20 Td (Customer guidance) Tj ET
+BT /F1 8.8 Tf 50 386.40 Td (> Start with 10G for basic bring-up. Use 25G when demonstrating bandwidth, CoE, or multi-stream capability.) Tj ET
+BT /F1 8.8 Tf 50 364.80 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 343.20 Td (Slide 24 - HSB Parameters) Tj ET
+BT /F2 10.5 Tf 50 316.40 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 292.60 Td (Point to NVIDIA HSB integration documentation.) Tj ET
+BT /F2 10.5 Tf 50 271.00 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 247.20 Td (> HSB behavior is controlled by integration parameters. These define interface widths, enabled buses, SIF) Tj ET
+BT /F1 8.8 Tf 50 236.40 Td (  configuration, packetization behavior, and peripheral options.) Tj ET
+BT /F2 10.5 Tf 50 214.80 Td (Why it matters) Tj ET
+BT /F1 8.8 Tf 50 191.00 Td (- FPGA configuration and host software must match.) Tj ET
+BT /F1 8.8 Tf 50 180.20 Td (- Packetizer settings matter for CoE.) Tj ET
+BT /F1 8.8 Tf 50 169.40 Td (- SIF count and width affect resource use and stream mapping.) Tj ET
+BT /F1 8.8 Tf 50 158.60 Td (- Incorrect parameters can cause link-level success but application-level failure.) Tj ET
+BT /F1 8.8 Tf 50 137.00 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 115.40 Td (Slide 25 - HSB Wrapper Parameterization) Tj ET
+BT /F2 10.5 Tf 50 88.60 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 64.80 Td (Explain Altera's wrapper value.) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 12 of 19) Tj ET
+endstream
+endobj
+29 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 28 0 R >>
+endobj
+30 0 obj
+<< /Length 2992 >>
+stream
+BT /F2 10.5 Tf 50 735.20 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 711.40 Td (> Altera created a Platform Designer component and wrapper around NVIDIA HSB IP to make integration easier and) Tj ET
+BT /F1 8.8 Tf 50 700.60 Td (  less error-prone.) Tj ET
+BT /F2 10.5 Tf 50 679.00 Td (Technical capabilities) Tj ET
+BT /F1 8.8 Tf 50 655.20 Td (- Exposes HSB parameters in GUI.) Tj ET
+BT /F1 8.8 Tf 50 644.40 Td (- Generates HOLOLINK_def.svh.) Tj ET
+BT /F1 8.8 Tf 50 633.60 Td (- Generates wrapper ports.) Tj ET
+BT /F1 8.8 Tf 50 622.80 Td (- Handles mixed SIF widths.) Tj ET
+BT /F1 8.8 Tf 50 612.00 Td (- Ties off unused signals.) Tj ET
+BT /F1 8.8 Tf 50 601.20 Td (- Supports register initialization.) Tj ET
+BT /F1 8.8 Tf 50 590.40 Td (- Keeps SPI0 visible when software expects it.) Tj ET
+BT /F1 8.8 Tf 50 579.60 Td (- Supports build revision and enumeration settings.) Tj ET
+BT /F2 10.5 Tf 50 558.00 Td (Customer value) Tj ET
+BT /F1 8.8 Tf 50 534.20 Td (> This helps customers adapt HSB without hand-editing low-level macro files and wrapper logic.) Tj ET
+BT /F1 8.8 Tf 50 512.60 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 491.00 Td (Slide 26 - Resource Utilization) Tj ET
+BT /F2 10.5 Tf 50 464.20 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 440.40 Td (Explain 25G resource cost.) Tj ET
+BT /F2 10.5 Tf 50 418.80 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 395.00 Td (> The 25G design uses more FPGA resources because CoE packetizer support is enabled across multiple video SIFs.) Tj ET
+BT /F2 10.5 Tf 50 373.40 Td (Important number) Tj ET
+BT /F1 8.8 Tf 50 349.60 Td (> The packetizer configuration adds approximately 7k ALMs per SIF. With eight SIFs, this becomes a significant) Tj ET
+BT /F1 8.8 Tf 50 338.80 Td (  resource increase.) Tj ET
+BT /F2 10.5 Tf 50 317.20 Td (Technical tradeoff) Tj ET
+BT /F1 8.8 Tf 50 293.40 Td (- CoE support improves host receive path.) Tj ET
+BT /F1 8.8 Tf 50 282.60 Td (- Multi-SIF support improves stream scaling.) Tj ET
+BT /F1 8.8 Tf 50 271.80 Td (- Both increase resource usage.) Tj ET
+BT /F2 10.5 Tf 50 250.20 Td (Customer guidance) Tj ET
+BT /F1 8.8 Tf 50 226.40 Td (> If the customer does not need CoE or eight SIFs, there may be opportunities to reduce resource use in a) Tj ET
+BT /F1 8.8 Tf 50 215.60 Td (  custom derivative.) Tj ET
+BT /F1 8.8 Tf 50 194.00 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 172.40 Td (Slide 27 - Camera Over Ethernet on Thor) Tj ET
+BT /F2 10.5 Tf 50 145.60 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 121.80 Td (Explain Thor-specific transport.) Tj ET
+BT /F2 10.5 Tf 50 100.20 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 76.40 Td (> AGX Thor does not use RoCEv2 in this path. It uses Camera over Ethernet, or CoE. CoE is RDMA-like for receive) Tj ET
+BT /F1 8.8 Tf 50 65.60 Td (  acceleration but has different driver and packetization requirements.) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 13 of 19) Tj ET
+endstream
+endobj
+31 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 30 0 R >>
+endobj
+32 0 obj
+<< /Length 2919 >>
+stream
+BT /F2 10.5 Tf 50 735.20 Td (Update from lab bring-up) Tj ET
+BT /F1 8.8 Tf 50 711.40 Td (> The slide says 25GbE CoE was not yet brought up. Our lab bring-up did validate 25GbE CoE on AGX Thor.) Tj ET
+BT /F2 10.5 Tf 50 689.80 Td (Current workaround) Tj ET
+BT /F1 8.8 Tf 50 666.00 Td (For repeated 25G CoE runs:) Tj ET
+BT /F3 7.5 Tf 50 644.40 Td (sudo ip link set mgbe0_0 down ; sudo ip link set mgbe0_0 up) Tj ET
+BT /F2 10.5 Tf 50 624.50 Td (Why workaround is needed) Tj ET
+BT /F1 8.8 Tf 50 600.70 Td (- Thor CoE repeated-run stability issue has been observed.) Tj ET
+BT /F1 8.8 Tf 50 589.90 Td (- Refreshing MGBE resets interface state before the next run.) Tj ET
+BT /F1 8.8 Tf 50 579.10 Td (- Recommended by Sho-san for 25G AGX Thor demo flow.) Tj ET
+BT /F2 10.5 Tf 50 557.50 Td (Important caveat) Tj ET
+BT /F1 8.8 Tf 50 533.70 Td (> For customer demos, run CoE mode only for the 25G path. Use Linux socket mode mainly as a diagnostic) Tj ET
+BT /F1 8.8 Tf 50 522.90 Td (  fallback.) Tj ET
+BT /F1 8.8 Tf 50 501.30 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 479.70 Td (Slide 28 - Software) Tj ET
+BT /F2 10.5 Tf 50 452.90 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 429.10 Td (Transition from FPGA hardware to host software.) Tj ET
+BT /F2 10.5 Tf 50 407.50 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 383.70 Td (> Now we move from the FPGA data path to the host-side software that receives frames, configures cameras, runs) Tj ET
+BT /F1 8.8 Tf 50 372.90 Td (  image processing, and executes AI workloads.) Tj ET
+BT /F1 8.8 Tf 50 351.30 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 329.70 Td (Slide 29 - Altera Builds on NVIDIA) Tj ET
+BT /F2 10.5 Tf 50 302.90 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 279.10 Td (Explain AGX5-specific software additions.) Tj ET
+BT /F2 10.5 Tf 50 257.50 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 233.70 Td (> Altera added Python classes and applications to support the IMX678 camera and AGX5 FPGA design inside the) Tj ET
+BT /F1 8.8 Tf 50 222.90 Td (  Holoscan Sensor Bridge software framework.) Tj ET
+BT /F2 10.5 Tf 50 201.30 Td (Software components) Tj ET
+BT /F1 8.8 Tf 50 177.50 Td (- agx5_imx678.py: sensor class.) Tj ET
+BT /F1 8.8 Tf 50 166.70 Td (- agx5_imx678_mode.py: supported modes.) Tj ET
+BT /F1 8.8 Tf 50 155.90 Td (- linux_agx5_player.py: single camera.) Tj ET
+BT /F1 8.8 Tf 50 145.10 Td (- linux_agx5_player_stereo.py: stereo.) Tj ET
+BT /F1 8.8 Tf 50 134.30 Td (- agx5_multiviewer.py: multi-stream viewer.) Tj ET
+BT /F1 8.8 Tf 50 123.50 Td (- linux_body_pose_estimation_agx5.py: YOLOv8 body pose.) Tj ET
+BT /F1 8.8 Tf 50 112.70 Td (- linux_tao_peoplenet_agx5.py: PeopleNet.) Tj ET
+BT /F2 10.5 Tf 50 91.10 Td (Technical details) Tj ET
+BT /F1 8.8 Tf 50 67.30 Td (The camera class manages:) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 14 of 19) Tj ET
+endstream
+endobj
+33 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 32 0 R >>
+endobj
+34 0 obj
+<< /Length 3005 >>
+stream
+BT /F1 8.8 Tf 50 735.20 Td (- I2C register access.) Tj ET
+BT /F1 8.8 Tf 50 724.40 Td (- Start/stop sequences.) Tj ET
+BT /F1 8.8 Tf 50 713.60 Td (- Gain control.) Tj ET
+BT /F1 8.8 Tf 50 702.80 Td (- Mode configuration.) Tj ET
+BT /F1 8.8 Tf 50 692.00 Td (- Pixel format assumptions.) Tj ET
+BT /F1 8.8 Tf 50 681.20 Td (- CSI line-byte calculation.) Tj ET
+BT /F2 10.5 Tf 50 659.60 Td (Important bring-up lesson) Tj ET
+BT /F1 8.8 Tf 50 635.80 Td (> If camera I2C fails, the application cannot configure the sensor even if the Ethernet and HSB path are) Tj ET
+BT /F1 8.8 Tf 50 625.00 Td (  working.) Tj ET
+BT /F1 8.8 Tf 50 603.40 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 581.80 Td (Slide 30 - Multiviewer Flow) Tj ET
+BT /F2 10.5 Tf 50 555.00 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 531.20 Td (Explain how the application starts and configures streams.) Tj ET
+BT /F2 10.5 Tf 50 509.60 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 485.80 Td (> The multiviewer application starts with device discovery. It enumerates the HSB device, selects data) Tj ET
+BT /F1 8.8 Tf 50 475.00 Td (  channels, creates camera objects, configures modes, builds the Holoscan graph, and then starts streaming.) Tj ET
+BT /F2 10.5 Tf 50 453.40 Td (Flow) Tj ET
+BT /F1 8.8 Tf 50 429.60 Td (1. Enumerate HSB at 192.168.0.2.) Tj ET
+BT /F1 8.8 Tf 50 418.80 Td (2. Read board UUID.) Tj ET
+BT /F1 8.8 Tf 50 408.00 Td (3. Choose Group A or Group B strategy.) Tj ET
+BT /F1 8.8 Tf 50 397.20 Td (4. Select camera channels.) Tj ET
+BT /F1 8.8 Tf 50 386.40 Td (5. Configure IMX678 cameras.) Tj ET
+BT /F1 8.8 Tf 50 375.60 Td (6. Choose receiver type: auto, linux, coe, or roce.) Tj ET
+BT /F1 8.8 Tf 50 364.80 Td (7. Build receiver, conversion, demosaic, and visualization paths.) Tj ET
+BT /F2 10.5 Tf 50 343.20 Td (Demo guidance) Tj ET
+BT /F1 8.8 Tf 50 319.40 Td (> With two physical cameras, use --cam 2. The eight-camera mode is for logical replicated streams on the Group) Tj ET
+BT /F1 8.8 Tf 50 308.60 Td (  A design, not necessarily eight physical cameras.) Tj ET
+BT /F1 8.8 Tf 50 287.00 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 265.40 Td (Slide 31 - NVIDIA System Ethernet Comparison) Tj ET
+BT /F2 10.5 Tf 50 238.60 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 214.80 Td (Explain host Ethernet mode limitations.) Tj ET
+BT /F2 10.5 Tf 50 193.20 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 169.40 Td (> AGX Thor defaults to 10GbE mode and does not dynamically switch between 10GbE x4 and 25GbE x4 using normal) Tj ET
+BT /F1 8.8 Tf 50 158.60 Td (  Linux network commands.) Tj ET
+BT /F2 10.5 Tf 50 137.00 Td (Bring-up result) Tj ET
+BT /F1 8.8 Tf 50 113.20 Td (> We used capsule/boot-slot switching. On our system:) Tj ET
+BT /F1 8.8 Tf 50 91.60 Td (- Slot 0 = 25G.) Tj ET
+BT /F1 8.8 Tf 50 80.80 Td (- Slot 1 = 10G.) Tj ET
+BT /F2 10.5 Tf 50 59.20 Td (Commands) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 15 of 19) Tj ET
+endstream
+endobj
+35 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 34 0 R >>
+endobj
+36 0 obj
+<< /Length 3259 >>
+stream
+BT /F1 8.8 Tf 50 735.20 Td (Switch to 25G:) Tj ET
+BT /F3 7.5 Tf 50 713.60 Td (sudo nvbootctrl set-active-boot-slot 0) Tj ET
+BT /F3 7.5 Tf 50 704.50 Td (sudo reboot) Tj ET
+BT /F1 8.8 Tf 50 684.60 Td (Switch to 10G:) Tj ET
+BT /F3 7.5 Tf 50 663.00 Td (sudo nvbootctrl set-active-boot-slot 1) Tj ET
+BT /F3 7.5 Tf 50 653.90 Td (sudo reboot) Tj ET
+BT /F1 8.8 Tf 50 634.00 Td (Check:) Tj ET
+BT /F3 7.5 Tf 50 612.40 Td (sudo nvbootctrl get-current-slot) Tj ET
+BT /F3 7.5 Tf 50 603.30 Td (cat /sys/devices/platform/bus@0/*/net/mgbe*/speed) Tj ET
+BT /F2 10.5 Tf 50 583.40 Td (Key message) Tj ET
+BT /F1 8.8 Tf 50 559.60 Td (> This is not an nmcli setting. It is a boot configuration mode.) Tj ET
+BT /F1 8.8 Tf 50 538.00 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 13 Tf 50 516.40 Td (Slide 32 - Closing) Tj ET
+BT /F2 10.5 Tf 50 489.60 Td (Purpose of the slide) Tj ET
+BT /F1 8.8 Tf 50 465.80 Td (End with key customer takeaways.) Tj ET
+BT /F2 10.5 Tf 50 444.20 Td (What to say) Tj ET
+BT /F1 8.8 Tf 50 420.40 Td (> In summary, we validated an end-to-end path from MIPI cameras through Agilex 5, over Ethernet, into NVIDIA) Tj ET
+BT /F1 8.8 Tf 50 409.60 Td (  Holoscan on AGX Thor. The FPGA provides deterministic sensor ingest and transport, while Holoscan provides GPU) Tj ET
+BT /F1 8.8 Tf 50 398.80 Td (  processing, visualization, and AI.) Tj ET
+BT /F2 10.5 Tf 50 377.20 Td (Final takeaways) Tj ET
+BT /F1 8.8 Tf 50 353.40 Td (- 10G path is stable and recommended for first customer evaluation.) Tj ET
+BT /F1 8.8 Tf 50 342.60 Td (- 25G path works on AGX Thor after boot-slot switching.) Tj ET
+BT /F1 8.8 Tf 50 331.80 Td (- CoE repeated-run workaround is documented.) Tj ET
+BT /F1 8.8 Tf 50 321.00 Td (- MAX10 firmware update may be required on early MDKs.) Tj ET
+BT /F1 8.8 Tf 50 310.20 Td (- AI demos are possible once camera and transport are validated.) Tj ET
+BT /F1 8.8 Tf 50 288.60 Td (----------------------------------------------------------------------------------) Tj ET
+BT /F2 18 Tf 50 267.00 Td (Expanded Technical Q&A) Tj ET
+BT /F2 13 Tf 50 234.20 Td (Q1. Why do we need an FPGA in this architecture?) Tj ET
+BT /F1 8.8 Tf 50 207.40 Td (Because many sensors do not connect directly to NVIDIA GPU platforms in the required format, timing, or) Tj ET
+BT /F1 8.8 Tf 50 196.60 Td (  bandwidth. The FPGA can terminate MIPI, JESD204, SLVS-EC, LVDS, SDI, SPI, I2C, GPIO, or custom protocols, then) Tj ET
+BT /F1 8.8 Tf 50 185.80 Td (  synchronize, preprocess, packetize, and transport the data over Ethernet.) Tj ET
+BT /F2 13 Tf 50 164.20 Td (Q2. What is the exact division of work between FPGA and Holoscan?) Tj ET
+BT /F1 8.8 Tf 50 137.40 Td (The FPGA handles deterministic IO, sensor protocol adaptation, timing, packetization, and Ethernet transport.) Tj ET
+BT /F1 8.8 Tf 50 126.60 Td (  Holoscan handles host-side graph execution, GPU processing, image conversion, inference, visualization, and) Tj ET
+BT /F1 8.8 Tf 50 115.80 Td (  application logic.) Tj ET
+BT /F2 13 Tf 50 94.20 Td (Q3. What does HSB IP provide?) Tj ET
+BT /F1 8.8 Tf 50 67.40 Td (HSB IP provides a host-accessible control plane and a high-speed data transport path. It exposes registers,) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 16 of 19) Tj ET
+endstream
+endobj
+37 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 36 0 R >>
+endobj
+38 0 obj
+<< /Length 3856 >>
+stream
+BT /F1 8.8 Tf 50 746.00 Td (  sensor control interfaces, SIF data inputs, and Ethernet transport integration so host software can discover,) Tj ET
+BT /F1 8.8 Tf 50 735.20 Td (  configure, and receive data from the FPGA.) Tj ET
+BT /F2 13 Tf 50 713.60 Td (Q4. What is a SIF?) Tj ET
+BT /F1 8.8 Tf 50 686.80 Td (SIF means Sensor Interface. It is a data input path into the HSB IP. The 25G design presents multiple video) Tj ET
+BT /F1 8.8 Tf 50 676.00 Td (  streams to multiple SIFs, enabling multi-stream or replicated-stream operation.) Tj ET
+BT /F2 13 Tf 50 654.40 Td (Q5. What is the difference between Linux receiver, RoCE, and CoE?) Tj ET
+BT /F1 8.8 Tf 50 627.60 Td (Linux receiver uses the standard Linux network stack and is simpler but less accelerated. RoCE uses RDMA over) Tj ET
+BT /F1 8.8 Tf 50 616.80 Td (  Converged Ethernet and is supported on platforms with appropriate NICs such as ConnectX. CoE is Thor's Camera-) Tj ET
+BT /F1 8.8 Tf 50 606.00 Td (  over-Ethernet receive acceleration path and is RDMA-like on RX, but not the same as RoCE.) Tj ET
+BT /F2 13 Tf 50 584.40 Td (Q6. Why does Thor need boot-slot switching for 10G and 25G?) Tj ET
+BT /F1 8.8 Tf 50 557.60 Td (AGX Thor does not dynamically switch MGBE between 10GbE x4 and 25GbE x4 from Linux networking tools. The mode) Tj ET
+BT /F1 8.8 Tf 50 546.80 Td (  is configured in the boot image/QSPI configuration. Capsule-based slot switching lets us move between modes by) Tj ET
+BT /F1 8.8 Tf 50 536.00 Td (  selecting the active boot slot and rebooting.) Tj ET
+BT /F2 13 Tf 50 514.40 Td (Q7. What is the current boot-slot mapping?) Tj ET
+BT /F1 8.8 Tf 50 487.60 Td (From this bring-up:) Tj ET
+BT /F1 8.8 Tf 50 466.00 Td (- Slot 0 = 25G.) Tj ET
+BT /F1 8.8 Tf 50 455.20 Td (- Slot 1 = 10G.) Tj ET
+BT /F1 8.8 Tf 50 433.60 Td (This should always be verified on the actual unit with nvbootctrl and MGBE speed checks.) Tj ET
+BT /F2 13 Tf 50 412.00 Td (Q8. How do we verify Thor is in 25G mode?) Tj ET
+BT /F1 8.8 Tf 50 385.20 Td (Run:) Tj ET
+BT /F3 7.5 Tf 50 363.60 Td (cat /sys/devices/platform/bus@0/*/net/mgbe*/speed) Tj ET
+BT /F1 8.8 Tf 50 343.70 Td (For 25G, expect 25000 for the MGBE ports. Then use ethtool to verify the connected port reports Speed:) Tj ET
+BT /F1 8.8 Tf 50 332.90 Td (  25000Mb/s and Link detected: yes.) Tj ET
+BT /F2 13 Tf 50 311.30 Td (Q9. Why did the initial 25G link fail?) Tj ET
+BT /F1 8.8 Tf 50 284.50 Td (Thor was still booted in default 10G mode. The 25G FPGA image cannot link correctly when Thor MGBE is) Tj ET
+BT /F1 8.8 Tf 50 273.70 Td (  configured for 10G. After switching Thor to 25G boot configuration, the link came up.) Tj ET
+BT /F2 13 Tf 50 252.10 Td (Q10. Why did camera I2C fail even though HSB enumeration worked?) Tj ET
+BT /F1 8.8 Tf 50 225.30 Td (HSB enumeration proves the Ethernet and FPGA HSB endpoint are reachable. Camera I2C is a separate path through) Tj ET
+BT /F1 8.8 Tf 50 214.50 Td (  the FPGA to the sensor. On early MDK boards, MAX10 firmware did not power the MIPI connectors, so the cameras) Tj ET
+BT /F1 8.8 Tf 50 203.70 Td (  could not respond to I2C.) Tj ET
+BT /F2 13 Tf 50 182.10 Td (Q11. How was the camera I2C issue fixed?) Tj ET
+BT /F1 8.8 Tf 50 155.30 Td (MAX10 was reflashed with the fixed image max10_top_rtl_v1p1p6_fw_v2p0p1.pof. SW4 was used to put MAX10 onto the) Tj ET
+BT /F1 8.8 Tf 50 144.50 Td (  JTAG chain, then returned to OFF so the FPGA appears on the JTAG chain again.) Tj ET
+BT /F2 13 Tf 50 122.90 Td (Q12. Is the MAX10 issue expected for customer boards?) Tj ET
+BT /F1 8.8 Tf 50 96.10 Td (Customer release production boards are expected to ship with the fixed MAX10 image. Early production MDKs may) Tj ET
+BT /F1 8.8 Tf 50 85.30 Td (  need reflashing.) Tj ET
+BT /F2 13 Tf 50 63.70 Td (Q13. What should be debugged first if a customer says the demo does not) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 17 of 19) Tj ET
+endstream
+endobj
+39 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 38 0 R >>
+endobj
+40 0 obj
+<< /Length 3500 >>
+stream
+BT /F2 13 Tf 50 746.00 Td (work?) Tj ET
+BT /F1 8.8 Tf 50 719.20 Td (Debug in this order:) Tj ET
+BT /F1 8.8 Tf 50 697.60 Td (1. FPGA programmed with correct SOF.) Tj ET
+BT /F1 8.8 Tf 50 686.80 Td (2. Thor in correct 10G or 25G mode.) Tj ET
+BT /F1 8.8 Tf 50 676.00 Td (3. ethtool link detected.) Tj ET
+BT /F1 8.8 Tf 50 665.20 Td (4. ping 192.168.0.2.) Tj ET
+BT /F1 8.8 Tf 50 654.40 Td (5. hololink-enumerate.) Tj ET
+BT /F1 8.8 Tf 50 643.60 Td (6. Camera I2C configuration.) Tj ET
+BT /F1 8.8 Tf 50 632.80 Td (7. Display/X11.) Tj ET
+BT /F1 8.8 Tf 50 622.00 Td (8. AI model or TensorRT engine.) Tj ET
+BT /F2 13 Tf 50 600.40 Td (Q14. What does `hololink-enumerate` prove?) Tj ET
+BT /F1 8.8 Tf 50 573.60 Td (It proves that the host can discover the HSB endpoint over Ethernet and read board metadata. It does not prove) Tj ET
+BT /F1 8.8 Tf 50 562.80 Td (  camera power or camera I2C.) Tj ET
+BT /F2 13 Tf 50 541.20 Td (Q15. Why is `--cam 8` not always correct?) Tj ET
+BT /F1 8.8 Tf 50 514.40 Td (The 25G Group A design can expose eight logical streams/SIFs, but the physical board may only have two cameras) Tj ET
+BT /F1 8.8 Tf 50 503.60 Td (  installed. For two physical cameras, use --cam 2. Use --cam 8 only when the replicated-stream demo is intended) Tj ET
+BT /F1 8.8 Tf 50 492.80 Td (  and validated.) Tj ET
+BT /F2 13 Tf 50 471.20 Td (Q16. Why does 25G use more FPGA resources?) Tj ET
+BT /F1 8.8 Tf 50 444.40 Td (The CoE packetizer logic is enabled per SIF. In this design it adds approximately 7k ALMs per SIF. With eight) Tj ET
+BT /F1 8.8 Tf 50 433.60 Td (  SIFs, this significantly increases resource utilization.) Tj ET
+BT /F2 13 Tf 50 412.00 Td (Q17. What is the 25G repeated-run workaround?) Tj ET
+BT /F1 8.8 Tf 50 385.20 Td (Before every 25G CoE run after the first, refresh the interface:) Tj ET
+BT /F3 7.5 Tf 50 363.60 Td (sudo ip link set mgbe0_0 down ; sudo ip link set mgbe0_0 up) Tj ET
+BT /F1 8.8 Tf 50 343.70 Td (This resets the MGBE interface state and avoids repeated-run CoE instability observed on AGX Thor.) Tj ET
+BT /F2 13 Tf 50 322.10 Td (Q18. Should customers use 10G or 25G?) Tj ET
+BT /F1 8.8 Tf 50 295.30 Td (For first evaluation and maximum stability, start with 10G. For bandwidth or 25G-specific demonstrations, use) Tj ET
+BT /F1 8.8 Tf 50 284.50 Td (  25G with CoE mode and the MGBE refresh workaround.) Tj ET
+BT /F2 13 Tf 50 262.90 Td (Q19. Why do GUI failures happen inside Docker?) Tj ET
+BT /F1 8.8 Tf 50 236.10 Td (Holoviz requires access to the host display. If X11 permissions or XDG_RUNTIME_DIR are missing, the pipeline) Tj ET
+BT /F1 8.8 Tf 50 225.30 Td (  may run but the visualizer fails. Use xhost on the host and set XDG_RUNTIME_DIR inside the container.) Tj ET
+BT /F2 13 Tf 50 203.70 Td (Q20. Why does PeopleNet take a long time on first run?) Tj ET
+BT /F1 8.8 Tf 50 176.90 Td (The first run builds a TensorRT engine from the ONNX model. This can take several minutes. The engine is) Tj ET
+BT /F1 8.8 Tf 50 166.10 Td (  cached, so later runs start faster.) Tj ET
+BT /F2 13 Tf 50 144.50 Td (Q21. Why did PeopleNet crash in InferenceOp?) Tj ET
+BT /F1 8.8 Tf 50 117.70 Td (The AGX5 script had metadata enabled. NVIDIA documentation notes an open metadata issue with InferenceOp.) Tj ET
+BT /F1 8.8 Tf 50 106.90 Td (  Setting self.is_metadata_enabled = False resolved the runtime crash.) Tj ET
+BT /F2 13 Tf 50 85.30 Td (Q22. What is the best customer demo order?) Tj ET
+BT /F1 8.8 Tf 50 58.50 Td (Recommended order:) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 18 of 19) Tj ET
+endstream
+endobj
+41 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 40 0 R >>
+endobj
+42 0 obj
+<< /Length 1071 >>
+stream
+BT /F1 8.8 Tf 50 735.20 Td (1. Show architecture slides.) Tj ET
+BT /F1 8.8 Tf 50 724.40 Td (2. Run hololink-enumerate.) Tj ET
+BT /F1 8.8 Tf 50 713.60 Td (3. Run single camera.) Tj ET
+BT /F1 8.8 Tf 50 702.80 Td (4. Run stereo or multiviewer.) Tj ET
+BT /F1 8.8 Tf 50 692.00 Td (5. Run body pose or PeopleNet.) Tj ET
+BT /F1 8.8 Tf 50 681.20 Td (6. Explain 10G/25G switch and MAX10 lessons.) Tj ET
+BT /F2 13 Tf 50 659.60 Td (Q23. What is the biggest risk in a live 25G demo?) Tj ET
+BT /F1 8.8 Tf 50 632.80 Td (Repeated CoE run stability and host mode mismatch. Always verify Thor is in 25G mode and refresh mgbe0_0 before) Tj ET
+BT /F1 8.8 Tf 50 622.00 Td (  repeated CoE demos.) Tj ET
+BT /F2 13 Tf 50 600.40 Td (Q24. What is the strongest technical value proposition?) Tj ET
+BT /F1 8.8 Tf 50 573.60 Td (The architecture decouples sensor-specific real-time IO from host compute. Customers can adapt the FPGA for) Tj ET
+BT /F1 8.8 Tf 50 562.80 Td (  their sensor and still use a modern GPU software pipeline through Holoscan.) Tj ET
+BT /F1 8 Tf 500 26 Td (Page 19 of 19) Tj ET
+endstream
+endobj
+43 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 42 0 R >>
+endobj
+xref
+0 44
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+0000000386 00000 n 
+0000000454 00000 n 
+0000004587 00000 n 
+0000004733 00000 n 
+0000008514 00000 n 
+0000008660 00000 n 
+0000012539 00000 n 
+0000012687 00000 n 
+0000016194 00000 n 
+0000016342 00000 n 
+0000019585 00000 n 
+0000019733 00000 n 
+0000023106 00000 n 
+0000023254 00000 n 
+0000026335 00000 n 
+0000026483 00000 n 
+0000029792 00000 n 
+0000029940 00000 n 
+0000032809 00000 n 
+0000032957 00000 n 
+0000035959 00000 n 
+0000036107 00000 n 
+0000039454 00000 n 
+0000039602 00000 n 
+0000042528 00000 n 
+0000042676 00000 n 
+0000045721 00000 n 
+0000045869 00000 n 
+0000048841 00000 n 
+0000048989 00000 n 
+0000052047 00000 n 
+0000052195 00000 n 
+0000055507 00000 n 
+0000055655 00000 n 
+0000059564 00000 n 
+0000059712 00000 n 
+0000063265 00000 n 
+0000063413 00000 n 
+0000064537 00000 n 
+trailer
+<< /Size 44 /Root 1 0 R >>
+startxref
+64685
+%%EOF
