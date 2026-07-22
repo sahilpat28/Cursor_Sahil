@@ -46,11 +46,11 @@ BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 115.88 Td (| `.aot` file | Ahead-o
 BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 106.50 Td (| Runtime | Runs inference through emulation, JTAG, PCIe, or SoC flow |) Tj ET
 BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 97.12 Td (| Quartus | Builds/programs FPGA hardware bitstreams |) Tj ET
 BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 83.75 Td (Quartus vs OpenVINO runtime) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 1 of 13) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 1 of 16) Tj ET
 endstream
 endobj
 4 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 3 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 3 0 R >>
 endobj
 5 0 obj
 << /Length 3337 >>
@@ -86,11 +86,11 @@ BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 139.00 Td (docker start -ai fpga-a
 BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 114.38 Td (A6. How to start FPGA AI Suite each time on Windows) Tj ET
 BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 88.88 Td (After Docker Desktop is running, open PowerShell and start the existing container:) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 66.38 Td (docker start -ai fpga-ai-suite-2026) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 2 of 13) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 2 of 16) Tj ET
 endstream
 endobj
 6 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 5 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 5 0 R >>
 endobj
 7 0 obj
 << /Length 3501 >>
@@ -129,11 +129,11 @@ BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 115.88 Td (B2. Install Docker Eng
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 88.38 Td (sudo apt update) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 77.75 Td (sudo apt install -y ca-certificates curl gnupg) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 67.12 Td (sudo install -m 0755 -d /etc/apt/keyrings) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 3 of 13) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 3 of 16) Tj ET
 endstream
 endobj
 8 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 7 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 7 0 R >>
 endobj
 9 0 obj
 << /Length 3967 >>
@@ -175,11 +175,11 @@ BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 149.25 Td (docker start -ai fpga-a
 BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 128.62 Td (You are inside FPGA AI Suite when the prompt changes from the host prompt, for example:) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 106.12 Td (sahilpat@sahilpat:~$) Tj ET
 BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 85.50 Td (to the container prompt, for example:) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 4 of 13) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 4 of 16) Tj ET
 endstream
 endobj
 10 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 9 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 9 0 R >>
 endobj
 11 0 obj
 << /Length 3301 >>
@@ -219,11 +219,11 @@ BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 148.75 Td (echo $COREDLA_WORK) Tj 
 BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 128.12 Td (Expected:) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 105.62 Td (/workspace/quickstart) Tj ET
 BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 81.00 Td (C2. Fix workspace permission issue if needed) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 5 of 13) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 5 of 16) Tj ET
 endstream
 endobj
 12 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 11 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 11 0 R >>
 endobj
 13 0 obj
 << /Length 3212 >>
@@ -262,11 +262,11 @@ BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 115.38 Td (omz_converter --name re
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 104.75 Td (  --download_dir $COREDLA_WORK/demo/models/ \\) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 94.12 Td (  --output_dir $COREDLA_WORK/demo/models/) Tj ET
 BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 73.50 Td (Verify:) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 6 of 13) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 6 of 16) Tj ET
 endstream
 endobj
 14 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 13 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 13 0 R >>
 endobj
 15 0 obj
 << /Length 3311 >>
@@ -304,14 +304,14 @@ BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 135.75 Td (F3. Run emulator infer
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 108.25 Td (cd $COREDLA_WORK/runtime/build_Release/dla_benchmark) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 85.62 Td (./dla_benchmark \\) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 75.00 Td (  -b 1 \\) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 7 of 13) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 7 of 16) Tj ET
 endstream
 endobj
 16 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 15 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 15 0 R >>
 endobj
 17 0 obj
-<< /Length 4120 >>
+<< /Length 4192 >>
 stream
 BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (  -niter 1 \\) Tj ET
@@ -348,259 +348,390 @@ BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 247.50 Td (Identifier: agx5e_modul
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 236.88 Td (Architecture: AGX5_Generic.arch) Tj ET
 BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 212.25 Td (G3. Build JTAG runtime) Tj ET
 BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 184.75 Td (cd $COREDLA_WORK/runtime) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 174.12 Td (./build_runtime.sh -target_system_console) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 149.50 Td (G4. Build Agilex 5 JTAG bitstream) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 122.00 Td (cd $COREDLA_WORK) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 111.38 Td ($COREDLA_ROOT/bin/dla_build_example_design.py build \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 100.75 Td (  --licensed \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 90.12 Td (  --output-dir build_agx5_jtag_ed \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 79.50 Td (  --num-instances 1 \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 68.88 Td (  --seed 1 \\) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 8 of 13) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 174.12 Td (./build_runtime.sh -target_agx5_mdk_jtag_system_console) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 153.50 Td (What this does: builds the FPGA AI Suite runtime plugin and dla_benchmark for the Agilex 5) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 141.00 Td (Modular Development Kit Hostless JTAG System Console design.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 120.50 Td (Why it is required: the emulation runtime cannot talk to the real board. This target builds the) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 108.00 Td (runtime layer that uses Quartus System Console to access FPGA registers and DDR through JTAG.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 83.50 Td (G4. Build Agilex 5 JTAG bitstream) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 8 of 16) Tj ET
 endstream
 endobj
 18 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 17 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 17 0 R >>
 endobj
 19 0 obj
-<< /Length 4908 >>
+<< /Length 4440 >>
 stream
 BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (  agx5e_modular_jtag \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td (  $COREDLA_ROOT/example_architectures/AGX5_Generic.arch) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 688.75 Td (Expected output:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 666.25 Td ($COREDLA_WORK/build_agx5_jtag_ed/AGX5_Generic.sof) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 641.62 Td (G5. Program board) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 616.12 Td (Connect board power and USB-JTAG. Then:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 593.62 Td (jtagconfig) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 583.00 Td (jtagconfig --setparam 1 JtagClock 16M) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 572.38 Td (cd $COREDLA_WORK/build_agx5_jtag_ed) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 561.75 Td (quartus_pgm -c 1 -m jtag -o "p;AGX5_Generic.sof") Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 541.12 Td (JTAG is slow. Use -nireq=1 for JTAG examples.) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 516.62 Td (G6. Permanent licensed Docker startup) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 491.12 Td (For a node-locked Altera license, start Docker with host networking, USB pass-through, workspace) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 478.62 Td (mount, license mount, and license environment variables.) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 458.12 Td (Create or update this host-side script:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 435.62 Td (mkdir -p ~/bin) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 425.00 Td (nano ~/bin/start-fpga-ai-suite.sh) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 404.38 Td (Use this content, adjusting the license filename if needed:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 381.88 Td (#!/bin/bash) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 371.25 Td (set -e) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 360.62 Td () Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 350.00 Td (CONTAINER_NAME="fpga-ai-suite-2026") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 339.38 Td (IMAGE_NAME="alterafpga/fpgaaisuite:2026.1.1-quartus") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 328.75 Td (WORKSPACE="$HOME/fpga-ai-work") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 318.12 Td (LICENSE_FILE="$HOME/altera_pro/LR-178044_License.dat") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 307.50 Td () Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 296.88 Td (if [ ! -f "$LICENSE_FILE" ]; then) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 286.25 Td (    echo "ERROR: License file not found: $LICENSE_FILE") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 275.62 Td (    exit 1) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 265.00 Td (fi) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 254.38 Td () Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 243.75 Td (mkdir -p "$WORKSPACE") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 233.12 Td () Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 222.50 Td (if docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 211.88 Td (    echo "Starting existing FPGA AI Suite container...") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 201.25 Td (    docker start -ai "$CONTAINER_NAME") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 190.62 Td (else) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 180.00 Td (    echo "Creating new licensed FPGA AI Suite container...") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 169.38 Td (    docker run -it \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 158.75 Td (      --name "$CONTAINER_NAME" \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 148.12 Td (      --network host \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 137.50 Td (      --privileged \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 126.88 Td (      -v /dev/bus/usb:/dev/bus/usb \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 116.25 Td (      -v "$WORKSPACE":/workspace \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 105.62 Td (      -v "$LICENSE_FILE":/licenses/altera_license.dat:ro \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 95.00 Td (      -e LM_LICENSE_FILE=/licenses/altera_license.dat \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 84.38 Td (      -e ALTERAD_LICENSE_FILE=/licenses/altera_license.dat \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 73.75 Td (      "$IMAGE_NAME") Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 9 of 13) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (cd $COREDLA_WORK) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td ($COREDLA_ROOT/bin/dla_build_example_design.py build \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 698.75 Td (  --licensed \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 688.12 Td (  --output-dir build_agx5_jtag_ed \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 677.50 Td (  --num-instances 1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 666.88 Td (  --seed 1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 656.25 Td (  agx5e_modular_jtag \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 645.62 Td (  $COREDLA_ROOT/example_architectures/AGX5_Generic.arch) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 625.00 Td (What this does: creates the FPGA hardware design for the Agilex 5 Hostless JTAG example and runs) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 612.50 Td (Quartus to generate the programming bitstream.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 592.00 Td (Why it is required: the board must be configured with FPGA AI Suite IP that matches) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 579.50 Td (AGX5_Generic.arch. The runtime checks this architecture at load time.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 559.00 Td (The --licensed option forces licensed FPGA AI Suite IP generation. Use this when you have a) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 546.50 Td (valid FPGA AI Suite/CoreDLA license.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 526.00 Td (Expected output:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 503.50 Td ($COREDLA_WORK/build_agx5_jtag_ed/AGX5_Generic.sof) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 478.88 Td (G5. Detect and program the board) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 453.38 Td (Connect board power and USB-JTAG. Then detect the board:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 430.88 Td (jtagconfig) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 410.25 Td (Expected example output:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 387.75 Td (1\) Agilex_5E MDK Carrier [1-8.1]) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 377.12 Td (  0364F0DD   A5E\(C065BB32AR0|D065BB32AR0\)) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 366.50 Td (  020D10DD   VTAP10) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 345.88 Td (What this does: verifies that Quartus JTAG tools can see the USB-JTAG cable and Agilex 5 device) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 333.38 Td (chain.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 312.88 Td (Why it is required: if jtagconfig cannot see the board, programming and hardware inference) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 300.38 Td (cannot work.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 279.88 Td (Set a stable JTAG clock:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 257.38 Td (jtagconfig --setparam 1 JtagClock 16M) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 236.75 Td (What this does: lowers the JTAG cable clock to 16 MHz.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 216.25 Td (Why it is required: the JTAG design example documentation recommends 16 MHz or lower to reduce) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 203.75 Td (System Console/JTAG instability.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 183.25 Td (Program the FPGA:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 160.75 Td (cd $COREDLA_WORK/build_agx5_jtag_ed) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 150.12 Td (quartus_pgm -c 1 -m jtag -o "p;AGX5_Generic.sof") Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 129.50 Td (What this does: downloads the AGX5_Generic.sof bitstream into the Agilex 5 FPGA over JTAG.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 109.00 Td (Why it is required: the FPGA must contain the agx5e_modular_jtag hardware design before) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 96.50 Td (dla_benchmark can run on hardware.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 76.00 Td (Success looks like:) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 9 of 16) Tj ET
 endstream
 endobj
 20 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 19 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 19 0 R >>
 endobj
 21 0 obj
-<< /Length 3973 >>
+<< /Length 4994 >>
 stream
 BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (fi) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 699.38 Td (Make it executable:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 676.88 Td (chmod +x ~/bin/start-fpga-ai-suite.sh) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 656.25 Td (Daily startup:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 633.75 Td (~/bin/start-fpga-ai-suite.sh) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 613.12 Td (Inside Docker, verify the license variables and tools:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 590.62 Td (echo $LM_LICENSE_FILE) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 580.00 Td (echo $ALTERAD_LICENSE_FILE) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 569.38 Td (ls -lh /licenses/altera_license.dat) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 558.75 Td (which quartus_pgm) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 548.12 Td (which system-console) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 537.50 Td (which lmutil) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 516.88 Td (If system-console or lmutil is not in PATH, add:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 494.38 Td (echo 'export PATH=/opt/altera/syscon/bin:/opt/altera/qcore/linux64:$PATH' >> ~) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 483.75 Td (  /.bashrc) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 473.12 Td (echo 'export QUARTUS_ROOTDIR=/opt/altera/quartus' >> ~/.bashrc) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 462.50 Td (source ~/.bashrc) Tj ET
-BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 423.88 Td (Part H - Object detection notes) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 393.38 Td (FPGA AI Suite includes ported OpenVINO demo applications:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 370.88 Td (classification_sample_async) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 360.25 Td (object_detection_demo_yolov3_async) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 349.62 Td (segmentation_demo) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 329.00 Td (The object detection demo is documented under the PCIe design example section and uses YOLOv3:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 306.50 Td (yolo-v3-tf) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 295.88 Td (yolo-v3-tiny-tf) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 275.25 Td (The sample command in the handbook is shown for a PCIe/Agilex 7 example. For the Agilex 5) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 262.75 Td (E-Series Modular Development Kit, the relevant full application-style path is closer to:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 240.25 Td (agx5e_modular_ofs_pcie) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 219.62 Td (JTAG can run inference, but it is not ideal for live/video object detection because USB-JTAG is) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 207.12 Td (slow.) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 182.62 Td (H1. Download and compile YOLOv3 for AGX5) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 155.12 Td (cd $COREDLA_WORK) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 144.50 Td (omz_downloader --name yolo-v3-tf --output_dir $COREDLA_WORK/demo/models/) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 121.88 Td (omz_converter --name yolo-v3-tf \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 111.25 Td (  --download_dir $COREDLA_WORK/demo/models/ \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 100.62 Td (  --output_dir $COREDLA_WORK/demo/models/) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 78.00 Td (cd $COREDLA_WORK/demo/models/public/yolo-v3-tf/FP32) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 10 of 13) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (Configuration succeeded at device index 1) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td (Quartus Prime Programmer was successful. 0 errors, 0 warnings) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 688.75 Td (JTAG is slow. Use -nireq=1 for JTAG examples.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 664.25 Td (G6. Run ResNet-50 on real Agilex 5 hardware over JTAG) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 638.75 Td (After programming AGX5_Generic.sof, set the runtime variables:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 616.25 Td (export PATH=/opt/altera/syscon/bin:/opt/altera/qcore/linux64:$PATH) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 605.62 Td (export QUARTUS_ROOTDIR=/opt/altera/quartus) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 595.00 Td (export DLA_SOF_PATH=$COREDLA_WORK/build_agx5_jtag_ed/AGX5_Generic.sof) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 584.38 Td () Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 573.75 Td (MODEL=$COREDLA_WORK/demo/models/public/resnet-50-tf/FP32/resnet-50-tf.xml) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 563.12 Td (IMGDIR=$COREDLA_WORK/demo/sample_images) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 552.50 Td (ARCH=$COREDLA_ROOT/example_architectures/AGX5_Generic.arch) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 541.88 Td (PLUGIN_XML=$COREDLA_WORK/runtime/build_Release/plugins.xml) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 521.25 Td (What this does: sets paths to the Quartus System Console tools, the programmed bitstream, the) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 508.75 Td (OpenVINO model, input images, architecture file, and runtime plugin XML.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 488.25 Td (Why it is required: dla_benchmark needs all of these paths to load the correct model, match the) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 475.75 Td (hardware architecture, and communicate with the FPGA plugin.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 455.25 Td (If the runtime cannot auto-detect the JTAG master, list System Console master paths:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 432.75 Td (system-console --cli) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 412.12 Td (At the System Console prompt:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 389.62 Td (get_service_paths master) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 379.00 Td (exit) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 358.38 Td (For the successful Agilex 5 JTAG run, the correct master path was:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 335.88 Td (/devices/A5E\(C065BB32AR0|D065BB32AR0\)@1#1-8.1#Agilex_5E MDK Carrier/\(link\)/JTA) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 325.25 Td (  G/alt_sld_fab_0_alt_sld_fab_0_sldfabric.node_0/phy_0/jtag_master_0.master) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 304.62 Td (Set it:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 282.12 Td (JTAG_PATH='/devices/A5E\(C065BB32AR0|D065BB32AR0\)@1#1-8.1#Agilex_5E MDK Carrier) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 271.50 Td (  /\(link\)/JTAG/alt_sld_fab_0_alt_sld_fab_0_sldfabric.node_0/phy_0/jtag_master_0.) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 260.88 Td (  master') Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 240.25 Td (Run hardware inference:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 217.75 Td (cd $COREDLA_WORK/runtime/build_Release/dla_benchmark) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 207.12 Td (rm -rf TensorFlow_Frontend_IR network_directories.txt csr_log.txt) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 196.50 Td () Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 185.88 Td (./dla_benchmark \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 175.25 Td (  -b=1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 164.62 Td (  -m=$MODEL \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 154.00 Td (  -d=HETERO:FPGA,CPU \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 143.38 Td (  -i=$IMGDIR \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 132.75 Td (  -niter=2 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 122.12 Td (  -plugins=$PLUGIN_XML \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 111.50 Td (  -arch_file=$ARCH \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 100.88 Td (  -api=async \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 90.25 Td (  -perf_est \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 79.62 Td (  -nireq=1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 69.00 Td (  -dump_output \\) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 10 of 16) Tj ET
 endstream
 endobj
 22 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 21 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 21 0 R >>
 endobj
 23 0 obj
-<< /Length 3363 >>
+<< /Length 5393 >>
 stream
 BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (dla_compiler \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td (  --march $COREDLA_ROOT/example_architectures/AGX5_Generic.arch \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 698.75 Td (  --network-file ./yolo-v3-tf.xml \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 688.12 Td (  --o $COREDLA_WORK/demo/YOLOv3_AGX5_Generic_b1.aot \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 677.50 Td (  --fanalyze-performance) Tj ET
-BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 638.88 Td (Part I - Troubleshooting) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 604.38 Td (I1. Docker container name conflict) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 578.88 Td (Error:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 556.38 Td (container name is already in use) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 535.75 Td (Fix:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 513.25 Td (docker start -ai fpga-ai-suite-2026) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 492.62 Td (or recreate:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 470.12 Td (docker rm fpga-ai-suite-2026) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 445.50 Td (I2. OpenVINO not found) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 420.00 Td (If this fails on host Ubuntu:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 397.50 Td (python3 -c "import openvino; print\(openvino.__version__\)") Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 376.88 Td (that is expected if OpenVINO is only installed inside Docker. Enter container first:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 354.38 Td (docker start -ai fpga-ai-suite-2026) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 329.75 Td (I3. Workspace permission denied) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 304.25 Td (Inside Docker:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 281.75 Td (sudo chown -R fpga_ai_suite:fpga_ai_suite /workspace) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 257.12 Td (I4. License issue: No valid license for CoreDLA found) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 231.62 Td (Symptoms in build.log:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 209.12 Td (No valid license for CoreDLA found.) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 198.50 Td (Building unlicensed version.) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 177.88 Td (First confirm the license file is mounted inside Docker:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 155.38 Td (echo $LM_LICENSE_FILE) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 144.75 Td (echo $ALTERAD_LICENSE_FILE) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 134.12 Td (ls -lh /licenses/altera_license.dat) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 113.50 Td (Find lmutil if needed:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 91.00 Td (find /opt/altera -name lmutil 2>/dev/null) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 70.38 Td (In the Quartus Docker image used here, lmutil was located at:) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 11 of 13) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (  -report_lsu_counters \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td (  -bgr \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 698.75 Td (  -jtag-path="$JTAG_PATH") Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 678.12 Td (What this does: runs ResNet-50 inference through OpenVINO HETERO mode, using the FPGA AI Suite) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 665.62 Td (plugin to execute supported layers on the FPGA and CPU fallback if needed.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 645.12 Td (Why it is required: this is the real hardware validation step. It proves the runtime can) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 632.62 Td (communicate with the programmed FPGA AI Suite IP and execute inference on the board.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 612.12 Td (Key options:) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 591.62 Td (| Option | Meaning |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 582.25 Td (|---|---|) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 572.88 Td (| `-m` | OpenVINO model XML |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 563.50 Td (| `-d=HETERO:FPGA,CPU` | Prefer FPGA, fall back to CPU if needed |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 554.12 Td (| `-plugins` | Runtime plugin XML for the hardware build |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 544.75 Td (| `-arch_file` | Must match the architecture used to build the bitstream |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 535.38 Td (| `-nireq=1` | Required/recommended for JTAG design example |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 526.00 Td (| `-perf_est` | Prints FPGA AI Suite performance estimate alongside measured results |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 516.62 Td (| `-report_lsu_counters` | Dumps memory access counter information |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 507.25 Td (| `-jtag-path` | Explicit System Console master path for CSR/DDR access |) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 493.88 Td (Successful hardware run indicators:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 471.38 Td (Using licensed IP) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 460.75 Td (Runtime arch check passed.) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 450.12 Td (Runtime build version check passed.) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 439.50 Td (IP throughput per instance: 31.1680 FPS) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 428.88 Td (IP clock frequency measurement: 326.8177 MHz) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 408.25 Td (Example measured result from the successful Agilex 5 run:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 385.75 Td (system throughput: 3.5635 FPS) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 375.12 Td (IP throughput per instance: 31.1680 FPS) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 364.50 Td (estimated IP throughput per instance: 30.6566 FPS) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 343.88 Td (The system throughput is lower than IP throughput because JTAG transfer/control overhead is) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 331.38 Td (slow. The IP throughput is the accelerator throughput.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 306.88 Td (G7. Permanent licensed Docker startup) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 281.38 Td (For a node-locked Altera license, start Docker with host networking, USB pass-through, workspace) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 268.88 Td (mount, license mount, and license environment variables.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 248.38 Td (Create or update this host-side script:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 225.88 Td (mkdir -p ~/bin) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 215.25 Td (nano ~/bin/start-fpga-ai-suite.sh) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 194.62 Td (Use this content, adjusting the license filename if needed:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 172.12 Td (#!/bin/bash) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 161.50 Td (set -e) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 150.88 Td () Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 140.25 Td (CONTAINER_NAME="fpga-ai-suite-2026") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 129.62 Td (IMAGE_NAME="alterafpga/fpgaaisuite:2026.1.1-quartus") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 119.00 Td (WORKSPACE="$HOME/fpga-ai-work") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 108.38 Td (LICENSE_FILE="$HOME/altera_pro/LR-178044_License.dat") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 97.75 Td () Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 87.12 Td (if [ ! -f "$LICENSE_FILE" ]; then) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 76.50 Td (    echo "ERROR: License file not found: $LICENSE_FILE") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 65.88 Td (    exit 1) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 11 of 16) Tj ET
 endstream
 endobj
 24 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 23 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 23 0 R >>
 endobj
 25 0 obj
-<< /Length 3789 >>
+<< /Length 4594 >>
 stream
 BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 718.00 Td (/opt/altera/qcore/linux64/lmutil) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 697.38 Td (Add it to PATH:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 674.88 Td (export PATH=/opt/altera/qcore/linux64:$PATH) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 654.25 Td (Check the container-visible host ID:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 631.75 Td (lmutil lmhostid) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 611.12 Td (Check the FPGA AI Suite/CoreDLA features from the license. The useful feature IDs observed for) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 598.62 Td (FPGA AI Suite were:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 576.12 Td (6AF8_018B) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 565.50 Td (6AF7_018B) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 544.88 Td (Run diagnostics:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 522.38 Td (lmutil lmdiag -c /licenses/altera_license.dat 6AF8_018B) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 511.75 Td (lmutil lmdiag -c /licenses/altera_license.dat 6AF7_018B) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 491.12 Td (Success looks like:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 468.62 Td (This is the correct node for this node-locked license) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 448.00 Td (If you see:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 425.50 Td (Invalid host) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 404.88 Td (then the license is locked to a different NIC/host ID. Generate or rehost the license using the) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 392.38 Td (real Linux host Ethernet MAC, not the Docker virtual MAC. Confirm host MACs on the Linux host) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 379.88 Td (with:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 357.38 Td (ip link) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 336.75 Td (For this setup, the corrected license was generated for primary computer ID:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 314.25 Td (e89744bdaefd) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 293.62 Td (For node-locked licenses in Docker, start the container with:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 271.12 Td (--network host) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 250.50 Td (so FlexLM can see the host network identity.) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 230.00 Td (For the Agilex 5 JTAG design build, force the licensed IP path with:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 207.50 Td ($COREDLA_ROOT/bin/dla_build_example_design.py build \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 196.88 Td (  --licensed \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 186.25 Td (  --output-dir build_agx5_jtag_ed \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 175.62 Td (  --num-instances 1 \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 165.00 Td (  --seed 1 \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 154.38 Td (  agx5e_modular_jtag \\) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 143.75 Td (  $COREDLA_ROOT/example_architectures/AGX5_Generic.arch) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 123.12 Td (The build log should include:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 100.62 Td (Created licensed IP.) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 90.00 Td (Building licensed version.) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 12 of 13) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (fi) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td () Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 698.75 Td (mkdir -p "$WORKSPACE") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 688.12 Td () Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 677.50 Td (if docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 666.88 Td (    echo "Starting existing FPGA AI Suite container...") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 656.25 Td (    docker start -ai "$CONTAINER_NAME") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 645.62 Td (else) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 635.00 Td (    echo "Creating new licensed FPGA AI Suite container...") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 624.38 Td (    docker run -it \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 613.75 Td (      --name "$CONTAINER_NAME" \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 603.12 Td (      --network host \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 592.50 Td (      --privileged \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 581.88 Td (      -v /dev/bus/usb:/dev/bus/usb \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 571.25 Td (      -v "$WORKSPACE":/workspace \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 560.62 Td (      -v "$LICENSE_FILE":/licenses/altera_license.dat:ro \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 550.00 Td (      -e LM_LICENSE_FILE=/licenses/altera_license.dat \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 539.38 Td (      -e ALTERAD_LICENSE_FILE=/licenses/altera_license.dat \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 528.75 Td (      "$IMAGE_NAME") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 518.12 Td (fi) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 497.50 Td (Make it executable:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 475.00 Td (chmod +x ~/bin/start-fpga-ai-suite.sh) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 454.38 Td (Daily startup:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 431.88 Td (~/bin/start-fpga-ai-suite.sh) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 411.25 Td (Inside Docker, verify the license variables and tools:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 388.75 Td (echo $LM_LICENSE_FILE) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 378.12 Td (echo $ALTERAD_LICENSE_FILE) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 367.50 Td (ls -lh /licenses/altera_license.dat) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 356.88 Td (which quartus_pgm) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 346.25 Td (which system-console) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 335.62 Td (which lmutil) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 315.00 Td (If system-console or lmutil is not in PATH, add:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 292.50 Td (echo 'export PATH=/opt/altera/syscon/bin:/opt/altera/qcore/linux64:$PATH' >> ~) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 281.88 Td (  /.bashrc) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 271.25 Td (echo 'export QUARTUS_ROOTDIR=/opt/altera/quartus' >> ~/.bashrc) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 260.62 Td (source ~/.bashrc) Tj ET
+BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 222.00 Td (Part H - Object detection notes) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 191.50 Td (FPGA AI Suite includes ported OpenVINO demo applications:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 169.00 Td (classification_sample_async) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 158.38 Td (object_detection_demo_yolov3_async) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 147.75 Td (segmentation_demo) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 127.12 Td (The object detection demo is documented under the PCIe design example section and uses YOLOv3:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 104.62 Td (yolo-v3-tf) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 94.00 Td (yolo-v3-tiny-tf) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 73.38 Td (The sample command in the handbook is shown for a PCIe/Agilex 7 example. For the Agilex 5) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 12 of 16) Tj ET
 endstream
 endobj
 26 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 25 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 25 0 R >>
 endobj
 27 0 obj
-<< /Length 2947 >>
+<< /Length 3472 >>
 stream
 BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 720.00 Td (I5. No JTAG hardware available) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 694.50 Td (Possible causes:) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 674.00 Td (1. Board not powered.) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 657.50 Td (2. USB-JTAG cable not connected.) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 641.00 Td (3. Container not started with USB pass-through.) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 624.50 Td (4. Host USB permissions issue.) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 604.00 Td (Use container command with:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 581.50 Td (--privileged -v /dev/bus/usb:/dev/bus/usb) Tj ET
-BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 556.88 Td (I6. Accuracy check fails but emulator says PASSED) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 531.38 Td (If emulator prints:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 508.88 Td (PASSED) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 488.25 Td (then emulation ran. Accuracy mismatch usually means preprocessing or ground-truth mismatch. Try) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 475.75 Td (first without -groundtruth_loc, then inspect output files.) Tj ET
-BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 437.25 Td (Final checklist) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 406.75 Td (A complete working environment should pass:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 384.25 Td (python3 -c "import openvino; print\(openvino.__version__\)") Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 373.62 Td (echo $COREDLA_ROOT) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 363.00 Td (dla_compiler --version) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 352.38 Td (quartus_pgm --version) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 341.75 Td (ls $COREDLA_ROOT/example_architectures | grep AGX5) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 331.12 Td (dla_compiler --fanalyze-area --march $COREDLA_ROOT/example_architectures/AGX5_) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 320.50 Td (  Generic.arch) Tj ET
-BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 299.88 Td (A successful model flow should produce:) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 277.38 Td (resnet-50-tf.xml) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 266.75 Td (resnet-50-tf.bin) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 256.12 Td (RN50_AGX5_Generic_b1.aot) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 245.50 Td (Performance Estimate has finished) Tj ET
-BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 234.88 Td (PASSED from emulator) Tj ET
-BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 13 of 13) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 720.00 Td (E-Series Modular Development Kit, the relevant full application-style path is closer to:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 697.50 Td (agx5e_modular_ofs_pcie) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 676.88 Td (JTAG can run inference, but it is not ideal for live/video object detection because USB-JTAG is) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 664.38 Td (slow.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 639.88 Td (H1. Download and compile YOLOv3 for AGX5) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 612.38 Td (cd $COREDLA_WORK) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 601.75 Td (omz_downloader --name yolo-v3-tf --output_dir $COREDLA_WORK/demo/models/) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 579.12 Td (omz_converter --name yolo-v3-tf \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 568.50 Td (  --download_dir $COREDLA_WORK/demo/models/ \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 557.88 Td (  --output_dir $COREDLA_WORK/demo/models/) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 535.25 Td (cd $COREDLA_WORK/demo/models/public/yolo-v3-tf/FP32) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 512.62 Td (dla_compiler \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 502.00 Td (  --march $COREDLA_ROOT/example_architectures/AGX5_Generic.arch \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 491.38 Td (  --network-file ./yolo-v3-tf.xml \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 480.75 Td (  --o $COREDLA_WORK/demo/YOLOv3_AGX5_Generic_b1.aot \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 470.12 Td (  --fanalyze-performance) Tj ET
+BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 431.50 Td (Part I - Troubleshooting) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 397.00 Td (I1. Docker container name conflict) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 371.50 Td (Error:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 349.00 Td (container name is already in use) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 328.38 Td (Fix:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 305.88 Td (docker start -ai fpga-ai-suite-2026) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 285.25 Td (or recreate:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 262.75 Td (docker rm fpga-ai-suite-2026) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 238.12 Td (I2. OpenVINO not found) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 212.62 Td (If this fails on host Ubuntu:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 190.12 Td (python3 -c "import openvino; print\(openvino.__version__\)") Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 169.50 Td (that is expected if OpenVINO is only installed inside Docker. Enter container first:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 147.00 Td (docker start -ai fpga-ai-suite-2026) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 122.38 Td (I3. Workspace permission denied) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 96.88 Td (Inside Docker:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 74.38 Td (sudo chown -R fpga_ai_suite:fpga_ai_suite /workspace) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 13 of 16) Tj ET
 endstream
 endobj
 28 0 obj
-<< /Type /Page /Parent 29 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 27 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 27 0 R >>
 endobj
 29 0 obj
-<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R 20 0 R 22 0 R 24 0 R 26 0 R 28 0 R] /Count 13 >>
+<< /Length 3642 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 716.00 Td (I4. License issue: No valid license for CoreDLA found) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 690.50 Td (Symptoms in build.log:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 668.00 Td (No valid license for CoreDLA found.) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 657.38 Td (Building unlicensed version.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 636.75 Td (First confirm the license file is mounted inside Docker:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 614.25 Td (echo $LM_LICENSE_FILE) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 603.62 Td (echo $ALTERAD_LICENSE_FILE) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 593.00 Td (ls -lh /licenses/altera_license.dat) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 572.38 Td (Find lmutil if needed:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 549.88 Td (find /opt/altera -name lmutil 2>/dev/null) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 529.25 Td (In the Quartus Docker image used here, lmutil was located at:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 506.75 Td (/opt/altera/qcore/linux64/lmutil) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 486.12 Td (Add it to PATH:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 463.62 Td (export PATH=/opt/altera/qcore/linux64:$PATH) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 443.00 Td (Check the container-visible host ID:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 420.50 Td (lmutil lmhostid) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 399.88 Td (Check the FPGA AI Suite/CoreDLA features from the license. The useful feature IDs observed for) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 387.38 Td (FPGA AI Suite were:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 364.88 Td (6AF8_018B) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 354.25 Td (6AF7_018B) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 333.62 Td (Run diagnostics:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 311.12 Td (lmutil lmdiag -c /licenses/altera_license.dat 6AF8_018B) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 300.50 Td (lmutil lmdiag -c /licenses/altera_license.dat 6AF7_018B) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 279.88 Td (Success looks like:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 257.38 Td (This is the correct node for this node-locked license) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 236.75 Td (If you see:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 214.25 Td (Invalid host) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 193.62 Td (then the license is locked to a different NIC/host ID. Generate or rehost the license using the) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 181.12 Td (real Linux host Ethernet MAC, not the Docker virtual MAC. Confirm host MACs on the Linux host) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 168.62 Td (with:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 146.12 Td (ip link) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 125.50 Td (For this setup, the corrected license was generated for primary computer ID:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 103.00 Td (e89744bdaefd) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 82.38 Td (For node-locked licenses in Docker, start the container with:) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 14 of 16) Tj ET
+endstream
 endobj
 30 0 obj
-<< /Type /Catalog /Pages 29 0 R >>
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 29 0 R >>
+endobj
+31 0 obj
+<< /Length 3859 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (--network host) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 699.38 Td (so FlexLM can see the host network identity.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 678.88 Td (For the Agilex 5 JTAG design build, force the licensed IP path with:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 656.38 Td ($COREDLA_ROOT/bin/dla_build_example_design.py build \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 645.75 Td (  --licensed \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 635.12 Td (  --output-dir build_agx5_jtag_ed \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 624.50 Td (  --num-instances 1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 613.88 Td (  --seed 1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 603.25 Td (  agx5e_modular_jtag \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 592.62 Td (  $COREDLA_ROOT/example_architectures/AGX5_Generic.arch) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 572.00 Td (The build log should include:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 549.50 Td (Created licensed IP.) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 538.88 Td (Building licensed version.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 514.25 Td (I5. No JTAG hardware available) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 488.75 Td (Possible causes:) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 468.25 Td (1. Board not powered.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 451.75 Td (2. USB-JTAG cable not connected.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 435.25 Td (3. Container not started with USB pass-through.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 418.75 Td (4. Host USB permissions issue.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 398.25 Td (Use container command with:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 375.75 Td (--privileged -v /dev/bus/usb:/dev/bus/usb) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 351.12 Td (I6. Accuracy check fails but emulator says PASSED) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 325.62 Td (If emulator prints:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 303.12 Td (PASSED) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 282.50 Td (then emulation ran. Accuracy mismatch usually means preprocessing or ground-truth mismatch. Try) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 270.00 Td (first without -groundtruth_loc, then inspect output files.) Tj ET
+BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 231.50 Td (Final checklist) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 201.00 Td (A complete working environment should pass:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 178.50 Td (python3 -c "import openvino; print\(openvino.__version__\)") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 167.88 Td (echo $COREDLA_ROOT) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 157.25 Td (dla_compiler --version) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 146.62 Td (quartus_pgm --version) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 136.00 Td (ls $COREDLA_ROOT/example_architectures | grep AGX5) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 125.38 Td (dla_compiler --fanalyze-area --march $COREDLA_ROOT/example_architectures/AGX5_) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 114.75 Td (  Generic.arch) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 94.12 Td (A successful model flow should produce:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 71.62 Td (resnet-50-tf.xml) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 15 of 16) Tj ET
+endstream
+endobj
+32 0 obj
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 31 0 R >>
+endobj
+33 0 obj
+<< /Length 527 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (FPGA AI Suite 2026.1.1 Installation Guide) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (resnet-50-tf.bin) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td (RN50_AGX5_Generic_b1.aot) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 698.75 Td (Performance Estimate has finished) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 688.12 Td (PASSED from emulator) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 16 of 16) Tj ET
+endstream
+endobj
+34 0 obj
+<< /Type /Page /Parent 35 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 33 0 R >>
+endobj
+35 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R 20 0 R 22 0 R 24 0 R 26 0 R 28 0 R 30 0 R 32 0 R 34 0 R] /Count 16 >>
+endobj
+36 0 obj
+<< /Type /Catalog /Pages 35 0 R >>
 endobj
 xref
-0 31
+0 37
 0000000000 65535 f 
 0000000015 00000 n 
 0000000085 00000 n 
@@ -619,21 +750,27 @@ xref
 0000022924 00000 n 
 0000026288 00000 n 
 0000026439 00000 n 
-0000030612 00000 n 
-0000030763 00000 n 
-0000035724 00000 n 
-0000035875 00000 n 
-0000039901 00000 n 
-0000040052 00000 n 
-0000043468 00000 n 
-0000043619 00000 n 
-0000047461 00000 n 
-0000047612 00000 n 
-0000050612 00000 n 
-0000050763 00000 n 
-0000050904 00000 n 
+0000030684 00000 n 
+0000030835 00000 n 
+0000035328 00000 n 
+0000035479 00000 n 
+0000040526 00000 n 
+0000040677 00000 n 
+0000046123 00000 n 
+0000046274 00000 n 
+0000050921 00000 n 
+0000051072 00000 n 
+0000054597 00000 n 
+0000054748 00000 n 
+0000058443 00000 n 
+0000058594 00000 n 
+0000062506 00000 n 
+0000062657 00000 n 
+0000063236 00000 n 
+0000063387 00000 n 
+0000063549 00000 n 
 trailer
-<< /Size 31 /Root 30 0 R >>
+<< /Size 37 /Root 36 0 R >>
 startxref
-50955
+63600
 %%EOF

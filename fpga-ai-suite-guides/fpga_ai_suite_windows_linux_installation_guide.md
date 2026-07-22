@@ -565,8 +565,12 @@ Architecture: AGX5_Generic.arch
 
 ```bash
 cd $COREDLA_WORK/runtime
-./build_runtime.sh -target_system_console
+./build_runtime.sh -target_agx5_mdk_jtag_system_console
 ```
+
+What this does: builds the FPGA AI Suite runtime plugin and `dla_benchmark` for the Agilex 5 Modular Development Kit Hostless JTAG System Console design.
+
+Why it is required: the emulation runtime cannot talk to the real board. This target builds the runtime layer that uses Quartus System Console to access FPGA registers and DDR through JTAG.
 
 ## G4. Build Agilex 5 JTAG bitstream
 
@@ -581,26 +585,173 @@ $COREDLA_ROOT/bin/dla_build_example_design.py build \
   $COREDLA_ROOT/example_architectures/AGX5_Generic.arch
 ```
 
+What this does: creates the FPGA hardware design for the Agilex 5 Hostless JTAG example and runs Quartus to generate the programming bitstream.
+
+Why it is required: the board must be configured with FPGA AI Suite IP that matches `AGX5_Generic.arch`. The runtime checks this architecture at load time.
+
+The `--licensed` option forces licensed FPGA AI Suite IP generation. Use this when you have a valid FPGA AI Suite/CoreDLA license.
+
 Expected output:
 
 ```text
 $COREDLA_WORK/build_agx5_jtag_ed/AGX5_Generic.sof
 ```
 
-## G5. Program board
+## G5. Detect and program the board
 
-Connect board power and USB-JTAG. Then:
+Connect board power and USB-JTAG. Then detect the board:
 
 ```bash
 jtagconfig
+```
+
+Expected example output:
+
+```text
+1) Agilex_5E MDK Carrier [1-8.1]
+  0364F0DD   A5E(C065BB32AR0|D065BB32AR0)
+  020D10DD   VTAP10
+```
+
+What this does: verifies that Quartus JTAG tools can see the USB-JTAG cable and Agilex 5 device chain.
+
+Why it is required: if `jtagconfig` cannot see the board, programming and hardware inference cannot work.
+
+Set a stable JTAG clock:
+
+```bash
 jtagconfig --setparam 1 JtagClock 16M
+```
+
+What this does: lowers the JTAG cable clock to 16 MHz.
+
+Why it is required: the JTAG design example documentation recommends 16 MHz or lower to reduce System Console/JTAG instability.
+
+Program the FPGA:
+
+```bash
 cd $COREDLA_WORK/build_agx5_jtag_ed
 quartus_pgm -c 1 -m jtag -o "p;AGX5_Generic.sof"
 ```
 
+What this does: downloads the `AGX5_Generic.sof` bitstream into the Agilex 5 FPGA over JTAG.
+
+Why it is required: the FPGA must contain the `agx5e_modular_jtag` hardware design before `dla_benchmark` can run on hardware.
+
+Success looks like:
+
+```text
+Configuration succeeded at device index 1
+Quartus Prime Programmer was successful. 0 errors, 0 warnings
+```
+
 JTAG is slow. Use `-nireq=1` for JTAG examples.
 
-## G6. Permanent licensed Docker startup
+## G6. Run ResNet-50 on real Agilex 5 hardware over JTAG
+
+After programming `AGX5_Generic.sof`, set the runtime variables:
+
+```bash
+export PATH=/opt/altera/syscon/bin:/opt/altera/qcore/linux64:$PATH
+export QUARTUS_ROOTDIR=/opt/altera/quartus
+export DLA_SOF_PATH=$COREDLA_WORK/build_agx5_jtag_ed/AGX5_Generic.sof
+
+MODEL=$COREDLA_WORK/demo/models/public/resnet-50-tf/FP32/resnet-50-tf.xml
+IMGDIR=$COREDLA_WORK/demo/sample_images
+ARCH=$COREDLA_ROOT/example_architectures/AGX5_Generic.arch
+PLUGIN_XML=$COREDLA_WORK/runtime/build_Release/plugins.xml
+```
+
+What this does: sets paths to the Quartus System Console tools, the programmed bitstream, the OpenVINO model, input images, architecture file, and runtime plugin XML.
+
+Why it is required: `dla_benchmark` needs all of these paths to load the correct model, match the hardware architecture, and communicate with the FPGA plugin.
+
+If the runtime cannot auto-detect the JTAG master, list System Console master paths:
+
+```bash
+system-console --cli
+```
+
+At the System Console prompt:
+
+```tcl
+get_service_paths master
+exit
+```
+
+For the successful Agilex 5 JTAG run, the correct master path was:
+
+```text
+/devices/A5E(C065BB32AR0|D065BB32AR0)@1#1-8.1#Agilex_5E MDK Carrier/(link)/JTAG/alt_sld_fab_0_alt_sld_fab_0_sldfabric.node_0/phy_0/jtag_master_0.master
+```
+
+Set it:
+
+```bash
+JTAG_PATH='/devices/A5E(C065BB32AR0|D065BB32AR0)@1#1-8.1#Agilex_5E MDK Carrier/(link)/JTAG/alt_sld_fab_0_alt_sld_fab_0_sldfabric.node_0/phy_0/jtag_master_0.master'
+```
+
+Run hardware inference:
+
+```bash
+cd $COREDLA_WORK/runtime/build_Release/dla_benchmark
+rm -rf TensorFlow_Frontend_IR network_directories.txt csr_log.txt
+
+./dla_benchmark \
+  -b=1 \
+  -m=$MODEL \
+  -d=HETERO:FPGA,CPU \
+  -i=$IMGDIR \
+  -niter=2 \
+  -plugins=$PLUGIN_XML \
+  -arch_file=$ARCH \
+  -api=async \
+  -perf_est \
+  -nireq=1 \
+  -dump_output \
+  -report_lsu_counters \
+  -bgr \
+  -jtag-path="$JTAG_PATH"
+```
+
+What this does: runs ResNet-50 inference through OpenVINO HETERO mode, using the FPGA AI Suite plugin to execute supported layers on the FPGA and CPU fallback if needed.
+
+Why it is required: this is the real hardware validation step. It proves the runtime can communicate with the programmed FPGA AI Suite IP and execute inference on the board.
+
+Key options:
+
+| Option | Meaning |
+|---|---|
+| `-m` | OpenVINO model XML |
+| `-d=HETERO:FPGA,CPU` | Prefer FPGA, fall back to CPU if needed |
+| `-plugins` | Runtime plugin XML for the hardware build |
+| `-arch_file` | Must match the architecture used to build the bitstream |
+| `-nireq=1` | Required/recommended for JTAG design example |
+| `-perf_est` | Prints FPGA AI Suite performance estimate alongside measured results |
+| `-report_lsu_counters` | Dumps memory access counter information |
+| `-jtag-path` | Explicit System Console master path for CSR/DDR access |
+
+Successful hardware run indicators:
+
+```text
+Using licensed IP
+Runtime arch check passed.
+Runtime build version check passed.
+IP throughput per instance: 31.1680 FPS
+IP clock frequency measurement: 326.8177 MHz
+```
+
+Example measured result from the successful Agilex 5 run:
+
+```text
+system throughput: 3.5635 FPS
+IP throughput per instance: 31.1680 FPS
+estimated IP throughput per instance: 30.6566 FPS
+```
+
+The system throughput is lower than IP throughput because JTAG transfer/control overhead is slow. The IP throughput is the accelerator throughput.
+
+## G7. Permanent licensed Docker startup
 
 For a node-locked Altera license, start Docker with host networking, USB pass-through, workspace mount, license mount, and license environment variables.
 
