@@ -1,0 +1,900 @@
+#!/usr/bin/env python3
+"""Generate Sahil's 29 July 2026 quarterly business review artifacts."""
+
+from __future__ import annotations
+
+import argparse
+from collections import defaultdict
+from datetime import date, datetime
+from pathlib import Path
+from typing import Any
+
+from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils.datetime import from_excel
+from pptx import Presentation
+from pptx.dml.color import RGBColor
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
+from pptx.util import Inches, Pt
+
+
+AS_OF = date(2026, 7, 27)
+REVIEW_DATE = date(2026, 7, 29)
+OWNER = "Sahil Patni"
+
+NAVY = "0B132B"
+NAVY_2 = "111C3A"
+TEAL = "00B8A9"
+BLUE = "3A86FF"
+ORANGE = "FF9F1C"
+RED = "FF5A5F"
+WHITE = "F7FAFC"
+MUTED = "A8B2C7"
+GRID = "2A3658"
+PALE = "DDE6F3"
+GREEN = "3DDC97"
+
+
+def rgb(hex_value: str) -> RGBColor:
+    return RGBColor.from_string(hex_value)
+
+
+def parse_date(value: Any) -> date | None:
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    if isinstance(value, (int, float)):
+        return from_excel(value).date()
+    if isinstance(value, str):
+        for pattern in ("%m/%d/%Y", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(value, pattern).date()
+            except ValueError:
+                pass
+    return None
+
+
+def fmt_value(value: float, decimals: int = 2) -> str:
+    """Format in source units; the workbook does not identify a currency."""
+    if abs(value) >= 1_000_000:
+        return f"{value / 1_000_000:.{decimals}f}M"
+    if abs(value) >= 1_000:
+        return f"{value / 1_000:.0f}K"
+    return f"{value:,.0f}"
+
+
+def fmt_date(value: date | None) -> str:
+    return value.strftime("%d %b %Y") if value else "—"
+
+
+def read_pipeline(source: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    workbook = load_workbook(source, data_only=True)
+    worksheet = workbook.active
+    values = list(worksheet.iter_rows(values_only=True))
+    headers = values[0]
+    line_items = [
+        dict(zip(headers, row))
+        for row in values[1:]
+        if row[2] == OWNER
+    ]
+
+    opportunities: dict[str, dict[str, Any]] = {}
+    for row in line_items:
+        opportunity_id = row["Opportunity ID"]
+        if opportunity_id not in opportunities:
+            opportunities[opportunity_id] = {
+                **row,
+                "Peak Value": 0.0,
+                "Products": [],
+            }
+        opportunities[opportunity_id]["Peak Value"] += float(row["Peak Value"] or 0)
+        opportunities[opportunity_id]["Products"].append(row["Product Name"])
+
+    result = list(opportunities.values())
+    for row in result:
+        row["Design Win Date Parsed"] = parse_date(row["Design Win Date"])
+        row["Created Date Parsed"] = parse_date(row["Created Date"])
+        row["Production Start Date Parsed"] = parse_date(row["Production Start Date"])
+        probability = float(row["Probability (%)"] or 0)
+        row["Weighted Value"] = row["Peak Value"] * probability / 100
+
+    result.sort(key=lambda item: item["Peak Value"], reverse=True)
+    return line_items, result
+
+
+def add_text(
+    slide,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    text: str,
+    *,
+    size: float = 16,
+    color: str = WHITE,
+    bold: bool = False,
+    font: str = "Aptos",
+    align=PP_ALIGN.LEFT,
+    valign=MSO_ANCHOR.TOP,
+    margin: float = 0.04,
+):
+    shape = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+    frame = shape.text_frame
+    frame.clear()
+    frame.word_wrap = True
+    frame.margin_left = Inches(margin)
+    frame.margin_right = Inches(margin)
+    frame.margin_top = Inches(margin)
+    frame.margin_bottom = Inches(margin)
+    frame.vertical_anchor = valign
+    paragraph = frame.paragraphs[0]
+    paragraph.text = text
+    paragraph.alignment = align
+    paragraph.font.name = font
+    paragraph.font.size = Pt(size)
+    paragraph.font.bold = bold
+    paragraph.font.color.rgb = rgb(color)
+    return shape
+
+
+def add_rich_text(
+    slide,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    lines: list[tuple[str, str, float, bool]],
+):
+    shape = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+    frame = shape.text_frame
+    frame.clear()
+    frame.word_wrap = True
+    frame.margin_left = Inches(0.08)
+    frame.margin_right = Inches(0.08)
+    frame.margin_top = Inches(0.05)
+    frame.margin_bottom = Inches(0.05)
+    for index, (text, color, size, bold) in enumerate(lines):
+        paragraph = frame.paragraphs[0] if index == 0 else frame.add_paragraph()
+        paragraph.text = text
+        paragraph.font.name = "Aptos"
+        paragraph.font.size = Pt(size)
+        paragraph.font.bold = bold
+        paragraph.font.color.rgb = rgb(color)
+        paragraph.space_after = Pt(5)
+    return shape
+
+
+def add_box(
+    slide,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    *,
+    fill: str = NAVY_2,
+    line: str = GRID,
+    radius: bool = True,
+):
+    kind = MSO_SHAPE.ROUNDED_RECTANGLE if radius else MSO_SHAPE.RECTANGLE
+    shape = slide.shapes.add_shape(kind, Inches(x), Inches(y), Inches(w), Inches(h))
+    shape.fill.solid()
+    shape.fill.fore_color.rgb = rgb(fill)
+    shape.line.color.rgb = rgb(line)
+    shape.line.width = Pt(1)
+    return shape
+
+
+def add_header(slide, title: str, section: str, number: int):
+    add_text(slide, 0.55, 0.25, 2.7, 0.25, section.upper(), size=9, color=TEAL, bold=True)
+    add_text(slide, 0.55, 0.52, 11.9, 0.48, title, size=25, bold=True)
+    add_text(
+        slide,
+        11.95,
+        0.26,
+        0.75,
+        0.25,
+        f"{number:02d}",
+        size=10,
+        color=MUTED,
+        bold=True,
+        align=PP_ALIGN.RIGHT,
+    )
+    line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.55), Inches(1.08), Inches(12.15), Inches(0.02))
+    line.fill.solid()
+    line.fill.fore_color.rgb = rgb(GRID)
+    line.line.fill.background()
+    add_text(
+        slide,
+        0.55,
+        7.18,
+        12.15,
+        0.18,
+        "Prepared 27 Jul 2026  •  Source: Sahil Report.xlsx  •  Values are in source units (currency not encoded)",
+        size=7.5,
+        color=MUTED,
+    )
+
+
+def new_slide(prs: Presentation, title: str, section: str, number: int):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    background = slide.background.fill
+    background.solid()
+    background.fore_color.rgb = rgb(NAVY)
+    add_header(slide, title, section, number)
+    return slide
+
+
+def add_stat_card(slide, x: float, y: float, w: float, label: str, value: str, note: str, accent: str = TEAL):
+    add_box(slide, x, y, w, 1.12)
+    add_text(slide, x + 0.18, y + 0.13, w - 0.36, 0.22, label.upper(), size=8.5, color=MUTED, bold=True)
+    add_text(slide, x + 0.18, y + 0.38, w - 0.36, 0.38, value, size=23, color=accent, bold=True)
+    add_text(slide, x + 0.18, y + 0.82, w - 0.36, 0.18, note, size=8, color=PALE)
+
+
+def add_table(
+    slide,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    headers: list[str],
+    rows: list[list[str]],
+    widths: list[float],
+    *,
+    font_size: float = 8.5,
+    header_size: float = 8,
+    row_fills: list[str] | None = None,
+):
+    table = slide.shapes.add_table(
+        len(rows) + 1,
+        len(headers),
+        Inches(x),
+        Inches(y),
+        Inches(w),
+        Inches(h),
+    ).table
+    for index, width in enumerate(widths):
+        table.columns[index].width = Inches(width)
+    for col, header in enumerate(headers):
+        cell = table.cell(0, col)
+        cell.text = header
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = rgb(BLUE)
+        cell.margin_left = Inches(0.06)
+        cell.margin_right = Inches(0.04)
+        cell.margin_top = Inches(0.03)
+        cell.margin_bottom = Inches(0.02)
+        paragraph = cell.text_frame.paragraphs[0]
+        paragraph.font.name = "Aptos"
+        paragraph.font.size = Pt(header_size)
+        paragraph.font.bold = True
+        paragraph.font.color.rgb = rgb(WHITE)
+        paragraph.vertical_anchor = MSO_ANCHOR.MIDDLE
+    for row_index, row in enumerate(rows, start=1):
+        fill = row_fills[row_index - 1] if row_fills else (NAVY_2 if row_index % 2 else "152446")
+        for col, value in enumerate(row):
+            cell = table.cell(row_index, col)
+            cell.text = str(value)
+            cell.fill.solid()
+            cell.fill.fore_color.rgb = rgb(fill)
+            cell.margin_left = Inches(0.06)
+            cell.margin_right = Inches(0.04)
+            cell.margin_top = Inches(0.025)
+            cell.margin_bottom = Inches(0.02)
+            frame = cell.text_frame
+            frame.word_wrap = True
+            frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+            paragraph = frame.paragraphs[0]
+            paragraph.font.name = "Aptos"
+            paragraph.font.size = Pt(font_size)
+            paragraph.font.color.rgb = rgb(WHITE)
+    return table
+
+
+def suggested_gate(opportunity: dict[str, Any]) -> str:
+    stage = opportunity["Opportunity Stage"]
+    if stage == "Identify":
+        return "Qualify use case, sponsor, budget and 0→25% gate"
+    if stage == "Define":
+        return "Freeze architecture/BOM and evaluation plan"
+    if stage == "Develop":
+        return "Close validation plan and design-freeze evidence"
+    if stage == "Design":
+        return "Secure DW evidence and production handoff"
+    return "Confirm next-stage exit criteria"
+
+
+def customer_name(value: str) -> str:
+    replacements = {
+        "EMERSON INNOVATION CENTER - PUNE": "Emerson",
+        "GE HEALTHCARE": "GE HealthCare",
+        "HONEYWELL AEROSPACE INDIA PRIVATE LIMITED": "Honeywell Aerospace",
+        "HONEYWELL TECHNOLOGY SOLUTIONS": "Honeywell Tech.",
+        "JUNIPER NETWORKS": "Juniper",
+        "Outdu Mediatech Private Limited": "Outdu",
+        "Philips India Limited - Innovation Center": "Philips",
+    }
+    return replacements.get(value, value)
+
+
+def build_presentation(opportunities: list[dict[str, Any]], output: Path):
+    total = sum(row["Peak Value"] for row in opportunities)
+    weighted = sum(row["Weighted Value"] for row in opportunities)
+    customers = sorted({row["Account Name"] for row in opportunities})
+    created_2026 = [row for row in opportunities if row["Created Date Parsed"] and row["Created Date Parsed"].year == 2026]
+    dw_2026 = [row for row in opportunities if row["Design Win Date Parsed"] and row["Design Win Date Parsed"].year == 2026]
+    q4_2026 = [
+        row
+        for row in opportunities
+        if row["Design Win Date Parsed"]
+        and date(2026, 10, 1) <= row["Design Win Date Parsed"] <= date(2026, 12, 31)
+    ]
+
+    prs = Presentation()
+    prs.slide_width = Inches(13.333)
+    prs.slide_height = Inches(7.5)
+
+    # 1 — Cover
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    slide.background.fill.solid()
+    slide.background.fill.fore_color.rgb = rgb(NAVY)
+    accent = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0), Inches(0), Inches(0.18), Inches(7.5))
+    accent.fill.solid()
+    accent.fill.fore_color.rgb = rgb(TEAL)
+    accent.line.fill.background()
+    add_text(slide, 0.8, 0.72, 4.0, 0.28, "QUARTERLY BUSINESS REVIEW", size=10, color=TEAL, bold=True)
+    add_text(slide, 0.8, 1.22, 8.6, 1.32, "Own the next gate.\nBuild the 2027 engine.", size=35, bold=True)
+    add_text(slide, 0.8, 2.78, 7.6, 0.42, "FAE plan review  •  Sahil Patni", size=18, color=PALE)
+    add_text(slide, 0.8, 3.25, 7.6, 0.32, "Wednesday, 29 July 2026  |  12:00–13:00", size=13, color=MUTED)
+    add_box(slide, 9.25, 0.75, 3.25, 5.55, fill=NAVY_2, line=GRID)
+    add_text(slide, 9.62, 1.18, 2.5, 0.28, "PIPELINE SNAPSHOT", size=9, color=MUTED, bold=True)
+    add_text(slide, 9.62, 1.65, 2.5, 0.58, fmt_value(total), size=31, color=TEAL, bold=True)
+    add_text(slide, 9.62, 2.18, 2.5, 0.26, "peak value", size=10, color=PALE)
+    add_text(slide, 9.62, 2.72, 2.5, 0.58, str(len(opportunities)), size=31, color=BLUE, bold=True)
+    add_text(slide, 9.62, 3.25, 2.5, 0.26, "distinct opportunities", size=10, color=PALE)
+    add_text(slide, 9.62, 3.78, 2.5, 0.58, str(len(customers)), size=31, color=ORANGE, bold=True)
+    add_text(slide, 9.62, 4.31, 2.5, 0.26, "direct-account customers", size=10, color=PALE)
+    add_text(slide, 9.62, 5.02, 2.5, 0.68, "Target + actual\ninputs required", size=15, color=RED, bold=True)
+    add_text(slide, 0.8, 6.78, 7.5, 0.24, "Prepared from Sahil Report.xlsx  •  Source values shown without assumed currency", size=8, color=MUTED)
+
+    # 2 — Executive snapshot
+    slide = new_slide(prs, "Executive snapshot: value exists; conversion discipline is the gap", "01 / Position", 2)
+    card_width = 2.82
+    add_stat_card(slide, 0.55, 1.35, card_width, "Peak pipeline", fmt_value(total), "14 opportunities", TEAL)
+    add_stat_card(slide, 3.55, 1.35, card_width, "Weighted pipeline", fmt_value(weighted), "probability × peak", BLUE)
+    add_stat_card(slide, 6.55, 1.35, card_width, "Added in 2026", fmt_value(sum(x["Peak Value"] for x in created_2026)), "8 new opportunities", ORANGE)
+    add_stat_card(slide, 9.55, 1.35, card_width, "2026 DWIN-dated", fmt_value(sum(x["Peak Value"] for x in dw_2026)), "5 opportunities", GREEN)
+    add_box(slide, 0.55, 2.78, 7.55, 3.85)
+    add_rich_text(
+        slide,
+        0.78,
+        3.05,
+        7.05,
+        3.25,
+        [
+            ("WHAT THE DATA SAYS", TEAL, 10, True),
+            (f"• {fmt_value(3_600_000)} sits at Identify / 0% probability; qualification is the first value unlock.", WHITE, 15, False),
+            (f"• Outdu AI is {fmt_value(4_125_000)} ({4_125_000 / total:.0%} of portfolio) but remains Define with a 21 Oct 2026 DWIN date.", WHITE, 15, False),
+            (f"• Q4 2026 DWIN-dated pipeline is {fmt_value(sum(x['Peak Value'] for x in q4_2026))}, yet weighted value is only {fmt_value(sum(x['Weighted Value'] for x in q4_2026))}.", WHITE, 15, False),
+            ("• Source contains direct opportunities only; no distributor-owned pipeline is present.", WHITE, 15, False),
+        ],
+    )
+    add_box(slide, 8.35, 2.78, 4.35, 3.85, fill="14213D", line=ORANGE)
+    add_rich_text(
+        slide,
+        8.62,
+        3.05,
+        3.78,
+        3.20,
+        [
+            ("DECISIONS FOR THE REVIEW", ORANGE, 10, True),
+            ("1  Confirm 2026 target and YTD actual.", WHITE, 15, True),
+            ("2  Agree stage-exit evidence for four Q4 DWINs.", WHITE, 15, True),
+            ("3  Assign DFAE support to top conversion plays.", WHITE, 15, True),
+            ("4  Select a distributor plan or confirm direct-only coverage.", WHITE, 15, True),
+        ],
+    )
+
+    # 3 — Target vs achievement
+    slide = new_slide(prs, "2026 target vs current achievement: source inputs are incomplete", "01 / Position", 3)
+    add_text(slide, 0.55, 1.28, 12.0, 0.32, "Do not use open opportunity value as booked achievement or target attainment.", size=13, color=ORANGE, bold=True)
+    labels = [
+        ("2026 ANNUAL TARGET", "[ INPUT REQUIRED ]", "Sales target is not in the source file"),
+        ("YTD ACTUAL ACHIEVEMENT", "[ INPUT REQUIRED ]", "Bookings/revenue/DWIN actuals are not in the source file"),
+        ("GAP TO TARGET", "[ CALCULATE AFTER INPUT ]", "Target − YTD actual"),
+    ]
+    for index, (label, value, note) in enumerate(labels):
+        x = 0.55 + index * 4.08
+        add_box(slide, x, 1.85, 3.82, 1.62, fill="14213D", line=RED if index < 2 else GRID)
+        add_text(slide, x + 0.2, 2.05, 3.42, 0.22, label, size=8.5, color=MUTED, bold=True)
+        add_text(slide, x + 0.2, 2.40, 3.42, 0.34, value, size=17, color=RED if index < 2 else ORANGE, bold=True)
+        add_text(slide, x + 0.2, 2.94, 3.42, 0.28, note, size=8, color=PALE)
+    add_box(slide, 0.55, 3.82, 12.15, 2.45)
+    add_text(slide, 0.8, 4.10, 11.65, 0.25, "AVAILABLE LEADING INDICATORS", size=9.5, color=TEAL, bold=True)
+    indicators = [
+        ("Peak pipeline", fmt_value(total)),
+        ("Weighted pipeline", fmt_value(weighted)),
+        ("2026-created", f"{len(created_2026)} / {fmt_value(sum(x['Peak Value'] for x in created_2026))}"),
+        ("2026 DWIN-dated", f"{len(dw_2026)} / {fmt_value(sum(x['Peak Value'] for x in dw_2026))}"),
+    ]
+    for index, (label, value) in enumerate(indicators):
+        x = 0.82 + index * 2.9
+        add_text(slide, x, 4.58, 2.45, 0.22, label, size=9, color=MUTED, bold=True)
+        add_text(slide, x, 4.90, 2.45, 0.38, value, size=19, color=WHITE, bold=True)
+    add_text(slide, 0.82, 5.72, 11.2, 0.30, "Bring to review: annual target, YTD revenue/bookings, achieved DWIN count/value, and definition of “achievement.”", size=11.5, color=ORANGE, bold=True)
+
+    # 4 — Funnel
+    slide = new_slide(prs, "Opportunity funnel: 58% of value remains at 0–25% probability", "02 / Funnel", 4)
+    stage_order = ["Identify", "Define", "Develop", "Design"]
+    stage_colors = [RED, ORANGE, BLUE, GREEN]
+    stage_rows = []
+    for stage, stage_color in zip(stage_order, stage_colors):
+        rows = [row for row in opportunities if row["Opportunity Stage"] == stage]
+        value = sum(row["Peak Value"] for row in rows)
+        stage_rows.append((stage, len(rows), value, sum(row["Weighted Value"] for row in rows), stage_color))
+    max_value = max(row[2] for row in stage_rows)
+    for index, (stage, count, value, stage_weighted, stage_color) in enumerate(stage_rows):
+        y = 1.45 + index * 1.05
+        add_text(slide, 0.62, y + 0.08, 1.15, 0.22, stage, size=12, bold=True)
+        add_text(slide, 1.58, y + 0.08, 0.65, 0.22, f"{count} opps", size=9, color=MUTED)
+        add_box(slide, 2.35, y, 6.35, 0.48, fill="152446", line="152446", radius=False)
+        bar_width = max(0.12, 6.35 * value / max_value)
+        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(2.35), Inches(y), Inches(bar_width), Inches(0.48))
+        bar.fill.solid()
+        bar.fill.fore_color.rgb = rgb(stage_color)
+        bar.line.fill.background()
+        add_text(slide, 8.88, y + 0.03, 1.15, 0.24, fmt_value(value), size=13, bold=True, align=PP_ALIGN.RIGHT)
+        add_text(slide, 10.18, y + 0.03, 1.52, 0.24, f"weighted {fmt_value(stage_weighted)}", size=9, color=MUTED)
+    add_box(slide, 0.55, 5.72, 12.15, 0.75, fill="14213D", line=GRID)
+    top_three = sum(row["Peak Value"] for row in opportunities[:3])
+    add_text(slide, 0.82, 5.94, 3.35, 0.26, f"Top 3 = {top_three / total:.0%} of peak value", size=13, color=ORANGE, bold=True)
+    add_text(slide, 4.35, 5.94, 3.75, 0.26, "2 Identify opportunities = 0 weighted value", size=13, color=RED, bold=True)
+    add_text(slide, 8.35, 5.94, 3.85, 0.26, "Priority: qualify → define → evidence", size=13, color=TEAL, bold=True)
+
+    # 5 — 2026 closure plan
+    slide = new_slide(prs, "2026 DWIN-dated pipeline: convert five named plays", "03 / Closure", 5)
+    ordered_dw = sorted(dw_2026, key=lambda row: row["Design Win Date Parsed"])
+    rows = [
+        [
+            customer_name(row["Account Name"]),
+            row["Opportunity Name"],
+            row["Opportunity Stage"],
+            f"{row['Probability (%)']:.0f}%",
+            fmt_date(row["Design Win Date Parsed"]),
+            fmt_value(row["Peak Value"]),
+            suggested_gate(row),
+        ]
+        for row in ordered_dw
+    ]
+    add_table(
+        slide,
+        0.55,
+        1.38,
+        12.15,
+        3.55,
+        ["Customer", "Opportunity", "Stage", "Prob.", "DWIN", "Peak", "Proposed next gate"],
+        rows,
+        [1.15, 2.42, 0.76, 0.62, 1.03, 0.77, 5.40],
+        font_size=8.4,
+    )
+    add_box(slide, 0.55, 5.22, 12.15, 1.18, fill="14213D", line=ORANGE)
+    add_text(slide, 0.82, 5.46, 2.65, 0.22, "REVIEW COMMITMENT", size=9, color=ORANGE, bold=True)
+    add_text(
+        slide,
+        3.05,
+        5.39,
+        9.15,
+        0.62,
+        "For each play: customer decision date • technical gap • required sample/tool/IP • named Sales + FAE + DFAE owners • evidence for the next stage.",
+        size=13,
+        color=WHITE,
+        bold=True,
+    )
+
+    # 6/7 — Top opportunities
+    for slide_number, chunk_start in ((6, 0), (7, 7)):
+        chunk = opportunities[chunk_start:chunk_start + 7]
+        title = "Top opportunities 1–7: protect the concentration" if chunk_start == 0 else "Top opportunities 8–14: build breadth and add #15"
+        slide = new_slide(prs, title, "04 / Top opportunities", slide_number)
+        table_rows = []
+        fills = []
+        for rank, row in enumerate(chunk, start=chunk_start + 1):
+            table_rows.append(
+                [
+                    str(rank),
+                    customer_name(row["Account Name"]),
+                    row["Opportunity Name"],
+                    row["Opportunity Stage"],
+                    f"{row['Probability (%)']:.0f}%",
+                    fmt_date(row["Design Win Date Parsed"]),
+                    fmt_value(row["Peak Value"]),
+                    suggested_gate(row),
+                ]
+            )
+            fills.append("14213D" if rank <= 3 else (NAVY_2 if rank % 2 else "152446"))
+        if chunk_start == 7:
+            table_rows.append(["15", "—", "OPEN SLOT", "—", "—", "—", "—", "Add a qualified 2027 demand-creation play"])
+            fills.append("2B1D2F")
+        add_table(
+            slide,
+            0.55,
+            1.35,
+            12.15,
+            4.92,
+            ["#", "Customer", "Opportunity", "Stage", "Prob.", "DWIN", "Peak", "Proposed next gate"],
+            table_rows,
+            [0.35, 1.25, 2.52, 0.72, 0.60, 1.00, 0.74, 4.97],
+            font_size=8.1,
+            row_fills=fills,
+        )
+        if chunk_start == 0:
+            add_text(slide, 0.65, 6.43, 11.9, 0.22, "Ranks 1–3 contribute 67.9% of total peak value; weekly executive inspection is warranted.", size=10.5, color=ORANGE, bold=True)
+        else:
+            add_text(slide, 0.65, 6.43, 11.9, 0.22, "The source contains 14 distinct Sahil opportunities—not 15. Use the open slot to create, qualify and name the next strategic play.", size=10.5, color=ORANGE, bold=True)
+
+    # 8 — Customer portfolio
+    slide = new_slide(prs, "Customer portfolio: Outdu and Honeywell Aerospace dominate peak value", "05 / Accounts", 8)
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in opportunities:
+        grouped[row["Account Name"]].append(row)
+    customer_rows = sorted(
+        [
+            (
+                customer_name(account),
+                len(rows),
+                sum(item["Peak Value"] for item in rows),
+                sum(item["Weighted Value"] for item in rows),
+            )
+            for account, rows in grouped.items()
+        ],
+        key=lambda row: row[2],
+        reverse=True,
+    )
+    max_customer = max(row[2] for row in customer_rows)
+    for index, (account, count, value, customer_weighted) in enumerate(customer_rows):
+        y = 1.40 + index * 0.69
+        add_text(slide, 0.62, y + 0.03, 1.65, 0.22, account, size=9.5, bold=True)
+        add_box(slide, 2.35, y, 5.25, 0.34, fill="152446", line="152446", radius=False)
+        bar_width = max(0.09, 5.25 * value / max_customer)
+        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(2.35), Inches(y), Inches(bar_width), Inches(0.34))
+        bar.fill.solid()
+        bar.fill.fore_color.rgb = rgb(TEAL if index < 2 else BLUE)
+        bar.line.fill.background()
+        add_text(slide, 7.78, y - 0.01, 0.85, 0.22, fmt_value(value), size=10.5, bold=True, align=PP_ALIGN.RIGHT)
+        add_text(slide, 8.76, y - 0.01, 1.10, 0.22, f"W {fmt_value(customer_weighted)}", size=8.5, color=MUTED)
+        add_text(slide, 10.06, y - 0.01, 0.85, 0.22, f"{count} opps", size=8.5, color=MUTED)
+    add_box(slide, 0.55, 6.42, 12.15, 0.42, fill="14213D", line=GRID)
+    add_text(slide, 0.78, 6.50, 11.65, 0.20, "Coverage check: 14/14 are direct “Altera Opportunity”; distributor account is blank on every Sahil line item.", size=9.5, color=ORANGE, bold=True)
+
+    # 9 — Key account plans
+    slide = new_slide(prs, "Q4 2026 / 2027 account plans: convert now, then expand adjacencies", "05 / Accounts", 9)
+    account_plans = [
+        ["Outdu", "AI response + tracking", "Close 21 Oct architecture, BOM and evaluation gate", "Replicate video/vision pipeline across tracking + analytics"],
+        ["Honeywell", "Radar + industrial/aerospace control", "Qualify 3.00M radar; close two Design-stage evidence packs", "Create radar/thermal-control solution campaign"],
+        ["Juniper", "PCIe FPGA + PQC interface", "Move CFPGA through validation; qualify PQC from 0%", "Position Agilex 3 for security/control-plane refresh"],
+        ["GE HealthCare", "CT, anesthesia, power control", "Recover 2026 SP-PDU gate; define CT/anesthesia evaluations", "Medical imaging + controller platform expansion"],
+        ["Emerson", "RX3i controller", "Freeze dual-device architecture before 16 Dec", "Industrial automation controller modernization"],
+        ["Philips", "CT + MRI UI", "Secure CT design evidence; define MRI UI success criteria", "Imaging workflow and low-power control adjacency"],
+    ]
+    add_table(
+        slide,
+        0.55,
+        1.35,
+        12.15,
+        4.95,
+        ["Account", "Current plays", "Q4 2026 proposed focus", "2027 proposed expansion"],
+        account_plans,
+        [1.18, 2.28, 4.10, 4.59],
+        font_size=9.0,
+        header_size=8.5,
+    )
+    add_text(slide, 0.65, 6.43, 11.9, 0.22, "These are proposed actions inferred from stage/date/product data; validate customer commitments and support history in the review.", size=9.5, color=MUTED)
+
+    # 10 — Demand creation
+    slide = new_slide(prs, "FY2027 demand creation: three repeatable motions", "06 / 2027 creation", 10)
+    initiatives = [
+        (
+            "ROBOTICS + CONTROL",
+            ORANGE,
+            "Target",
+            "Industrial OEMs; Emerson + Honeywell adjacencies",
+            "Offer",
+            "Deterministic control, functional partitioning, secure connectivity",
+            "Create",
+            "Controller architecture workshop + 3 qualified use cases",
+        ),
+        (
+            "VIDEO + VISION",
+            TEAL,
+            "Target",
+            "Outdu, medical imaging and smart sensing teams",
+            "Offer",
+            "Edge AI/video pipeline on Agilex 5 D / Agilex 3",
+            "Create",
+            "Vision benchmark day + reference design + 3 evaluations",
+        ),
+        (
+            "INDUSTRIAL PLATFORM",
+            BLUE,
+            "Target",
+            "Automation, medical controls and network infrastructure",
+            "Offer",
+            "PCIe/Ethernet modernization and legacy FPGA migration",
+            "Create",
+            "Portfolio migration clinic + joint Sales/FAE account map",
+        ),
+    ]
+    for index, initiative in enumerate(initiatives):
+        title, accent_color, label1, value1, label2, value2, label3, value3 = initiative
+        x = 0.55 + index * 4.10
+        add_box(slide, x, 1.42, 3.82, 4.75, fill="14213D", line=accent_color)
+        add_text(slide, x + 0.22, 1.72, 3.38, 0.36, title, size=15, color=accent_color, bold=True)
+        add_text(slide, x + 0.22, 2.35, 3.38, 0.22, label1.upper(), size=8, color=MUTED, bold=True)
+        add_text(slide, x + 0.22, 2.62, 3.38, 0.70, value1, size=12, bold=True)
+        add_text(slide, x + 0.22, 3.46, 3.38, 0.22, label2.upper(), size=8, color=MUTED, bold=True)
+        add_text(slide, x + 0.22, 3.73, 3.38, 0.70, value2, size=12, bold=True)
+        add_text(slide, x + 0.22, 4.60, 3.38, 0.22, label3.upper(), size=8, color=MUTED, bold=True)
+        add_text(slide, x + 0.22, 4.87, 3.38, 0.86, value3, size=12, bold=True)
+    add_text(slide, 0.65, 6.40, 11.9, 0.28, "Review decision: choose numeric 2027 creation targets after the 2027 sales objective is confirmed.", size=10.5, color=ORANGE, bold=True)
+
+    # 11 — Ecosystem
+    slide = new_slide(prs, "DFAE + ecosystem engagement: attach expertise to stage exits", "07 / Team execution", 11)
+    columns = [
+        ("DISCOVERY", "Sales + FAE", "Sponsor, use case, value, budget and decision process", RED),
+        ("ARCHITECTURE", "FAE + specialist DFAE", "Block diagram, device fit, IP/tools and risk register", ORANGE),
+        ("VALIDATION", "Customer + FAE + DFAE", "Evaluation results, issue closure and design-freeze evidence", BLUE),
+        ("PRODUCTION", "Sales + FAE + channel", "DW evidence, forecast, supply path and production handoff", GREEN),
+    ]
+    for index, (stage, owners, evidence, accent_color) in enumerate(columns):
+        x = 0.55 + index * 3.08
+        add_box(slide, x, 1.48, 2.82, 2.62, fill="14213D", line=accent_color)
+        add_text(slide, x + 0.18, 1.76, 2.46, 0.25, stage, size=11, color=accent_color, bold=True)
+        add_text(slide, x + 0.18, 2.18, 2.46, 0.24, owners, size=12.5, bold=True)
+        add_text(slide, x + 0.18, 2.72, 2.46, 0.94, evidence, size=11.5, color=PALE)
+    add_box(slide, 0.55, 4.42, 12.15, 1.65)
+    add_text(slide, 0.82, 4.72, 2.2, 0.22, "WEEKLY OPERATING CADENCE", size=9, color=TEAL, bold=True)
+    cadence = [
+        ("MON", "Top-5 stage/gap inspection"),
+        ("WED", "Customer/DFAE action review"),
+        ("FRI", "Evidence + CRM hygiene"),
+        ("MONTH-END", "Pipeline creation + conversion scorecard"),
+    ]
+    for index, (when, action) in enumerate(cadence):
+        x = 3.00 + index * 2.35
+        add_text(slide, x, 4.70, 1.95, 0.20, when, size=8, color=MUTED, bold=True)
+        add_text(slide, x, 5.00, 2.05, 0.62, action, size=11, bold=True)
+
+    # 12 — Commitments / gaps
+    slide = new_slide(prs, "Close the review with owners, evidence and missing inputs", "08 / Commitments", 12)
+    add_box(slide, 0.55, 1.38, 7.30, 4.95)
+    add_text(slide, 0.82, 1.70, 6.75, 0.26, "PROPOSED COMMITMENTS", size=10, color=TEAL, bold=True)
+    commitments = [
+        "Name next-stage evidence and due date for every top-5 opportunity.",
+        "Qualify Weather Radar and CPU Interface Card from 0% or remove value from the active forecast.",
+        "Create the 15th strategic opportunity with a 2027 customer sponsor and use case.",
+        "Publish a direct-account + distributor coverage map; current source has no disty pipeline.",
+        "Run one demand-creation motion per focus area and track evaluations created.",
+    ]
+    for index, commitment in enumerate(commitments):
+        y = 2.18 + index * 0.76
+        add_text(slide, 0.84, y, 0.35, 0.30, f"{index + 1}", size=15, color=ORANGE, bold=True)
+        add_text(slide, 1.28, y, 6.10, 0.55, commitment, size=13, bold=True)
+    add_box(slide, 8.10, 1.38, 4.60, 4.95, fill="14213D", line=RED)
+    add_text(slide, 8.38, 1.70, 4.05, 0.26, "INPUTS TO COMPLETE BEFORE PRESENTING", size=10, color=RED, bold=True)
+    missing = [
+        "2026 target",
+        "YTD actual / achieved DWINs",
+        "Gap-closure value and dates",
+        "Support activity history",
+        "Customer market-share baseline",
+        "Distributor targets/accounts",
+        "Named DFAE owners",
+    ]
+    for index, item in enumerate(missing):
+        y = 2.18 + index * 0.49
+        add_text(slide, 8.40, y, 0.28, 0.22, "□", size=13, color=ORANGE, bold=True)
+        add_text(slide, 8.78, y, 3.35, 0.28, item, size=11.5, bold=True)
+    add_text(slide, 8.40, 5.76, 3.95, 0.34, "No invented numbers.\nFill, validate, commit.", size=13.5, color=TEAL, bold=True)
+
+    # 13 — Data definitions
+    slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 13)
+    notes = [
+        ("Scope", "Rows where Technical Owner = Sahil Patni; 20 product lines consolidated by Opportunity ID into 14 opportunities."),
+        ("Peak value", "Product-line Peak Value summed within each Opportunity ID. Source file does not encode currency."),
+        ("Weighted value", "Consolidated peak value × source probability. Identify opportunities at 0% therefore contribute zero."),
+        ("DWIN-dated", "Opportunity Design Win Date falls in the stated year. This is a scheduled date, not proof of an achieved design win."),
+        ("Dates", "Source mixes Excel dates and text dates; both were normalized for analysis."),
+        ("Coverage", "All Sahil records are “Altera Opportunity”; Distributor Account is blank. No channel pipeline can be inferred."),
+        ("Not available", "Target, actual achievement, revenue/bookings, support history, market share, next actions, and named DFAE assignments."),
+    ]
+    for index, (label, note) in enumerate(notes):
+        y = 1.36 + index * 0.72
+        add_text(slide, 0.65, y, 1.65, 0.26, label.upper(), size=9, color=TEAL if index < 4 else ORANGE, bold=True)
+        add_text(slide, 2.20, y, 10.15, 0.48, note, size=11.5, color=WHITE)
+    add_text(slide, 0.65, 6.56, 11.9, 0.24, "Regenerate with: python3 qbr/generate_sahil_qbr.py", size=9, color=MUTED)
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    prs.save(output)
+
+
+def build_summary_workbook(
+    line_items: list[dict[str, Any]],
+    opportunities: list[dict[str, Any]],
+    output: Path,
+):
+    workbook = Workbook()
+    summary = workbook.active
+    summary.title = "Executive Summary"
+
+    total = sum(row["Peak Value"] for row in opportunities)
+    weighted = sum(row["Weighted Value"] for row in opportunities)
+    created_2026 = [row for row in opportunities if row["Created Date Parsed"] and row["Created Date Parsed"].year == 2026]
+    dw_2026 = [row for row in opportunities if row["Design Win Date Parsed"] and row["Design Win Date Parsed"].year == 2026]
+    metrics = [
+        ("Metric", "Value", "Definition"),
+        ("Distinct opportunities", len(opportunities), "Consolidated by Opportunity ID"),
+        ("Product line items", len(line_items), "Rows where Technical Owner = Sahil Patni"),
+        ("Direct-account customers", len({row["Account Name"] for row in opportunities}), "Distinct Account Name"),
+        ("Peak pipeline", total, "Sum of consolidated Peak Value; currency absent"),
+        ("Weighted pipeline", weighted, "Peak Value × Probability"),
+        ("2026-created opportunities", len(created_2026), "Created Date in 2026"),
+        ("2026-created peak value", sum(row["Peak Value"] for row in created_2026), "Peak Value"),
+        ("2026 DWIN-dated opportunities", len(dw_2026), "Scheduled DWIN date in 2026; not achieved DWIN"),
+        ("2026 DWIN-dated peak value", sum(row["Peak Value"] for row in dw_2026), "Peak Value"),
+        ("2026 annual target", "INPUT REQUIRED", "Not present in source"),
+        ("YTD actual achievement", "INPUT REQUIRED", "Not present in source"),
+    ]
+    for row in metrics:
+        summary.append(row)
+
+    opportunity_sheet = workbook.create_sheet("Opportunities")
+    headers = [
+        "Rank",
+        "Opportunity ID",
+        "Account",
+        "Opportunity",
+        "Stage",
+        "Probability (%)",
+        "Design Win Date",
+        "Created Date",
+        "Production Start Date",
+        "Vertical",
+        "Peak Value",
+        "Weighted Value",
+        "Product Count",
+        "Products",
+        "Suggested Next Gate",
+    ]
+    opportunity_sheet.append(headers)
+    for rank, row in enumerate(opportunities, start=1):
+        opportunity_sheet.append(
+            [
+                rank,
+                row["Opportunity ID"],
+                row["Account Name"],
+                row["Opportunity Name"],
+                row["Opportunity Stage"],
+                row["Probability (%)"],
+                row["Design Win Date Parsed"],
+                row["Created Date Parsed"],
+                row["Production Start Date Parsed"],
+                row["Vertical Market"],
+                row["Peak Value"],
+                row["Weighted Value"],
+                len(row["Products"]),
+                "\n".join(str(product) for product in row["Products"]),
+                suggested_gate(row),
+            ]
+        )
+
+    source_sheet = workbook.create_sheet("Sahil Line Items")
+    source_headers = list(line_items[0].keys())
+    source_sheet.append(source_headers)
+    for row in line_items:
+        source_sheet.append([row[header] for header in source_headers])
+
+    for sheet in workbook.worksheets:
+        sheet.freeze_panes = "A2"
+        sheet.auto_filter.ref = sheet.dimensions
+        for cell in sheet[1]:
+            cell.fill = PatternFill("solid", fgColor=BLUE)
+            cell.font = Font(color="FFFFFF", bold=True)
+            cell.alignment = Alignment(vertical="center")
+        for row in sheet.iter_rows(min_row=2):
+            for cell in row:
+                cell.alignment = Alignment(vertical="top", wrap_text=True)
+        for column_cells in sheet.columns:
+            max_length = max(len(str(cell.value or "")) for cell in column_cells)
+            sheet.column_dimensions[column_cells[0].column_letter].width = min(max(max_length + 2, 10), 44)
+    for sheet in (summary, opportunity_sheet):
+        for row in sheet.iter_rows(min_row=2):
+            for cell in row:
+                if isinstance(cell.value, (int, float)) and cell.column in ({2} if sheet == summary else {11, 12}):
+                    cell.number_format = '#,##0.00'
+    opportunity_sheet.column_dimensions["N"].width = 52
+    opportunity_sheet.column_dimensions["O"].width = 48
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    workbook.save(output)
+
+
+def build_notes(opportunities: list[dict[str, Any]], output: Path):
+    total = sum(row["Peak Value"] for row in opportunities)
+    weighted = sum(row["Weighted Value"] for row in opportunities)
+    q4 = [
+        row
+        for row in opportunities
+        if row["Design Win Date Parsed"]
+        and date(2026, 10, 1) <= row["Design Win Date Parsed"] <= date(2026, 12, 31)
+    ]
+    text = f"""# Sahil FAE QBR — presenter notes
+
+Review: {REVIEW_DATE.strftime("%d %B %Y")}, 12:00–13:00  
+Prepared: {AS_OF.strftime("%d %B %Y")}  
+Source: `Sahil Report.xlsx`
+
+## Opening message
+
+The available pipeline is meaningful—{fmt_value(total)} peak and {fmt_value(weighted)} weighted across
+{len(opportunities)} distinct opportunities—but conversion is concentrated and target attainment cannot
+be calculated from this file. The review should end with named stage-exit evidence, owners, and dates.
+
+## Facts to land
+
+- 20 Sahil-owned product lines consolidate to {len(opportunities)} opportunities across
+  {len({row["Account Name"] for row in opportunities})} direct customers.
+- {fmt_value(3_600_000)} is still Identify at 0% probability.
+- Outdu AI contributes {fmt_value(4_125_000)}, or {4_125_000 / total:.1%} of peak pipeline, while still at Define.
+- Four Q4 2026 DWIN-dated plays total {fmt_value(sum(row["Peak Value"] for row in q4))};
+  their weighted value is {fmt_value(sum(row["Weighted Value"] for row in q4))}.
+- The source contains 14—not 15—distinct opportunities. Use slot 15 as a concrete demand-creation commitment.
+- Every Sahil line is marked `Altera Opportunity`; distributor account is blank.
+
+## Inputs required before presenting
+
+1. 2026 annual target.
+2. YTD actual achievement and the exact definition used (revenue, bookings, DWINs, or another measure).
+3. Achieved 2026 DWIN count/value.
+4. Support activities completed and open technical gaps.
+5. Market-share baseline by key customer.
+6. Distributor account targets and joint plans.
+7. Named Sales, FAE, and DFAE owners for stage exits.
+
+## Suggested close
+
+“I will manage the portfolio by evidence, not activity: qualify the two 0% plays, close the Q4 stage
+gates, create the fifteenth strategic opportunity, and run one repeatable 2027 demand-creation motion
+for robotics/control, video/vision, and industrial platforms.”
+
+## Important definitions
+
+- Values are shown in source units because the workbook does not identify a currency.
+- “DWIN-dated” means the scheduled Design Win Date falls in that year; it does not mean the design win
+  has already been achieved.
+- Proposed actions in the deck are planning recommendations inferred from stage/date/product data and
+  should be validated with Sales and the customer.
+"""
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(text, encoding="utf-8")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--source", type=Path, default=Path("Sahil Report.xlsx"))
+    parser.add_argument("--output-dir", type=Path, default=Path("qbr/output"))
+    args = parser.parse_args()
+
+    line_items, opportunities = read_pipeline(args.source)
+    if not opportunities:
+        raise SystemExit(f"No records found for Technical Owner = {OWNER!r}")
+
+    build_presentation(opportunities, args.output_dir / "Sahil_QBR_2026-07-29.pptx")
+    build_summary_workbook(line_items, opportunities, args.output_dir / "Sahil_QBR_Pipeline_Summary.xlsx")
+    build_notes(opportunities, args.output_dir / "Sahil_QBR_Presenter_Notes.md")
+    print(f"Generated QBR artifacts in {args.output_dir}")
+
+
+if __name__ == "__main__":
+    main()
