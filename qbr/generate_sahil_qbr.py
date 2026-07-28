@@ -435,6 +435,38 @@ def read_total_pipeline_snapshot(sources: dict[str, Path]) -> dict[str, dict[str
             for row in rows
             if row["Opportunity Coverage"] == "Channel Opportunity (DR)"
         ]
+        stage_funnel: dict[str, dict[str, Any]] = {}
+        for stage in sorted({row["Opportunity Stage"] for row in rows}):
+            stage_rows = [row for row in rows if row["Opportunity Stage"] == stage]
+            stage_direct = [
+                row
+                for row in stage_rows
+                if row["Opportunity Coverage"] == "Altera Opportunity"
+            ]
+            stage_channel = [
+                row
+                for row in stage_rows
+                if row["Opportunity Coverage"] == "Channel Opportunity (DR)"
+            ]
+            stage_funnel[stage] = {
+                "Total Value": sum(float(row["Peak Value"] or 0) for row in stage_rows),
+                "Records": len(stage_rows),
+                "Distinct Opportunities": len(
+                    {row["Opportunity ID"] for row in stage_rows}
+                ),
+                "Direct Value": sum(
+                    float(row["Peak Value"] or 0) for row in stage_direct
+                ),
+                "Channel Value": sum(
+                    float(row["Peak Value"] or 0) for row in stage_channel
+                ),
+                "Direct Opportunities": len(
+                    {row["Opportunity ID"] for row in stage_direct}
+                ),
+                "Channel Opportunities": len(
+                    {row["Opportunity ID"] for row in stage_channel}
+                ),
+            }
         snapshot[bucket] = {
             "Total Open Value": sum(float(row["Peak Value"] or 0) for row in rows),
             "Total Records": len(rows),
@@ -450,6 +482,7 @@ def read_total_pipeline_snapshot(sources: dict[str, Path]) -> dict[str, dict[str
             "Distinct Channel Opportunities": len(
                 {row["Opportunity ID"] for row in channel_rows}
             ),
+            "Stages": stage_funnel,
         }
     return snapshot
 
@@ -738,6 +771,7 @@ def build_presentation(
     ranked_opportunities = sorted(
         open_opportunities, key=lambda row: row["Peak Value"], reverse=True
     )
+    top_three = sum(row["Peak Value"] for row in ranked_opportunities[:3])
     qualified_total = sum(row["Peak Value"] for row in open_opportunities)
     weighted = sum(row["Weighted Value"] for row in open_opportunities)
     customers = sorted({row["Account Name"] for row in open_opportunities})
@@ -860,32 +894,42 @@ def build_presentation(
     add_text(slide, 0.82, 5.72, 11.2, 0.30, "Bring to review: annual target, YTD revenue/bookings, achieved DWIN count/value, and definition of “achievement.”", size=11.5, color=ORANGE, bold=True)
 
     # 4 — Funnel
-    slide = new_slide(prs, "Opportunity funnel: separate qualified open from 0% identification", "02 / Funnel", 4)
-    stage_order = ["Identify", "Define", "Develop", "Design"]
-    stage_colors = [RED, ORANGE, BLUE, GREEN]
-    stage_rows = []
-    for stage, stage_color in zip(stage_order, stage_colors):
-        rows = [row for row in opportunities if row["Opportunity Stage"] == stage]
-        value = sum(row["Peak Value"] for row in rows)
-        stage_rows.append((stage, len(rows), value, sum(row["Weighted Value"] for row in rows), stage_color))
-    max_value = max(row[2] for row in stage_rows)
-    for index, (stage, count, value, stage_weighted, stage_color) in enumerate(stage_rows):
-        y = 1.45 + index * 1.05
-        add_text(slide, 0.62, y + 0.08, 1.15, 0.22, stage, size=12, bold=True)
-        add_text(slide, 1.58, y + 0.08, 0.65, 0.22, f"{count} opps", size=9, color=MUTED)
-        add_box(slide, 2.35, y, 6.35, 0.48, fill="152446", line="152446", radius=False)
-        bar_width = max(0.12, 6.35 * value / max_value)
-        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(2.35), Inches(y), Inches(bar_width), Inches(0.48))
-        bar.fill.solid()
-        bar.fill.fore_color.rgb = rgb(stage_color)
-        bar.line.fill.background()
-        add_text(slide, 8.88, y + 0.03, 1.15, 0.24, fmt_value(value), size=13, bold=True, align=PP_ALIGN.RIGHT)
-        add_text(slide, 10.18, y + 0.03, 1.52, 0.24, f"weighted {fmt_value(stage_weighted)}", size=9, color=MUTED)
-    add_box(slide, 0.55, 5.72, 12.15, 0.75, fill="14213D", line=GRID)
-    top_three = sum(row["Peak Value"] for row in ranked_opportunities[:3])
-    add_text(slide, 0.82, 5.94, 3.35, 0.26, f"Qualified top 3 = {top_three / qualified_total:.0%}", size=13, color=ORANGE, bold=True)
-    add_text(slide, 4.35, 5.94, 3.75, 0.26, f"Open exports = {fmt_value(qualified_total)}", size=13, color=TEAL, bold=True)
-    add_text(slide, 8.35, 5.94, 3.85, 0.26, f"Identify outside exports = {fmt_value(total - qualified_total)}", size=13, color=RED, bold=True)
+    slide = new_slide(prs, "Opportunity stage funnel: FY2026 versus FY2027", "02 / Funnel", 4)
+    stage_colors = {"Define": ORANGE, "Develop": BLUE, "Design": GREEN}
+    for panel_index, bucket in enumerate(("2026", "2027")):
+        snapshot = total_snapshot[bucket]
+        x = 0.55 + panel_index * 6.15
+        add_box(slide, x, 1.35, 5.98, 5.10, fill="14213D", line=TEAL if bucket == "2026" else BLUE)
+        add_text(slide, x + 0.22, 1.64, 2.10, 0.24, f"FY{bucket}", size=13, color=TEAL if bucket == "2026" else BLUE, bold=True)
+        add_text(slide, x + 2.30, 1.60, 1.70, 0.34, fmt_value(snapshot["Total Open Value"], 1), size=21, bold=True, align=PP_ALIGN.RIGHT)
+        add_text(slide, x + 4.10, 1.68, 1.55, 0.20, f"{snapshot['Distinct Opportunities']} distinct opps", size=8.2, color=MUTED, align=PP_ALIGN.RIGHT)
+        max_stage_value = max(item["Total Value"] for item in snapshot["Stages"].values())
+        for stage_index, stage in enumerate(("Define", "Develop", "Design")):
+            item = snapshot["Stages"].get(
+                stage,
+                {"Total Value": 0, "Distinct Opportunities": 0, "Records": 0},
+            )
+            y = 2.30 + stage_index * 1.05
+            add_text(slide, x + 0.22, y + 0.03, 0.82, 0.22, stage, size=10.5, bold=True)
+            add_box(slide, x + 1.08, y, 2.78, 0.34, fill="152446", line="152446", radius=False)
+            bar_width = 0 if max_stage_value == 0 else 2.78 * item["Total Value"] / max_stage_value
+            if bar_width:
+                bar = slide.shapes.add_shape(
+                    MSO_SHAPE.RECTANGLE,
+                    Inches(x + 1.08),
+                    Inches(y),
+                    Inches(bar_width),
+                    Inches(0.34),
+                )
+                bar.fill.solid()
+                bar.fill.fore_color.rgb = rgb(stage_colors[stage])
+                bar.line.fill.background()
+            add_text(slide, x + 3.98, y - 0.01, 0.90, 0.24, fmt_value(item["Total Value"]), size=11.2, bold=True, align=PP_ALIGN.RIGHT)
+            add_text(slide, x + 4.98, y - 0.01, 0.72, 0.30, f"{item['Distinct Opportunities']} opps\n{item['Records']} rows", size=7.6, color=MUTED, align=PP_ALIGN.RIGHT)
+        add_text(slide, x + 0.22, 5.50, 5.48, 0.22, f"Direct {fmt_value(snapshot['Direct Value'])}  •  Channel {fmt_value(snapshot['Channel Value'])}", size=10.5, color=PALE, bold=True)
+        define_share = snapshot["Stages"]["Define"]["Total Value"] / snapshot["Total Open Value"]
+        add_text(slide, x + 0.22, 5.88, 5.48, 0.22, f"Define stage = {define_share:.0%} of value", size=9.5, color=ORANGE, bold=True)
+    add_citation(slide, "Source: uploaded FY2026/FY2027 open-pipeline exports. “Rows” are product-line records; “opps” are distinct Opportunity IDs.")
 
     # 5 — 2026 closure plan
     slide = new_slide(prs, f"Q4 FY2026 DWIN pipeline: convert {len(q4_fy2026)} named plays", "03 / Closure", 5)
@@ -1854,6 +1898,51 @@ def build_summary_workbook(
             ]
         )
 
+    stage_sheet = workbook.create_sheet("Opportunity Stage Funnel")
+    stage_sheet.append(
+        [
+            "Fiscal Bucket",
+            "Stage",
+            "Total Value",
+            "Distinct Opportunities",
+            "Source Rows",
+            "Direct Value",
+            "Channel Value",
+            "Distinct Direct Opportunities",
+            "Distinct Channel Opportunities",
+            "Value Share",
+        ]
+    )
+    for bucket in ("2026", "2027"):
+        snapshot = total_snapshot[bucket]
+        for stage in ("Define", "Develop", "Design"):
+            item = snapshot["Stages"].get(
+                stage,
+                {
+                    "Total Value": 0,
+                    "Distinct Opportunities": 0,
+                    "Records": 0,
+                    "Direct Value": 0,
+                    "Channel Value": 0,
+                    "Direct Opportunities": 0,
+                    "Channel Opportunities": 0,
+                },
+            )
+            stage_sheet.append(
+                [
+                    f"FY{bucket}",
+                    stage,
+                    item["Total Value"],
+                    item["Distinct Opportunities"],
+                    item["Records"],
+                    item["Direct Value"],
+                    item["Channel Value"],
+                    item["Direct Opportunities"],
+                    item["Channel Opportunities"],
+                    item["Total Value"] / snapshot["Total Open Value"],
+                ]
+            )
+
     opportunity_sheet = workbook.create_sheet("Opportunities")
     headers = [
         "Rank",
@@ -2139,6 +2228,7 @@ def build_summary_workbook(
                 "Qualified Open Value",
                 "Outside-Export Value",
                 "Total Open Value",
+                "Total Value",
                 "Direct Value",
                 "Channel Value",
             }
@@ -2147,9 +2237,16 @@ def build_summary_workbook(
             for cell in row:
                 if cell.column in value_columns and isinstance(cell.value, (int, float)):
                     cell.number_format = '#,##0.00'
+                if (
+                    header_by_column.get(cell.column) == "Value Share"
+                    and isinstance(cell.value, (int, float))
+                ):
+                    cell.number_format = '0.0%'
     opportunity_sheet.column_dimensions["P"].width = 52
     opportunity_sheet.column_dimensions["Q"].width = 48
     snapshot_sheet.column_dimensions["A"].width = 18
+    stage_sheet.column_dimensions["A"].width = 18
+    stage_sheet.column_dimensions["B"].width = 14
     reconciliation_sheet.column_dimensions["E"].width = 56
     reference_sheet.column_dimensions["B"].width = 58
     reference_sheet.column_dimensions["C"].width = 90
@@ -2270,6 +2367,27 @@ present in the source, and solution/demo readiness has not been verified.
 - Every qualified reporting-scope opportunity is marked `Altera Opportunity`; distributor account is blank.
 - Treat “2026” and “2027” as FY2026 and FY2027 planning-bucket labels. Altera FY runs 01 Nov–31 Oct;
   retain file membership rather than recalculating the buckets from Design Win Date.
+
+## Opportunity-stage funnel
+
+- **FY2026:** Define {fmt_value(fy2026_snapshot["Stages"]["Define"]["Total Value"])}
+  / {fy2026_snapshot["Stages"]["Define"]["Distinct Opportunities"]} distinct opportunities;
+  Develop {fmt_value(fy2026_snapshot["Stages"]["Develop"]["Total Value"])}
+  / {fy2026_snapshot["Stages"]["Develop"]["Distinct Opportunities"]};
+  Design {fmt_value(fy2026_snapshot["Stages"]["Design"]["Total Value"])}
+  / {fy2026_snapshot["Stages"]["Design"]["Distinct Opportunities"]}.
+- **FY2027:** Define {fmt_value(fy2027_snapshot["Stages"]["Define"]["Total Value"])}
+  / {fy2027_snapshot["Stages"]["Define"]["Distinct Opportunities"]} distinct opportunities;
+  Develop {fmt_value(fy2027_snapshot["Stages"]["Develop"]["Total Value"])}
+  / {fy2027_snapshot["Stages"]["Develop"]["Distinct Opportunities"]};
+  Design {fmt_value(fy2027_snapshot["Stages"]["Design"]["Total Value"])}
+  / {fy2027_snapshot["Stages"]["Design"]["Distinct Opportunities"]}.
+- Define dominates both funnels: {fy2026_snapshot["Stages"]["Define"]["Total Value"] / fy2026_snapshot["Total Open Value"]:.1%}
+  of FY2026 value and
+  {fy2027_snapshot["Stages"]["Define"]["Total Value"] / fy2027_snapshot["Total Open Value"]:.1%}
+  of FY2027 value. The operating priority is evidence-based progression from Define to Develop/Design.
+- Source-row counts are higher than distinct opportunity counts because one opportunity can contain
+  multiple product lines.
 
 ## Account ownership and support execution
 

@@ -51,6 +51,27 @@ present in the source, and solution/demo readiness has not been verified.
 - Treat “2026” and “2027” as FY2026 and FY2027 planning-bucket labels. Altera FY runs 01 Nov–31 Oct;
   retain file membership rather than recalculating the buckets from Design Win Date.
 
+## Opportunity-stage funnel
+
+- **FY2026:** Define 12.66M
+  / 14 distinct opportunities;
+  Develop 3.69M
+  / 5;
+  Design 1.00M
+  / 1.
+- **FY2027:** Define 55.93M
+  / 77 distinct opportunities;
+  Develop 8.10M
+  / 2;
+  Design 480K
+  / 3.
+- Define dominates both funnels: 73.0%
+  of FY2026 value and
+  86.7%
+  of FY2027 value. The operating priority is evidence-based progression from Define to Develop/Design.
+- Source-row counts are higher than distinct opportunity counts because one opportunity can contain
+  multiple product lines.
+
 ## Account ownership and support execution
 
 - **Primary accounts:** Ciena, Juniper / HPE, Philips, GE HealthCare, Outdu.
