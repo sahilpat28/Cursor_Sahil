@@ -126,6 +126,16 @@ REFERENCES = [
         "AMD, Vitis unified software platform",
         "https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vitis.html",
     ),
+    (
+        "R19",
+        "Altera, Video Solutions Stack",
+        "https://www.altera.com/fpga-solutions/video-solutions-stack",
+    ),
+    (
+        "R20",
+        "Altera, Sensor Interfaces including Holoscan Sensor Bridge",
+        "https://www.altera.com/fpga-solutions/sensory-interfaces",
+    ),
 ]
 
 
@@ -443,7 +453,7 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
     accent.line.fill.background()
     add_text(slide, 0.8, 0.72, 4.0, 0.28, "QUARTERLY BUSINESS REVIEW", size=10, color=TEAL, bold=True)
     add_text(slide, 0.8, 1.22, 8.6, 1.32, "Own the next gate.\nBuild the 2027 engine.", size=35, bold=True)
-    add_text(slide, 0.8, 2.78, 7.6, 0.42, "FAE plan review  •  Sahil Patni", size=18, color=PALE)
+    add_text(slide, 0.8, 2.78, 7.9, 0.42, "FAE plan review  •  Altera + Arrow + Macnica", size=18, color=PALE)
     add_text(slide, 0.8, 3.25, 7.6, 0.32, "Wednesday, 29 July 2026  |  12:00–13:00", size=13, color=MUTED)
     add_box(slide, 9.25, 0.75, 3.25, 5.55, fill=NAVY_2, line=GRID)
     add_text(slide, 9.62, 1.18, 2.5, 0.28, "PIPELINE SNAPSHOT", size=9, color=MUTED, bold=True)
@@ -736,8 +746,187 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, x + 0.22, 4.87, 3.38, 0.86, value3, size=12, bold=True)
     add_text(slide, 0.65, 6.40, 11.9, 0.28, "Review decision: choose numeric 2027 creation targets after the 2027 sales objective is confirmed.", size=10.5, color=ORANGE, bold=True)
 
-    # 11 — Market signals
-    slide = new_slide(prs, "Market review: growth is real, but proof-of-value wins budgets", "07 / Market review", 11)
+    # 11 — Critical review verdict
+    slide = new_slide(prs, "Critical-review verdict: strong analysis, incomplete execution system", "07 / Readiness", 11)
+    add_box(slide, 0.55, 1.35, 3.10, 4.98, fill="2B1D2F", line=RED)
+    add_text(slide, 0.84, 1.70, 2.52, 0.24, "CURRENT VERDICT", size=9, color=RED, bold=True)
+    add_text(slide, 0.84, 2.18, 2.52, 0.90, "NOT YET\nREADY TO SCALE", size=25, color=WHITE, bold=True)
+    add_text(slide, 0.84, 3.38, 2.52, 1.72, "The market case and opportunity analysis are strong. The team, demos, distributor ownership and conversion system are not yet committed.", size=13, color=PALE, bold=True)
+    add_text(slide, 0.84, 5.52, 2.52, 0.40, "Fix the operating model before launching campaigns.", size=11, color=ORANGE, bold=True)
+    readiness_rows = [
+        ["Pipeline facts", "GREEN", "14 opportunities; value/stage/customer view is auditable"],
+        ["Market + competition", "GREEN", "Three sourced segments and an honest AMD battlecard"],
+        ["Solution portfolio", "AMBER", "Solutions exist; access, kit, maturity and demo owners need verification"],
+        ["Distributor team", "RED", "No Arrow or Macnica specialist is named"],
+        ["Channel pipeline", "RED", "0/14 opportunities linked to a distributor account"],
+        ["Execution scorecard", "AMBER", "Proposed metrics exist; leadership and distis have not committed"],
+    ]
+    readiness_fills = ["14362E", "14362E", "3A2F16", "3B1D28", "3B1D28", "3A2F16"]
+    add_table(
+        slide,
+        3.92,
+        1.35,
+        8.78,
+        4.98,
+        ["Readiness gate", "Status", "Evidence / gap"],
+        readiness_rows,
+        [1.82, 0.90, 6.06],
+        font_size=9.2,
+        header_size=8.5,
+        row_fills=readiness_fills,
+    )
+    add_text(slide, 3.98, 6.47, 8.60, 0.22, "Review decision: approve the joint Altera–Arrow–Macnica tiger team, owners, readiness dates and Q4 scorecard.", size=9.8, color=ORANGE, bold=True)
+
+    # 12 — Altera solution stack
+    slide = new_slide(prs, "Altera solution arsenal: lead with demonstrable systems, not device slides", "08 / Solution stack", 12)
+    solution_columns = [
+        (
+            "ROBOTICS + CONTROL",
+            ORANGE,
+            [
+                "ROS Consolidated Robot Controller",
+                "Drive-on-Chip motor control",
+                "Drive-on-Chip with PLC",
+                "HPS TSN 3×2.5G SGMII",
+                "Sensor Fusion Platform for AMRs",
+                "Functional-safety flow / FSDP",
+            ],
+        ),
+        (
+            "CAMERA + EDGE AI",
+            TEAL,
+            [
+                "Holoscan Sensor Bridge: MIPI→10GbE",
+                "4Kp60 Multi-Sensor HDR Camera",
+                "4Kp30 Multi-Sensor Camera + AI",
+                "Smart Camera Demo Kit",
+                "45+ Video & Vision Processing IPs",
+                "FPGA AI Suite + MIPI CSI-2",
+            ],
+        ),
+        (
+            "PARTNER PLATFORMS",
+            BLUE,
+            [
+                "Arrow Eagle Board",
+                "Macnica Sulphur Agilex 5 kit",
+                "Macnica MEP100 ST2110 SmartNIC",
+                "Agilex 5 Modular / Premium kits",
+                "Critical Link vision modules",
+                "IntoPIX JPEG-XS ecosystem",
+            ],
+        ),
+    ]
+    for index, (title, accent_color, items) in enumerate(solution_columns):
+        x = 0.55 + index * 4.10
+        add_box(slide, x, 1.38, 3.82, 4.95, fill="14213D", line=accent_color)
+        add_text(slide, x + 0.22, 1.70, 3.38, 0.28, title, size=12, color=accent_color, bold=True)
+        for item_index, item in enumerate(items):
+            y = 2.22 + item_index * 0.60
+            add_text(slide, x + 0.22, y, 0.24, 0.24, "●", size=8, color=accent_color, bold=True)
+            add_text(slide, x + 0.51, y - 0.01, 3.00, 0.45, item, size=10.5, bold=True)
+        add_text(slide, x + 0.22, 5.93, 3.35, 0.20, "VERIFY: access • kit • owner • benchmark", size=8, color=MUTED, bold=True)
+    add_citation(slide, "[R4], [R7], [R8], [R19], [R20]. Holoscan is NVIDIA technology integrated by Altera reference designs; solution access/maturity must be checked.")
+
+    # 13 — Solution readiness plan
+    slide = new_slide(prs, "Solution readiness: every offer needs an owner, running kit and proof", "08 / Solution stack", 13)
+    solution_rows = [
+        ["ROS robot controller", "Sahil + Robotics DFAE", "Agilex 5 SoC", "Sensor→actuator jitter + ROS 2 integration", "□"],
+        ["Holoscan bridge", "Camera/AI DFAE + Macnica", "A5 Premium + MIPI + 10GbE", "4K stream into NVIDIA Holoscan", "□"],
+        ["4Kp60 HDR camera", "Sahil + Macnica expert", "A5 Modular + camera", "ISP image quality, latency and power", "□"],
+        ["4Kp30 camera + AI", "AI DFAE + Arrow expert", "A5 kit + customer model", "Ingest→inference→display benchmark", "□"],
+        ["Drive-on-Chip", "Control DFAE + Arrow", "A5 Modular", "Motor-loop latency and integration", "□"],
+        ["3×2.5G TSN", "Industrial DFAE + Sahil", "Agilex 5 SoC", "Multi-node sync, jitter and topology", "□"],
+        ["Sensor fusion / AMR", "Robotics expert + Macnica", "A5 + sensor set", "Time-aligned multi-sensor pipeline", "□"],
+        ["Smart camera", "Critical Link + joint team", "Partner kit", "Customer model + production BOM", "□"],
+    ]
+    add_table(
+        slide,
+        0.55,
+        1.32,
+        12.15,
+        5.35,
+        ["Solution", "Minimum owner", "Platform / kit", "Proof required before customer campaign", "Ready"],
+        solution_rows,
+        [1.62, 2.25, 2.18, 5.45, 0.65],
+        font_size=8.3,
+        header_size=8.0,
+    )
+    add_citation(slide, "Readiness means the team can run the demo, explain limitations, reproduce results and support an evaluation. A web page alone is not readiness.")
+
+    # 14 — Joint team
+    slide = new_slide(prs, "This is not a one-person job: form one market-penetration tiger team", "09 / Joint GTM", 14)
+    team_columns = [
+        (
+            "ALTERA",
+            TEAL,
+            "Sahil — program + solution lead",
+            [
+                "Own segment strategy and architecture",
+                "Coordinate Robotics, AI/Vision, TSN/FuSa DFAEs",
+                "Define benchmark method and technical red lines",
+                "Escalate product/IP/roadmap gaps",
+            ],
+            "NAMED",
+        ),
+        (
+            "ARROW",
+            ORANGE,
+            "[Name required] — joint specialist",
+            [
+                "Robotics/AI/camera technical coverage",
+                "Own Arrow account map and opportunity follow-up",
+                "Maintain Eagle/A5 kits, samples and logistics",
+                "Run workshops and CRM hygiene with Sales",
+            ],
+            "DUE 05 AUG",
+        ),
+        (
+            "MACNICA",
+            BLUE,
+            "[Name required] — joint specialist",
+            [
+                "Robotics/AI/camera technical coverage",
+                "Own Macnica account map and opportunity follow-up",
+                "Bring Sulphur, MEP100 and video ecosystem",
+                "Run evaluations and close integration gaps",
+            ],
+            "DUE 05 AUG",
+        ),
+    ]
+    for index, (org, accent_color, lead, duties, status) in enumerate(team_columns):
+        x = 0.55 + index * 4.10
+        add_box(slide, x, 1.38, 3.82, 4.95, fill="14213D", line=accent_color)
+        add_text(slide, x + 0.22, 1.67, 1.80, 0.28, org, size=14, color=accent_color, bold=True)
+        add_text(slide, x + 2.16, 1.69, 1.37, 0.22, status, size=7.5, color=accent_color, bold=True, align=PP_ALIGN.RIGHT)
+        add_text(slide, x + 0.22, 2.12, 3.38, 0.58, lead, size=13, bold=True)
+        for duty_index, duty in enumerate(duties):
+            y = 2.95 + duty_index * 0.64
+            add_text(slide, x + 0.22, y, 0.22, 0.24, "●", size=8, color=accent_color)
+            add_text(slide, x + 0.51, y - 0.01, 3.02, 0.48, duty, size=10.2, color=PALE, bold=True)
+    add_text(slide, 0.65, 6.44, 11.9, 0.24, "Minimum formation rule: one named robotics/AI/camera-capable specialist from each organization, backed by Altera specialist DFAEs.", size=10, color=ORANGE, bold=True)
+
+    # 15 — Joint penetration plan
+    slide = new_slide(prs, "Joint market penetration: ready → target → prove → convert", "09 / Joint GTM", 15)
+    phases = [
+        ("BY 05 AUG", "FORM", RED, "Name Arrow + Macnica specialists; approve charter, segment roles and weekly cadence."),
+        ("BY 14 AUG", "READY", ORANGE, "Run internal enablement; verify solution access; establish ≥1 working robotics and ≥1 camera/AI demo path."),
+        ("BY 31 AUG", "TARGET", BLUE, "Build 30-account map: 15 Arrow + 15 Macnica; rank pains, installed competition and sponsor."),
+        ("SEP–OCT", "ENGAGE", TEAL, "12 customer workshops; 8 benchmark/evaluation starts; joint Sales–FAE–disti follow-up in 48 hours."),
+        ("Q4 CLOSE", "CONVERT", GREEN, "Proposed target: 6 qualified opportunities, 3 Develop/Design-stage plays and 2 DWINs."),
+    ]
+    for index, (when, name, accent_color, action) in enumerate(phases):
+        y = 1.35 + index * 0.98
+        add_box(slide, 0.55, y, 1.50, 0.74, fill="14213D", line=accent_color)
+        add_text(slide, 0.74, y + 0.12, 1.12, 0.18, when, size=7.5, color=MUTED, bold=True)
+        add_text(slide, 0.74, y + 0.37, 1.12, 0.22, name, size=11, color=accent_color, bold=True)
+        add_box(slide, 2.25, y, 10.45, 0.74, fill=NAVY_2, line=GRID)
+        add_text(slide, 2.55, y + 0.14, 9.85, 0.46, action, size=11.4, bold=True)
+    add_box(slide, 0.55, 6.35, 12.15, 0.38, fill="2B1D2F", line=ORANGE)
+    add_text(slide, 0.78, 6.42, 11.62, 0.20, "These are proposed critical-review commitments—not achieved results. Leadership, Arrow and Macnica must accept or reset them in the meeting.", size=8.8, color=ORANGE, bold=True)
+
+    # 16 — Market signals
+    slide = new_slide(prs, "Market review: growth is real, but proof-of-value wins budgets", "10 / Market review", 16)
     market_signals = [
         (
             "ROBOTICS",
@@ -778,8 +967,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, x + 0.22, 4.66, 3.38, 1.15, implication, size=11.5, bold=True)
     add_citation(slide, "[R1] IFR World Robotics 2025  •  [R3] Interact Analysis, Jun 2025  •  [R2] Rockwell APAC Smart Manufacturing 2025")
 
-    # 12 — Robotics market
-    slide = new_slide(prs, "Robotics: India is scaling; own the deterministic control layer", "07 / Market review", 12)
+    # 17 — Robotics market
+    slide = new_slide(prs, "Robotics: India is scaling; own the deterministic control layer", "10 / Market review", 17)
     add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=ORANGE)
     add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE", size=9, color=ORANGE, bold=True)
     add_rich_text(
@@ -832,8 +1021,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
     )
     add_citation(slide, "[R1] IFR World Robotics 2025  •  [R4] Altera Robotics Stack  •  [R5] Agilex 5  •  [R6] AMD Kria KR260")
 
-    # 13 — Video and vision market
-    slide = new_slide(prs, "Video + vision: recovery is selective; benchmark the whole pipeline", "07 / Market review", 13)
+    # 18 — Video and vision market
+    slide = new_slide(prs, "Video + vision: recovery is selective; benchmark the whole pipeline", "10 / Market review", 18)
     add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=TEAL)
     add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE", size=9, color=TEAL, bold=True)
     add_rich_text(
@@ -886,8 +1075,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
     )
     add_citation(slide, "[R3] Interact Analysis  •  [R7] Altera VVP Suite  •  [R8] FPGA AI Suite  •  [R9] AMD KV260  •  [R10] Versal AI Edge")
 
-    # 14 — Industrial market
-    slide = new_slide(prs, "Industrial: AI spending converges with control, safety and cyber", "07 / Market review", 14)
+    # 19 — Industrial market
+    slide = new_slide(prs, "Industrial: AI spending converges with control, safety and cyber", "10 / Market review", 19)
     add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=BLUE)
     add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE — APAC", size=9, color=BLUE, bold=True)
     add_rich_text(
@@ -940,8 +1129,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
     )
     add_citation(slide, "[R2] Rockwell APAC 2025  •  [R11–R15] Altera/AMD industrial networking and functional-safety sources")
 
-    # 15 — Portfolio map
-    slide = new_slide(prs, "Competitive portfolio map: no single one-for-one device comparison", "08 / Competition", 15)
+    # 20 — Portfolio map
+    slide = new_slide(prs, "Competitive portfolio map: no single one-for-one device comparison", "11 / Competition", 20)
     portfolio_rows = [
         [
             "Cost / I/O edge",
@@ -983,8 +1172,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
     add_text(slide, 0.65, 6.43, 11.9, 0.22, "Never compare LE vs logic-cell counts or headline TOPS as equivalent metrics; normalize the workload, precision, sparsity, clocks, power and tool version.", size=9.5, color=ORANGE, bold=True)
     add_citation(slide, "[R5], [R8], [R10], [R16], [R17] — official vendor product pages; claims remain vendor-stated until customer benchmark")
 
-    # 16 — Competitive scorecard
-    slide = new_slide(prs, "Altera vs AMD Xilinx: evidence-based battlecard", "08 / Competition", 16)
+    # 21 — Competitive scorecard
+    slide = new_slide(prs, "Altera vs AMD Xilinx: evidence-based battlecard", "11 / Competition", 21)
     score_rows = [
         ["Robotics SW", "ROS 2 controller + Drive-on-Chip reference stack", "KR260 + native ROS 2 + KRS + production K26 SOM", "AMD advantage for software-first/SOM buyers; counter with deterministic consolidation proof."],
         ["Vision IP", "45+ VVP cores; FPGA AI Suite; custom streaming fabric", "Vitis Vision/AI; KV260; Versal AI Engines", "Both credible. Win on measured end-to-end latency, power and engineering effort."],
@@ -1007,8 +1196,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
     )
     add_citation(slide, "[R4–R18] Official vendor sources. “Advantage” statements are sales assessments, not third-party benchmark conclusions.")
 
-    # 17 — Competitive win plan
-    slide = new_slide(prs, "How to win against AMD Xilinx: replace claims with customer evidence", "08 / Competition", 17)
+    # 22 — Competitive win plan
+    slide = new_slide(prs, "How to win against AMD Xilinx: replace claims with customer evidence", "11 / Competition", 22)
     win_steps = [
         ("1  DISCOVER", ORANGE, "Installed device/tool flow? Decision owner? Workload? Pain: latency, power, I/O, BOM, safety or schedule?"),
         ("2  BASELINE", RED, "Capture AMD reference: exact device/board, tool version, model precision, interfaces, clocks and measured power."),
@@ -1025,8 +1214,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
     add_box(slide, 0.55, 6.38, 12.15, 0.35, fill="2B1D2F", line=ORANGE)
     add_text(slide, 0.78, 6.43, 11.62, 0.20, "Red line: do not use vendor headline TOPS, power or performance claims as an apples-to-apples result without reproducing the workload.", size=9, color=ORANGE, bold=True)
 
-    # 18 — Ecosystem
-    slide = new_slide(prs, "DFAE + ecosystem engagement: attach expertise to stage exits", "09 / Team execution", 18)
+    # 23 — Ecosystem
+    slide = new_slide(prs, "DFAE + ecosystem engagement: attach expertise to stage exits", "12 / Team execution", 23)
     columns = [
         ("DISCOVERY", "Sales + FAE", "Sponsor, use case, value, budget and decision process", RED),
         ("ARCHITECTURE", "FAE + specialist DFAE", "Block diagram, device fit, IP/tools and risk register", ORANGE),
@@ -1052,16 +1241,16 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, x, 4.70, 1.95, 0.20, when, size=8, color=MUTED, bold=True)
         add_text(slide, x, 5.00, 2.05, 0.62, action, size=11, bold=True)
 
-    # 19 — Commitments / gaps
-    slide = new_slide(prs, "Close the review with owners, evidence and missing inputs", "10 / Commitments", 19)
+    # 24 — Commitments / gaps
+    slide = new_slide(prs, "Close the review with owners, evidence and missing inputs", "13 / Commitments", 24)
     add_box(slide, 0.55, 1.38, 7.30, 4.95)
     add_text(slide, 0.82, 1.70, 6.75, 0.26, "PROPOSED COMMITMENTS", size=10, color=TEAL, bold=True)
     commitments = [
         "Name next-stage evidence and due date for every top-5 opportunity.",
         "Qualify Weather Radar and CPU Interface Card from 0% or remove value from the active forecast.",
-        "Create the 15th strategic opportunity with a 2027 customer sponsor and use case.",
-        "Publish a direct-account + distributor coverage map; current source has no disty pipeline.",
-        "Run one sourced, benchmark-led demand-creation motion per focus area and track evaluations created.",
+        "Name one Arrow and one Macnica robotics/AI/camera specialist by 05 Aug; verify solution readiness by 14 Aug.",
+        "Publish a 30-account Arrow + Macnica map and create the 15th strategic opportunity.",
+        "Run three joint benchmark-led campaigns and inspect workshops, evaluations, qualified pipeline and DWINs weekly.",
     ]
     for index, commitment in enumerate(commitments):
         y = 2.18 + index * 0.76
@@ -1075,8 +1264,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         "Gap-closure value and dates",
         "Support activity history",
         "Customer market-share baseline",
-        "Distributor targets/accounts",
-        "Named DFAE owners",
+        "Arrow + Macnica specialist names",
+        "Named solution DFAEs / kit status",
     ]
     for index, item in enumerate(missing):
         y = 2.18 + index * 0.49
@@ -1084,8 +1273,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, 8.78, y, 3.35, 0.28, item, size=11.5, bold=True)
     add_text(slide, 8.40, 5.76, 3.95, 0.34, "No invented numbers.\nFill, validate, commit.", size=13.5, color=TEAL, bold=True)
 
-    # 20 — Data definitions
-    slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 20)
+    # 25 — Data definitions
+    slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 25)
     notes = [
         ("Scope", "Rows where Technical Owner = Sahil Patni; 20 product lines consolidated by Opportunity ID into 14 opportunities."),
         ("Peak value", "Product-line Peak Value summed within each Opportunity ID. Source file does not encode currency."),
@@ -1101,16 +1290,16 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, 2.20, y, 10.15, 0.48, note, size=11.5, color=WHITE)
     add_text(slide, 0.65, 6.56, 11.9, 0.24, "Regenerate with: python3 qbr/generate_sahil_qbr.py", size=9, color=MUTED)
 
-    # 21/22 — Reference appendix
-    for slide_number, start in ((21, 0), (22, 9)):
-        end = start + 9
+    # 26/27 — Reference appendix
+    for slide_number, start in ((26, 0), (27, 10)):
+        end = start + 10
         title = "References: market evidence and solution sources" if start == 0 else "References: competitive product and tool sources"
         slide = new_slide(prs, title, "Appendix / References", slide_number)
         for index, (reference_id, reference_title, url) in enumerate(REFERENCES[start:end]):
-            y = 1.30 + index * 0.60
+            y = 1.25 + index * 0.53
             add_text(slide, 0.62, y, 0.55, 0.22, reference_id, size=9, color=TEAL, bold=True)
-            add_text(slide, 1.15, y, 4.40, 0.42, reference_title, size=8.2, color=WHITE, bold=True)
-            add_text(slide, 5.68, y, 6.92, 0.42, url, size=7.1, color=PALE)
+            add_text(slide, 1.15, y, 4.40, 0.36, reference_title, size=7.8, color=WHITE, bold=True)
+            add_text(slide, 5.68, y, 6.92, 0.36, url, size=6.8, color=PALE)
         add_text(slide, 0.65, 6.70, 11.9, 0.18, "Accessed 28 Jul 2026. Vendor specifications and performance figures are vendor-stated; validate against current datasheets and customer workloads.", size=7.5, color=ORANGE, bold=True)
 
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -1214,9 +1403,25 @@ def build_summary_workbook(
         "R16": "Altera cost-optimized portfolio",
         "R17": "AMD cost-optimized portfolio",
         "R18": "AMD development tools",
+        "R19": "Altera video solution stack",
+        "R20": "Altera Holoscan / sensor interfaces",
     }
     for reference_id, reference_title, url in REFERENCES:
         reference_sheet.append([reference_id, reference_title, url, date(2026, 7, 28), reference_uses[reference_id]])
+
+    joint_sheet = workbook.create_sheet("Joint GTM Plan")
+    joint_sheet.append(["Workstream", "Owner", "Commitment", "Due", "Proposed KPI", "Status"])
+    joint_rows = [
+        ["Team", "Altera / Sahil", "Lead program, architecture, benchmarks and DFAE coordination", date(2026, 8, 5), "Named and charter accepted", "NAMED"],
+        ["Team", "Arrow", "Name robotics/AI/camera-capable joint specialist", date(2026, 8, 5), "≥1 named specialist", "OPEN"],
+        ["Team", "Macnica", "Name robotics/AI/camera-capable joint specialist", date(2026, 8, 5), "≥1 named specialist", "OPEN"],
+        ["Readiness", "Joint tiger team", "Verify solution access, kits, skills and benchmark playbooks", date(2026, 8, 14), "≥1 robotics + ≥1 camera/AI demo path", "OPEN"],
+        ["Targeting", "Arrow + Macnica", "Create non-duplicated joint account map", date(2026, 8, 31), "30 accounts: 15 per distributor", "OPEN"],
+        ["Engagement", "Joint tiger team", "Run segment workshops and launch evaluations", date(2026, 10, 31), "12 workshops; 8 evaluations", "OPEN"],
+        ["Conversion", "Sales + FAE + distis", "Advance evidence-backed opportunities", date(2026, 12, 31), "6 qualified; 3 Develop/Design; 2 DWINs", "PROPOSED"],
+    ]
+    for row in joint_rows:
+        joint_sheet.append(row)
 
     for sheet in workbook.worksheets:
         sheet.freeze_panes = "A2"
@@ -1240,6 +1445,8 @@ def build_summary_workbook(
     opportunity_sheet.column_dimensions["O"].width = 48
     reference_sheet.column_dimensions["B"].width = 58
     reference_sheet.column_dimensions["C"].width = 90
+    joint_sheet.column_dimensions["C"].width = 62
+    joint_sheet.column_dimensions["E"].width = 42
 
     output.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(output)
@@ -1270,6 +1477,10 @@ The available pipeline is meaningful—{fmt_value(total)} peak and {fmt_value(we
 {len(opportunities)} distinct opportunities—but conversion is concentrated and target attainment cannot
 be calculated from this file. The review should end with named stage-exit evidence, owners, and dates.
 
+The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
+Only Sahil is named; no Arrow or Macnica specialist is committed, no distributor-linked opportunity is
+present in the source, and solution/demo readiness has not been verified.
+
 ## Facts to land
 
 - 20 Sahil-owned product lines consolidate to {len(opportunities)} opportunities across
@@ -1280,6 +1491,39 @@ be calculated from this file. The review should end with named stage-exit eviden
   their weighted value is {fmt_value(sum(row["Weighted Value"] for row in q4))}.
 - The source contains 14—not 15—distinct opportunities. Use slot 15 as a concrete demand-creation commitment.
 - Every Sahil line is marked `Altera Opportunity`; distributor account is blank.
+
+## Altera solution story
+
+Lead with complete, demonstrable solution paths:
+
+- **Robotics/control:** ROS Consolidated Robot Controller, Drive-on-Chip, Drive-on-Chip with PLC,
+  3×2.5G TSN example, Sensor Fusion Platform and the functional-safety flow.
+- **Camera/AI:** Holoscan Sensor Bridge (MIPI to 10GbE), 4Kp60 Multi-Sensor HDR Camera,
+  4Kp30 Multi-Sensor Camera with AI, Smart Camera Demo Kit, Video and Vision Processing Suite,
+  FPGA AI Suite and MIPI CSI-2.
+- **Partner platforms:** Arrow Eagle Board; Macnica Sulphur Agilex 5 kit and MEP100 ST2110
+  SmartNIC; Critical Link vision modules and other ecosystem IP.
+
+Be precise: NVIDIA owns Holoscan technology; Altera provides FPGA integration/reference designs.
+Also verify access, release maturity, kit availability and certification scope before promising a
+solution to a customer.
+
+## Joint Altera–Arrow–Macnica model
+
+This cannot be a Sahil-only program.
+
+- **Altera — Sahil:** program and solution lead; architecture, benchmark method, segment message and
+  specialist-DFAE escalation.
+- **Arrow — name by 05 August:** at least one robotics/AI/camera-capable technical specialist;
+  Arrow account map, kits/samples, workshops and opportunity follow-up.
+- **Macnica — name by 05 August:** at least one robotics/AI/camera-capable technical specialist;
+  Macnica account map, Sulphur/MEP100/video ecosystem, evaluations and integration support.
+- **Readiness by 14 August:** at least one working robotics demo path and one working camera/AI demo
+  path, with owners and repeatable benchmark instructions.
+- **Targeting by 31 August:** 30 named accounts—15 Arrow and 15 Macnica—with sponsor, use case,
+  installed competition and next action.
+- **Proposed Q4 scorecard:** 12 workshops, 8 evaluations, 6 qualified opportunities,
+  3 Develop/Design-stage plays and 2 DWINs. These targets need explicit review approval.
 
 ## Market review talk track
 

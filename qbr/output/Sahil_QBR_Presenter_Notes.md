@@ -10,6 +10,10 @@ The available pipeline is meaningful—11.82M peak and 2.51M weighted across
 14 distinct opportunities—but conversion is concentrated and target attainment cannot
 be calculated from this file. The review should end with named stage-exit evidence, owners, and dates.
 
+The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
+Only Sahil is named; no Arrow or Macnica specialist is committed, no distributor-linked opportunity is
+present in the source, and solution/demo readiness has not been verified.
+
 ## Facts to land
 
 - 20 Sahil-owned product lines consolidate to 14 opportunities across
@@ -20,6 +24,39 @@ be calculated from this file. The review should end with named stage-exit eviden
   their weighted value is 1.26M.
 - The source contains 14—not 15—distinct opportunities. Use slot 15 as a concrete demand-creation commitment.
 - Every Sahil line is marked `Altera Opportunity`; distributor account is blank.
+
+## Altera solution story
+
+Lead with complete, demonstrable solution paths:
+
+- **Robotics/control:** ROS Consolidated Robot Controller, Drive-on-Chip, Drive-on-Chip with PLC,
+  3×2.5G TSN example, Sensor Fusion Platform and the functional-safety flow.
+- **Camera/AI:** Holoscan Sensor Bridge (MIPI to 10GbE), 4Kp60 Multi-Sensor HDR Camera,
+  4Kp30 Multi-Sensor Camera with AI, Smart Camera Demo Kit, Video and Vision Processing Suite,
+  FPGA AI Suite and MIPI CSI-2.
+- **Partner platforms:** Arrow Eagle Board; Macnica Sulphur Agilex 5 kit and MEP100 ST2110
+  SmartNIC; Critical Link vision modules and other ecosystem IP.
+
+Be precise: NVIDIA owns Holoscan technology; Altera provides FPGA integration/reference designs.
+Also verify access, release maturity, kit availability and certification scope before promising a
+solution to a customer.
+
+## Joint Altera–Arrow–Macnica model
+
+This cannot be a Sahil-only program.
+
+- **Altera — Sahil:** program and solution lead; architecture, benchmark method, segment message and
+  specialist-DFAE escalation.
+- **Arrow — name by 05 August:** at least one robotics/AI/camera-capable technical specialist;
+  Arrow account map, kits/samples, workshops and opportunity follow-up.
+- **Macnica — name by 05 August:** at least one robotics/AI/camera-capable technical specialist;
+  Macnica account map, Sulphur/MEP100/video ecosystem, evaluations and integration support.
+- **Readiness by 14 August:** at least one working robotics demo path and one working camera/AI demo
+  path, with owners and repeatable benchmark instructions.
+- **Targeting by 31 August:** 30 named accounts—15 Arrow and 15 Macnica—with sponsor, use case,
+  installed competition and next action.
+- **Proposed Q4 scorecard:** 12 workshops, 8 evaluations, 6 qualified opportunities,
+  3 Develop/Design-stage plays and 2 DWINs. These targets need explicit review approval.
 
 ## Market review talk track
 
@@ -102,3 +139,5 @@ Accessed 28 July 2026.
 - **R16** — Altera, Agilex 3 FPGA and SoC FPGA overview: https://www.altera.com/products/fpga/agilex/3
 - **R17** — AMD, Spartan UltraScale+ FPGA overview: https://www.amd.com/en/products/adaptive-socs-and-fpgas/fpga/spartan-ultrascale-plus.html
 - **R18** — AMD, Vitis unified software platform: https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vitis.html
+- **R19** — Altera, Video Solutions Stack: https://www.altera.com/fpga-solutions/video-solutions-stack
+- **R20** — Altera, Sensor Interfaces including Holoscan Sensor Bridge: https://www.altera.com/fpga-solutions/sensory-interfaces
