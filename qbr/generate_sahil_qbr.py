@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
@@ -135,6 +135,161 @@ REFERENCES = [
         "R20",
         "Altera, Sensor Interfaces including Holoscan Sensor Bridge",
         "https://www.altera.com/fpga-solutions/sensory-interfaces",
+    ),
+]
+
+PRIMARY_ACCOUNTS = ["Ciena", "Juniper / HPE", "Philips", "GE HealthCare", "Outdu"]
+OTHER_STRATEGIC_ACCOUNTS = [
+    "Siemens",
+    "Boeing",
+    "Honeywell Aerospace",
+    "Schneider",
+    "Emerson",
+]
+
+ALLOCATION_ROSTER = [
+    ("ADA", "Bangalore", "ADG", "08 Feb 2025", "Amol"),
+    ("ADE", "Bangalore", "ADG", "08 Feb 2025", "Amol"),
+    ("DEAL", "Dehradun", "ADG", "08 Feb 2025", "Mayank"),
+    ("C-DOT", "Across India", "COMM", "08 Jan 2026", "Mayank / Amol"),
+    ("BEL", "Bangalore", "ADG", "08 Feb 2025", "Sumanth / Prasad"),
+    ("LRDE", "Bangalore", "ADG", "08 Feb 2025", "Sumanth / Prasad"),
+    ("ECON", "Chennai", "OTHERS", "08 Feb 2025", "Akash"),
+    ("BEL", "Chennai", "ADG", "08 Feb 2025", "Akash"),
+    ("IRDE", "Dehradun", "ADG", "08 Feb 2025", "TBH / Prasad"),
+    ("BEL", "Ghaziabad", "ADG", "08 Feb 2025", "TBH / Prasad"),
+    ("BEL", "Machilipatnam", "ADG", "08 Feb 2025", "Sumanth"),
+    ("Outdu", "Bangalore", "OTHERS", "08 Jan 2026", "TBD"),
+]
+
+SUPPORT_ISSUES = [
+    (
+        "Quartus Pro 24.1 SignalTap compilation slowdown",
+        "C-DOT",
+        date(2026, 5, 22),
+        "Tools / AI",
+        "Reproduce with an example design and SignalTap; provide a cleaner debug path.",
+        "Reproduction required",
+    ),
+    (
+        "LVDS SerDes + optical transceiver integration for TSE",
+        "Macnica / external",
+        date(2026, 5, 29),
+        "Networking",
+        "100 Mbps optical fit requires hardware adaptation; TSE LVDS path is 1G-oriented.",
+        "Feasibility validation",
+    ),
+    (
+        "Non-PTP drops with PTP residence-time update in LL 40GbE MAC",
+        "Ceragon",
+        date(2026, 5, 19),
+        "Networking",
+        "Trigger isolated to residence-time update control, narrowing MAC-level debug.",
+        "Debug narrowed",
+    ),
+    (
+        "MAX 10 DK-DEV-10M08E144-B GPIO feasibility",
+        "Siemens",
+        date(2026, 6, 25),
+        "Device / I/O",
+        "44-signal fit is feasible subject to pin, bank-voltage, shared-circuit and level-shift checks.",
+        "Guidance provided",
+    ),
+    (
+        "Agilex 7 F-Tile TX MAC segmented-interface behavior",
+        "C-DOT",
+        date(2026, 6, 18),
+        "Networking",
+        "Clarified fixed latency, idle behavior and mid-frame valid-drop error handling.",
+        "Resolved",
+    ),
+    (
+        "Cyclone V PCIe MSI MsiReq_o not asserting",
+        "HPE",
+        date(2026, 6, 29),
+        "PCIe / Configuration",
+        "Use MSI memory-write transaction flow rather than expecting MSIReq_o assertion.",
+        "Guidance provided",
+    ),
+    (
+        "MAX 10 I/O utilization for 10M02SCE144A7G",
+        "Honeywell Aerospace",
+        date(2026, 6, 26),
+        "Device / I/O",
+        "No fixed derating percentage; validate package and electrical constraints in Quartus.",
+        "Guidance provided",
+    ),
+    (
+        "PTA 26.1 LPDDR5 frequency cap versus datasheet",
+        "Vicharak",
+        date(2026, 7, 28),
+        "Tools / AI",
+        "Use 1866 MHz in Platform Designer and full Quartus power analysis pending PTA fix.",
+        "Workaround + escalation",
+    ),
+    (
+        "FPGA AI Suite HL-JTAG memory and address-map issue",
+        "Pantherun",
+        date(2026, 7, 15),
+        "Tools / AI",
+        "Use fabric DDR or expand the accessible bridge/span for F2SDRAM.",
+        "Guidance provided",
+    ),
+    (
+        "Agilex 7 custom-board bring-up and power sequencing",
+        "BEL / Macnica",
+        date(2026, 7, 27),
+        "Board / Schematic",
+        "Validate rail sequencing, pre-bias, waveforms, JTAG visibility and board captures first.",
+        "Bring-up investigation",
+    ),
+    (
+        "Agilex 3/5 schematic corrections before card release",
+        "Qbit Labs / Arrow",
+        date(2026, 7, 15),
+        "Board / Schematic",
+        "Correct GTS bank power grouping before AI-Modem and TSN card release.",
+        "Release blocker found",
+    ),
+    (
+        "ATUM Nano Ethernet failure after BSP regeneration",
+        "Macnica / BEL Chennai",
+        date(2026, 7, 3),
+        "Networking",
+        "Reapply required manual driver edits after BSP regeneration, then rebuild.",
+        "Fix identified",
+    ),
+    (
+        "Agilex 7 core/HSSI rail topology for 3U VPX switch",
+        "BEL / Macnica",
+        date(2026, 7, 7),
+        "Board / Schematic",
+        "Do not collapse regulators without current-sharing, transient and margin validation.",
+        "Validation required",
+    ),
+    (
+        "Dual-image Cyclone V GX flash update partitioning",
+        "Juniper / HPE",
+        date(2026, 7, 24),
+        "PCIe / Configuration",
+        "Need a partition-safe primary-image update method; generated RPD spans full flash.",
+        "Method required",
+    ),
+    (
+        "Cyclone V PCIe MSI interrupt generation",
+        "Juniper / HPE",
+        date(2026, 7, 14),
+        "PCIe / Configuration",
+        "Implement MSI through the memory-write flow rather than MsiReq_o.",
+        "Guidance provided",
+    ),
+    (
+        "SDR schematic-freeze pin and constraint blockers",
+        "Macnica SDR program",
+        date(2026, 7, 16),
+        "Board / Schematic",
+        "Close OPN mismatch, HPS UART, electrical constraints and pin handling before release.",
+        "Release blockers found",
     ),
 ]
 
@@ -474,6 +629,40 @@ def customer_name(value: str) -> str:
     return replacements.get(value, value)
 
 
+def account_in_group(group: str, account_name: str) -> bool:
+    value = account_name.upper()
+    checks = {
+        "Ciena": ("CIENA",),
+        "Juniper / HPE": ("JUNIPER", "HPE"),
+        "Philips": ("PHILIPS",),
+        "GE HealthCare": ("GE HEALTHCARE",),
+        "Outdu": ("OUTDU",),
+        "Siemens": ("SIEMENS",),
+        "Boeing": ("BOEING",),
+        "Honeywell Aerospace": ("HONEYWELL AEROSPACE",),
+        "Schneider": ("SCHNEIDER",),
+        "Emerson": ("EMERSON",),
+    }
+    return any(token in value for token in checks[group])
+
+
+def issue_in_group(group: str, issue_customer: str) -> bool:
+    value = issue_customer.upper()
+    checks = {
+        "Ciena": ("CIENA",),
+        "Juniper / HPE": ("JUNIPER", "HPE"),
+        "Philips": ("PHILIPS",),
+        "GE HealthCare": ("GE HEALTHCARE", "GEHC"),
+        "Outdu": ("OUTDU",),
+        "Siemens": ("SIEMENS",),
+        "Boeing": ("BOEING",),
+        "Honeywell Aerospace": ("HONEYWELL",),
+        "Schneider": ("SCHNEIDER",),
+        "Emerson": ("EMERSON",),
+    }
+    return any(token in value for token in checks[group])
+
+
 def build_presentation(
     opportunities: list[dict[str, Any]],
     open_buckets: dict[str, list[dict[str, Any]]],
@@ -779,8 +968,116 @@ def build_presentation(
     )
     add_text(slide, 0.65, 6.43, 11.9, 0.22, "These are proposed actions inferred from stage/date/product data; validate customer commitments and support history in the review.", size=9.5, color=MUTED)
 
-    # 10 — Demand creation
-    slide = new_slide(prs, "FY2027 demand creation: three repeatable motions", "06 / 2027 creation", 10)
+    # 10 — Account ownership
+    slide = new_slide(prs, "Account ownership: focus list plus allocated-customer coverage", "06 / Account coverage", 10)
+    add_box(slide, 0.55, 1.35, 3.70, 4.95, fill="14213D", line=TEAL)
+    add_text(slide, 0.82, 1.66, 3.15, 0.24, "PRIMARY ACCOUNTS", size=9, color=TEAL, bold=True)
+    for index, account in enumerate(PRIMARY_ACCOUNTS):
+        y = 2.06 + index * 0.43
+        add_text(slide, 0.84, y, 0.22, 0.22, "●", size=8, color=TEAL)
+        add_text(slide, 1.13, y - 0.01, 2.75, 0.28, account, size=11.5, bold=True)
+    add_text(slide, 0.82, 4.32, 3.15, 0.24, "OTHER STRATEGIC / SUPPORTED", size=9, color=ORANGE, bold=True)
+    for index, account in enumerate(OTHER_STRATEGIC_ACCOUNTS):
+        y = 4.70 + index * 0.29
+        add_text(slide, 0.84, y, 0.20, 0.20, "•", size=8, color=ORANGE)
+        add_text(slide, 1.10, y - 0.01, 2.82, 0.24, account, size=9.5, bold=True)
+    roster_rows = [
+        [customer, location, segment, allocation_date, dfae]
+        for customer, location, segment, allocation_date, dfae in ALLOCATION_ROSTER
+    ]
+    add_table(
+        slide,
+        4.52,
+        1.35,
+        8.18,
+        4.95,
+        ["Customer", "Location", "Segment", "Allocation", "DFAE"],
+        roster_rows,
+        [1.20, 1.48, 0.90, 1.42, 3.18],
+        font_size=7.2,
+        header_size=7.4,
+    )
+    add_text(slide, 0.65, 6.45, 11.9, 0.22, "Allocation image: all rows list Sahil as New FAE. “Outdo” normalized to Outdu; unknown DFAE shown as TBD.", size=8.8, color=MUTED)
+
+    # 11 — Support execution
+    slide = new_slide(prs, "External support execution: 16 substantive issue threads in 75 days", "06 / Account coverage", 11)
+    category_counts = Counter(issue[3] for issue in SUPPORT_ISSUES)
+    resolved_count = sum(issue[5] == "Resolved" for issue in SUPPORT_ISSUES)
+    add_stat_card(slide, 0.55, 1.35, 2.82, "Issue threads", str(len(SUPPORT_ISSUES)), "15 May–28 Jul 2026", TEAL)
+    add_stat_card(slide, 3.55, 1.35, 2.82, "Coverage window", "75 days", "external technical email", BLUE)
+    add_stat_card(slide, 6.55, 1.35, 2.82, "Technical themes", str(len(category_counts)), "from tools to board bring-up", ORANGE)
+    add_stat_card(slide, 9.55, 1.35, 2.82, "Explicitly resolved", str(resolved_count), "closure proven in summaries", GREEN)
+    category_colors = {
+        "Board / Schematic": RED,
+        "Networking": TEAL,
+        "PCIe / Configuration": BLUE,
+        "Tools / AI": ORANGE,
+        "Device / I/O": GREEN,
+    }
+    max_count = max(category_counts.values())
+    for index, (category, count) in enumerate(category_counts.most_common()):
+        y = 2.95 + index * 0.60
+        add_text(slide, 0.65, y + 0.02, 2.15, 0.22, category, size=10, bold=True)
+        add_box(slide, 2.95, y, 6.65, 0.33, fill="152446", line="152446", radius=False)
+        bar_width = 6.65 * count / max_count
+        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(2.95), Inches(y), Inches(bar_width), Inches(0.33))
+        bar.fill.solid()
+        bar.fill.fore_color.rgb = rgb(category_colors[category])
+        bar.line.fill.background()
+        add_text(slide, 9.78, y - 0.01, 0.45, 0.22, str(count), size=11, bold=True, align=PP_ALIGN.RIGHT)
+    add_box(slide, 10.45, 2.90, 2.25, 3.03, fill="14213D", line=ORANGE)
+    add_rich_text(
+        slide,
+        10.66,
+        3.16,
+        1.83,
+        2.48,
+        [
+            ("QUALITY RULE", ORANGE, 9, True),
+            ("Only one thread explicitly records customer-confirmed resolution.", WHITE, 11, True),
+            ("Others show guidance, workaround, escalation or pending validation—not assumed closure.", PALE, 10, False),
+        ],
+    )
+    add_citation(slide, "Source: user-provided distinct external email-thread analysis, 15 May–28 Jul 2026. Internal-only/admin threads excluded.")
+
+    # 12 — Support-to-growth conversion
+    slide = new_slide(prs, "Convert support into growth: primary-account actions", "06 / Account coverage", 12)
+    def group_value(group: str) -> float:
+        return sum(
+            row["Peak Value"]
+            for row in open_opportunities
+            if account_in_group(group, str(row["Account Name"]))
+        )
+
+    account_actions = {
+        "Ciena": ("5 qualified network platforms", "Joint OTN/router architecture and migration review"),
+        "Juniper / HPE": ("3 PCIe/flash support threads", "Convert support into PCIe + secure-update design workshop"),
+        "Philips": ("CT + MRI pipeline; no issue thread", "Secure CT evidence and MRI UI evaluation criteria"),
+        "GE HealthCare": ("3 medical-control plays; no issue thread", "Run imaging/controller platform review before issues arise"),
+        "Outdu": ("2 AI/vision plays; no issue thread", "Close AI architecture gate + run vision benchmark"),
+    }
+    primary_rows = []
+    for account in PRIMARY_ACCOUNTS:
+        support_threads = sum(issue_in_group(account, issue[1]) for issue in SUPPORT_ISSUES)
+        signal, action = account_actions[account]
+        primary_rows.append([account, fmt_value(group_value(account)), str(support_threads), signal, action])
+    add_table(
+        slide,
+        0.55,
+        1.35,
+        12.15,
+        4.55,
+        ["Primary account", "Qualified open", "Threads", "Current signal", "Next growth action"],
+        primary_rows,
+        [1.45, 1.05, 0.65, 3.60, 5.40],
+        font_size=9.2,
+        header_size=8.4,
+    )
+    add_box(slide, 0.55, 6.12, 12.15, 0.55, fill="2B1D2F", line=ORANGE)
+    add_text(slide, 0.78, 6.24, 11.62, 0.28, "Critical gap: 4 of 5 primary accounts had no substantive issue thread in this window. Move from reactive support to scheduled architecture creation.", size=10.2, color=ORANGE, bold=True)
+
+    # 13 — Demand creation
+    slide = new_slide(prs, "FY2027 demand creation: three repeatable motions", "07 / 2027 creation", 13)
     initiatives = [
         (
             "ROBOTICS + CONTROL",
@@ -826,8 +1123,8 @@ def build_presentation(
         add_text(slide, x + 0.22, 4.87, 3.38, 0.86, value3, size=12, bold=True)
     add_text(slide, 0.65, 6.40, 11.9, 0.28, "Review decision: choose numeric 2027 creation targets after the 2027 sales objective is confirmed.", size=10.5, color=ORANGE, bold=True)
 
-    # 11 — Critical review verdict
-    slide = new_slide(prs, "Critical-review verdict: strong analysis, incomplete execution system", "07 / Readiness", 11)
+    # 14 — Critical review verdict
+    slide = new_slide(prs, "Critical-review verdict: strong analysis, incomplete execution system", "08 / Readiness", 14)
     add_box(slide, 0.55, 1.35, 3.10, 4.98, fill="2B1D2F", line=RED)
     add_text(slide, 0.84, 1.70, 2.52, 0.24, "CURRENT VERDICT", size=9, color=RED, bold=True)
     add_text(slide, 0.84, 2.18, 2.52, 0.90, "NOT YET\nREADY TO SCALE", size=25, color=WHITE, bold=True)
@@ -836,12 +1133,13 @@ def build_presentation(
     readiness_rows = [
         ["Pipeline facts", "GREEN", f"{len(open_opportunities)} qualified open + {len(outside_open_opportunities)} outside-export plays"],
         ["Market + competition", "GREEN", "Three sourced segments and an honest AMD battlecard"],
+        ["Support execution", "GREEN", f"{len(SUPPORT_ISSUES)} external issue threads captured with outcomes"],
         ["Solution portfolio", "AMBER", "Solutions exist; access, kit, maturity and demo owners need verification"],
         ["Distributor team", "RED", "No Arrow or Macnica specialist is named"],
         ["Channel pipeline", "RED", f"0/{len(open_opportunities)} qualified open opportunities linked to a distributor"],
         ["Execution scorecard", "AMBER", "Proposed metrics exist; leadership and distis have not committed"],
     ]
-    readiness_fills = ["14362E", "14362E", "3A2F16", "3B1D28", "3B1D28", "3A2F16"]
+    readiness_fills = ["14362E", "14362E", "14362E", "3A2F16", "3B1D28", "3B1D28", "3A2F16"]
     add_table(
         slide,
         3.92,
@@ -857,8 +1155,8 @@ def build_presentation(
     )
     add_text(slide, 3.98, 6.47, 8.60, 0.22, "Review decision: approve the joint Altera–Arrow–Macnica tiger team, owners, readiness dates and Q4 scorecard.", size=9.8, color=ORANGE, bold=True)
 
-    # 12 — Altera solution stack
-    slide = new_slide(prs, "Altera solution arsenal: lead with demonstrable systems, not device slides", "08 / Solution stack", 12)
+    # 15 — Altera solution stack
+    slide = new_slide(prs, "Altera solution arsenal: lead with demonstrable systems, not device slides", "09 / Solution stack", 15)
     solution_columns = [
         (
             "ROBOTICS + CONTROL",
@@ -908,8 +1206,8 @@ def build_presentation(
         add_text(slide, x + 0.22, 5.93, 3.35, 0.20, "VERIFY: access • kit • owner • benchmark", size=8, color=MUTED, bold=True)
     add_citation(slide, "[R4], [R7], [R8], [R19], [R20]. Holoscan is NVIDIA technology integrated by Altera reference designs; solution access/maturity must be checked.")
 
-    # 13 — Solution readiness plan
-    slide = new_slide(prs, "Solution readiness: every offer needs an owner, running kit and proof", "08 / Solution stack", 13)
+    # 16 — Solution readiness plan
+    slide = new_slide(prs, "Solution readiness: every offer needs an owner, running kit and proof", "09 / Solution stack", 16)
     solution_rows = [
         ["ROS robot controller", "Sahil + Robotics DFAE", "Agilex 5 SoC", "Sensor→actuator jitter + ROS 2 integration", "□"],
         ["Holoscan bridge", "Camera/AI DFAE + Macnica", "A5 Premium + MIPI + 10GbE", "4K stream into NVIDIA Holoscan", "□"],
@@ -934,8 +1232,8 @@ def build_presentation(
     )
     add_citation(slide, "Readiness means the team can run the demo, explain limitations, reproduce results and support an evaluation. A web page alone is not readiness.")
 
-    # 14 — Joint team
-    slide = new_slide(prs, "This is not a one-person job: form one market-penetration tiger team", "09 / Joint GTM", 14)
+    # 17 — Joint team
+    slide = new_slide(prs, "This is not a one-person job: form one market-penetration tiger team", "10 / Joint GTM", 17)
     team_columns = [
         (
             "ALTERA",
@@ -986,8 +1284,8 @@ def build_presentation(
             add_text(slide, x + 0.51, y - 0.01, 3.02, 0.48, duty, size=10.2, color=PALE, bold=True)
     add_text(slide, 0.65, 6.44, 11.9, 0.24, "Minimum formation rule: one named robotics/AI/camera-capable specialist from each organization, backed by Altera specialist DFAEs.", size=10, color=ORANGE, bold=True)
 
-    # 15 — Joint penetration plan
-    slide = new_slide(prs, "Joint market penetration: ready → target → prove → convert", "09 / Joint GTM", 15)
+    # 18 — Joint penetration plan
+    slide = new_slide(prs, "Joint market penetration: ready → target → prove → convert", "10 / Joint GTM", 18)
     phases = [
         ("BY 05 AUG", "FORM", RED, "Name Arrow + Macnica specialists; approve charter, segment roles and weekly cadence."),
         ("BY 14 AUG", "READY", ORANGE, "Run internal enablement; verify solution access; establish ≥1 working robotics and ≥1 camera/AI demo path."),
@@ -1005,8 +1303,8 @@ def build_presentation(
     add_box(slide, 0.55, 6.35, 12.15, 0.38, fill="2B1D2F", line=ORANGE)
     add_text(slide, 0.78, 6.42, 11.62, 0.20, "These are proposed critical-review commitments—not achieved results. Leadership, Arrow and Macnica must accept or reset them in the meeting.", size=8.8, color=ORANGE, bold=True)
 
-    # 16 — Market signals
-    slide = new_slide(prs, "Market review: growth is real, but proof-of-value wins budgets", "10 / Market review", 16)
+    # 19 — Market signals
+    slide = new_slide(prs, "Market review: growth is real, but proof-of-value wins budgets", "11 / Market review", 19)
     market_signals = [
         (
             "ROBOTICS",
@@ -1047,8 +1345,8 @@ def build_presentation(
         add_text(slide, x + 0.22, 4.66, 3.38, 1.15, implication, size=11.5, bold=True)
     add_citation(slide, "[R1] IFR World Robotics 2025  •  [R3] Interact Analysis, Jun 2025  •  [R2] Rockwell APAC Smart Manufacturing 2025")
 
-    # 17 — Robotics market
-    slide = new_slide(prs, "Robotics: India is scaling; own the deterministic control layer", "10 / Market review", 17)
+    # 20 — Robotics market
+    slide = new_slide(prs, "Robotics: India is scaling; own the deterministic control layer", "11 / Market review", 20)
     add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=ORANGE)
     add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE", size=9, color=ORANGE, bold=True)
     add_rich_text(
@@ -1101,8 +1399,8 @@ def build_presentation(
     )
     add_citation(slide, "[R1] IFR World Robotics 2025  •  [R4] Altera Robotics Stack  •  [R5] Agilex 5  •  [R6] AMD Kria KR260")
 
-    # 18 — Video and vision market
-    slide = new_slide(prs, "Video + vision: recovery is selective; benchmark the whole pipeline", "10 / Market review", 18)
+    # 21 — Video and vision market
+    slide = new_slide(prs, "Video + vision: recovery is selective; benchmark the whole pipeline", "11 / Market review", 21)
     add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=TEAL)
     add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE", size=9, color=TEAL, bold=True)
     add_rich_text(
@@ -1155,8 +1453,8 @@ def build_presentation(
     )
     add_citation(slide, "[R3] Interact Analysis  •  [R7] Altera VVP Suite  •  [R8] FPGA AI Suite  •  [R9] AMD KV260  •  [R10] Versal AI Edge")
 
-    # 19 — Industrial market
-    slide = new_slide(prs, "Industrial: AI spending converges with control, safety and cyber", "10 / Market review", 19)
+    # 22 — Industrial market
+    slide = new_slide(prs, "Industrial: AI spending converges with control, safety and cyber", "11 / Market review", 22)
     add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=BLUE)
     add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE — APAC", size=9, color=BLUE, bold=True)
     add_rich_text(
@@ -1209,8 +1507,8 @@ def build_presentation(
     )
     add_citation(slide, "[R2] Rockwell APAC 2025  •  [R11–R15] Altera/AMD industrial networking and functional-safety sources")
 
-    # 20 — Portfolio map
-    slide = new_slide(prs, "Competitive portfolio map: no single one-for-one device comparison", "11 / Competition", 20)
+    # 23 — Portfolio map
+    slide = new_slide(prs, "Competitive portfolio map: no single one-for-one device comparison", "12 / Competition", 23)
     portfolio_rows = [
         [
             "Cost / I/O edge",
@@ -1252,8 +1550,8 @@ def build_presentation(
     add_text(slide, 0.65, 6.43, 11.9, 0.22, "Never compare LE vs logic-cell counts or headline TOPS as equivalent metrics; normalize the workload, precision, sparsity, clocks, power and tool version.", size=9.5, color=ORANGE, bold=True)
     add_citation(slide, "[R5], [R8], [R10], [R16], [R17] — official vendor product pages; claims remain vendor-stated until customer benchmark")
 
-    # 21 — Competitive scorecard
-    slide = new_slide(prs, "Altera vs AMD Xilinx: evidence-based battlecard", "11 / Competition", 21)
+    # 24 — Competitive scorecard
+    slide = new_slide(prs, "Altera vs AMD Xilinx: evidence-based battlecard", "12 / Competition", 24)
     score_rows = [
         ["Robotics SW", "ROS 2 controller + Drive-on-Chip reference stack", "KR260 + native ROS 2 + KRS + production K26 SOM", "AMD advantage for software-first/SOM buyers; counter with deterministic consolidation proof."],
         ["Vision IP", "45+ VVP cores; FPGA AI Suite; custom streaming fabric", "Vitis Vision/AI; KV260; Versal AI Engines", "Both credible. Win on measured end-to-end latency, power and engineering effort."],
@@ -1276,8 +1574,8 @@ def build_presentation(
     )
     add_citation(slide, "[R4–R18] Official vendor sources. “Advantage” statements are sales assessments, not third-party benchmark conclusions.")
 
-    # 22 — Competitive win plan
-    slide = new_slide(prs, "How to win against AMD Xilinx: replace claims with customer evidence", "11 / Competition", 22)
+    # 25 — Competitive win plan
+    slide = new_slide(prs, "How to win against AMD Xilinx: replace claims with customer evidence", "12 / Competition", 25)
     win_steps = [
         ("1  DISCOVER", ORANGE, "Installed device/tool flow? Decision owner? Workload? Pain: latency, power, I/O, BOM, safety or schedule?"),
         ("2  BASELINE", RED, "Capture AMD reference: exact device/board, tool version, model precision, interfaces, clocks and measured power."),
@@ -1294,8 +1592,8 @@ def build_presentation(
     add_box(slide, 0.55, 6.38, 12.15, 0.35, fill="2B1D2F", line=ORANGE)
     add_text(slide, 0.78, 6.43, 11.62, 0.20, "Red line: do not use vendor headline TOPS, power or performance claims as an apples-to-apples result without reproducing the workload.", size=9, color=ORANGE, bold=True)
 
-    # 23 — Ecosystem
-    slide = new_slide(prs, "DFAE + ecosystem engagement: attach expertise to stage exits", "12 / Team execution", 23)
+    # 26 — Ecosystem
+    slide = new_slide(prs, "DFAE + ecosystem engagement: attach expertise to stage exits", "13 / Team execution", 26)
     columns = [
         ("DISCOVERY", "Sales + FAE", "Sponsor, use case, value, budget and decision process", RED),
         ("ARCHITECTURE", "FAE + specialist DFAE", "Block diagram, device fit, IP/tools and risk register", ORANGE),
@@ -1321,8 +1619,8 @@ def build_presentation(
         add_text(slide, x, 4.70, 1.95, 0.20, when, size=8, color=MUTED, bold=True)
         add_text(slide, x, 5.00, 2.05, 0.62, action, size=11, bold=True)
 
-    # 24 — Commitments / gaps
-    slide = new_slide(prs, "Close the review with owners, evidence and missing inputs", "13 / Commitments", 24)
+    # 27 — Commitments / gaps
+    slide = new_slide(prs, "Close the review with owners, evidence and missing inputs", "14 / Commitments", 27)
     add_box(slide, 0.55, 1.38, 7.30, 4.95)
     add_text(slide, 0.82, 1.70, 6.75, 0.26, "PROPOSED COMMITMENTS", size=10, color=TEAL, bold=True)
     commitments = [
@@ -1353,8 +1651,8 @@ def build_presentation(
         add_text(slide, 8.78, y, 3.35, 0.28, item, size=11.5, bold=True)
     add_text(slide, 8.40, 5.76, 3.95, 0.34, "No invented numbers.\nFill, validate, commit.", size=13.5, color=TEAL, bold=True)
 
-    # 25 — Data definitions
-    slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 25)
+    # 28 — Data definitions
+    slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 28)
     notes = [
         ("Scope", f"Reporting scope attributes Sahil Patni + Kasturi Rangan to Sahil. Master: {len(opportunities)} opportunities; open exports: {len(open_opportunities)}."),
         ("Buckets", "“2026” and “2027” are the user-provided export labels. Membership is not inferred from Design Win Date; the 2027 export includes some 2026 DWIN dates."),
@@ -1370,8 +1668,8 @@ def build_presentation(
         add_text(slide, 2.20, y, 10.15, 0.48, note, size=11.5, color=WHITE)
     add_text(slide, 0.65, 6.56, 11.9, 0.24, "Regenerate with: python3 qbr/generate_sahil_qbr.py", size=9, color=MUTED)
 
-    # 26/27 — Reference appendix
-    for slide_number, start in ((26, 0), (27, 10)):
+    # 29/30 — Reference appendix
+    for slide_number, start in ((29, 0), (30, 10)):
         end = start + 10
         title = "References: market evidence and solution sources" if start == 0 else "References: competitive product and tool sources"
         slide = new_slide(prs, title, "Appendix / References", slide_number)
@@ -1434,6 +1732,8 @@ def build_summary_workbook(
         ("Total discovered peak value", total, "Qualified open + outside-export plays"),
         ("Reporting scope", "Sahil + Kasturi", "Only these two source Technical Owner values are included"),
         ("Product line items", len(line_items), "Technical Owner = Sahil Patni or Kasturi Rangan"),
+        ("External support issue threads", len(SUPPORT_ISSUES), "Distinct substantive external email threads, 15 May–28 Jul 2026"),
+        ("Explicitly resolved support threads", sum(issue[5] == "Resolved" for issue in SUPPORT_ISSUES), "Closure explicitly recorded in supplied summaries"),
         ("2026 annual target", "INPUT REQUIRED", "Not present in source"),
         ("YTD actual achievement", "INPUT REQUIRED", "Not present in source"),
     ]
@@ -1574,6 +1874,73 @@ def build_summary_workbook(
                 ]
             )
 
+    account_sheet = workbook.create_sheet("Account Coverage")
+    account_sheet.append(
+        [
+            "Tier",
+            "Account",
+            "Qualified Open Value",
+            "Outside-Export Value",
+            "Support Threads",
+            "Coverage Note",
+        ]
+    )
+    account_notes = {
+        "Ciena": "Primary; five qualified network platforms",
+        "Juniper / HPE": "Primary; PCIe/flash support plus qualified and Identify pipeline",
+        "Philips": "Primary; CT and MRI pipeline",
+        "GE HealthCare": "Primary; CT, anesthesia and power-control pipeline",
+        "Outdu": "Primary; AI response and tracking pipeline",
+        "Siemens": "Other strategic; MAX 10 GPIO support",
+        "Boeing": "Other strategic; Data Recorder sits outside uploaded open exports",
+        "Honeywell Aerospace": "Other strategic; I/O support and Identify-stage radar",
+        "Schneider": "Other strategic; no supplied pipeline/support thread in period",
+        "Emerson": "Other strategic; RX3i pipeline",
+    }
+    for tier, accounts in (
+        ("Primary", PRIMARY_ACCOUNTS),
+        ("Other strategic / supported", OTHER_STRATEGIC_ACCOUNTS),
+    ):
+        for account in accounts:
+            account_sheet.append(
+                [
+                    tier,
+                    account,
+                    sum(
+                        row["Peak Value"]
+                        for row in open_opportunities
+                        if account_in_group(account, str(row["Account Name"]))
+                    ),
+                    sum(
+                        row["Peak Value"]
+                        for row in outside_open_opportunities
+                        if account_in_group(account, str(row["Account Name"]))
+                    ),
+                    sum(issue_in_group(account, issue[1]) for issue in SUPPORT_ISSUES),
+                    account_notes[account],
+                ]
+            )
+
+    allocation_sheet = workbook.create_sheet("Allocation Roster")
+    allocation_sheet.append(
+        ["Customer", "Location", "Segment", "Allocation Date", "DFAE", "New FAE"]
+    )
+    for customer, location, segment, allocation_date, dfae in ALLOCATION_ROSTER:
+        allocation_sheet.append(
+            [customer, location, segment, allocation_date, dfae, "Sahil"]
+        )
+
+    support_sheet = workbook.create_sheet("External Support Issues")
+    support_sheet.append(
+        ["#", "Issue", "Customer / Partner", "Latest Activity", "Theme", "Technical Outcome / Next Action", "Status"]
+    )
+    for index, (issue, customer, latest, category, outcome, status) in enumerate(
+        SUPPORT_ISSUES, start=1
+    ):
+        support_sheet.append(
+            [index, issue, customer, latest, category, outcome, status]
+        )
+
     source_sheet = workbook.create_sheet("Sahil Line Items")
     source_headers = list(line_items[0].keys())
     source_sheet.append(source_headers)
@@ -1642,7 +2009,13 @@ def build_summary_workbook(
         value_columns = {
             column
             for column, header in header_by_column.items()
-            if header in {"Peak Value", "Weighted Value"}
+            if header
+            in {
+                "Peak Value",
+                "Weighted Value",
+                "Qualified Open Value",
+                "Outside-Export Value",
+            }
         }
         for row in sheet.iter_rows(min_row=2):
             for cell in row:
@@ -1655,6 +2028,11 @@ def build_summary_workbook(
     reference_sheet.column_dimensions["C"].width = 90
     joint_sheet.column_dimensions["C"].width = 62
     joint_sheet.column_dimensions["E"].width = 42
+    account_sheet.column_dimensions["F"].width = 58
+    allocation_sheet.column_dimensions["B"].width = 18
+    support_sheet.column_dimensions["B"].width = 54
+    support_sheet.column_dimensions["C"].width = 25
+    support_sheet.column_dimensions["F"].width = 76
 
     output.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(output)
@@ -1691,6 +2069,16 @@ def build_notes(
         if row["Design Win Date Parsed"]
         and date(2026, 10, 1) <= row["Design Win Date Parsed"] <= date(2026, 12, 31)
     ]
+    support_categories = Counter(issue[3] for issue in SUPPORT_ISSUES)
+    support_issue_text = "\n".join(
+        (
+            f"{index}. **{issue}** — {customer}; latest {latest.strftime('%d %b %Y')}; "
+            f"{category}; **{status}**. {outcome}"
+        )
+        for index, (issue, customer, latest, category, outcome, status) in enumerate(
+            SUPPORT_ISSUES, start=1
+        )
+    )
     reference_text = "\n".join(
         f"- **{reference_id}** — {reference_title}: {url}"
         for reference_id, reference_title, url in REFERENCES
@@ -1734,6 +2122,25 @@ present in the source, and solution/demo readiness has not been verified.
 - Every qualified reporting-scope opportunity is marked `Altera Opportunity`; distributor account is blank.
 - Treat “2026” and “2027” as the uploaded planning-bucket labels. They are not synonymous with Design
   Win Date year; the 2027 export contains some opportunities with 2026 DWIN dates.
+
+## Account ownership and support execution
+
+- **Primary accounts:** {", ".join(PRIMARY_ACCOUNTS)}.
+- **Other strategic/supported accounts:** {", ".join(OTHER_STRATEGIC_ACCOUNTS)}.
+- Philips appeared in both supplied account lists and is treated once as a primary account.
+- The allocation roster contains {len(ALLOCATION_ROSTER)} customer/location rows, all naming Sahil as
+  New FAE. The image spelling “Outdo” is normalized to Outdu.
+- From 15 May to 28 July 2026, {len(SUPPORT_ISSUES)} distinct substantive external issue threads were
+  handled: {", ".join(f"{category} {count}" for category, count in support_categories.most_common())}.
+- Only {sum(issue[5] == "Resolved" for issue in SUPPORT_ISSUES)} thread explicitly records confirmed
+  resolution. The remaining summaries show guidance, workaround, escalation, investigation or pending
+  validation and should not be presented as closed without confirmation.
+- Four of five primary accounts—Ciena, Philips, GE HealthCare and Outdu—had no substantive issue thread
+  in this window. This is a proactive-engagement gap, not evidence that no technical needs exist.
+
+### External support issue ledger
+
+{support_issue_text}
 
 ## Altera solution story
 

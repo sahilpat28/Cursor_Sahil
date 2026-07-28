@@ -38,6 +38,40 @@ present in the source, and solution/demo readiness has not been verified.
 - Treat “2026” and “2027” as the uploaded planning-bucket labels. They are not synonymous with Design
   Win Date year; the 2027 export contains some opportunities with 2026 DWIN dates.
 
+## Account ownership and support execution
+
+- **Primary accounts:** Ciena, Juniper / HPE, Philips, GE HealthCare, Outdu.
+- **Other strategic/supported accounts:** Siemens, Boeing, Honeywell Aerospace, Schneider, Emerson.
+- Philips appeared in both supplied account lists and is treated once as a primary account.
+- The allocation roster contains 12 customer/location rows, all naming Sahil as
+  New FAE. The image spelling “Outdo” is normalized to Outdu.
+- From 15 May to 28 July 2026, 16 distinct substantive external issue threads were
+  handled: Networking 4, Board / Schematic 4, Tools / AI 3, PCIe / Configuration 3, Device / I/O 2.
+- Only 1 thread explicitly records confirmed
+  resolution. The remaining summaries show guidance, workaround, escalation, investigation or pending
+  validation and should not be presented as closed without confirmation.
+- Four of five primary accounts—Ciena, Philips, GE HealthCare and Outdu—had no substantive issue thread
+  in this window. This is a proactive-engagement gap, not evidence that no technical needs exist.
+
+### External support issue ledger
+
+1. **Quartus Pro 24.1 SignalTap compilation slowdown** — C-DOT; latest 22 May 2026; Tools / AI; **Reproduction required**. Reproduce with an example design and SignalTap; provide a cleaner debug path.
+2. **LVDS SerDes + optical transceiver integration for TSE** — Macnica / external; latest 29 May 2026; Networking; **Feasibility validation**. 100 Mbps optical fit requires hardware adaptation; TSE LVDS path is 1G-oriented.
+3. **Non-PTP drops with PTP residence-time update in LL 40GbE MAC** — Ceragon; latest 19 May 2026; Networking; **Debug narrowed**. Trigger isolated to residence-time update control, narrowing MAC-level debug.
+4. **MAX 10 DK-DEV-10M08E144-B GPIO feasibility** — Siemens; latest 25 Jun 2026; Device / I/O; **Guidance provided**. 44-signal fit is feasible subject to pin, bank-voltage, shared-circuit and level-shift checks.
+5. **Agilex 7 F-Tile TX MAC segmented-interface behavior** — C-DOT; latest 18 Jun 2026; Networking; **Resolved**. Clarified fixed latency, idle behavior and mid-frame valid-drop error handling.
+6. **Cyclone V PCIe MSI MsiReq_o not asserting** — HPE; latest 29 Jun 2026; PCIe / Configuration; **Guidance provided**. Use MSI memory-write transaction flow rather than expecting MSIReq_o assertion.
+7. **MAX 10 I/O utilization for 10M02SCE144A7G** — Honeywell Aerospace; latest 26 Jun 2026; Device / I/O; **Guidance provided**. No fixed derating percentage; validate package and electrical constraints in Quartus.
+8. **PTA 26.1 LPDDR5 frequency cap versus datasheet** — Vicharak; latest 28 Jul 2026; Tools / AI; **Workaround + escalation**. Use 1866 MHz in Platform Designer and full Quartus power analysis pending PTA fix.
+9. **FPGA AI Suite HL-JTAG memory and address-map issue** — Pantherun; latest 15 Jul 2026; Tools / AI; **Guidance provided**. Use fabric DDR or expand the accessible bridge/span for F2SDRAM.
+10. **Agilex 7 custom-board bring-up and power sequencing** — BEL / Macnica; latest 27 Jul 2026; Board / Schematic; **Bring-up investigation**. Validate rail sequencing, pre-bias, waveforms, JTAG visibility and board captures first.
+11. **Agilex 3/5 schematic corrections before card release** — Qbit Labs / Arrow; latest 15 Jul 2026; Board / Schematic; **Release blocker found**. Correct GTS bank power grouping before AI-Modem and TSN card release.
+12. **ATUM Nano Ethernet failure after BSP regeneration** — Macnica / BEL Chennai; latest 03 Jul 2026; Networking; **Fix identified**. Reapply required manual driver edits after BSP regeneration, then rebuild.
+13. **Agilex 7 core/HSSI rail topology for 3U VPX switch** — BEL / Macnica; latest 07 Jul 2026; Board / Schematic; **Validation required**. Do not collapse regulators without current-sharing, transient and margin validation.
+14. **Dual-image Cyclone V GX flash update partitioning** — Juniper / HPE; latest 24 Jul 2026; PCIe / Configuration; **Method required**. Need a partition-safe primary-image update method; generated RPD spans full flash.
+15. **Cyclone V PCIe MSI interrupt generation** — Juniper / HPE; latest 14 Jul 2026; PCIe / Configuration; **Guidance provided**. Implement MSI through the memory-write flow rather than MsiReq_o.
+16. **SDR schematic-freeze pin and constraint blockers** — Macnica SDR program; latest 16 Jul 2026; Board / Schematic; **Release blockers found**. Close OPN mismatch, HPS UART, electrical constraints and pin handling before release.
+
 ## Altera solution story
 
 Lead with complete, demonstrable solution paths:
