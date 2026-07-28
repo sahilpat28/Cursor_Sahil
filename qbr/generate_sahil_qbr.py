@@ -35,6 +35,99 @@ GRID = "2A3658"
 PALE = "DDE6F3"
 GREEN = "3DDC97"
 
+REFERENCES = [
+    (
+        "R1",
+        "International Federation of Robotics, World Robotics 2025 press release",
+        "https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years",
+    ),
+    (
+        "R2",
+        "Rockwell Automation, 2025 State of Smart Manufacturing — APAC findings",
+        "https://www.rockwellautomation.com/en-sg/company/news/press-releases/apac-sosm-2025.html",
+    ),
+    (
+        "R3",
+        "Interact Analysis, Machine Vision return-to-growth forecast, June 2025",
+        "https://interactanalysis.com/return-to-growth-forecast-for-machine-vision-in-2025-despite-us-tariffs/",
+    ),
+    (
+        "R4",
+        "Altera, Robotics Solutions Stack",
+        "https://www.altera.com/fpga-solutions/robotics-solutions-stack",
+    ),
+    (
+        "R5",
+        "Altera, Agilex 5 FPGA and SoC FPGA overview",
+        "https://www.altera.com/products/fpga/agilex/5",
+    ),
+    (
+        "R6",
+        "AMD, Kria KR260 robotics platform and Kria Robotics Stack",
+        "https://www.amd.com/en/products/system-on-modules/kria/k26/robotics.html",
+    ),
+    (
+        "R7",
+        "Altera, Video and Vision Processing Suite",
+        "https://www.altera.com/products/ip/po-3150/video-and-vision-processing-suite",
+    ),
+    (
+        "R8",
+        "Altera, FPGA AI Suite",
+        "https://www.altera.com/products/development-tools/fpga-ai-suite",
+    ),
+    (
+        "R9",
+        "AMD, Kria KV260 Vision AI Starter Kit",
+        "https://www.amd.com/en/products/system-on-modules/kria/k26/kv260-vision-starter-kit.html",
+    ),
+    (
+        "R10",
+        "AMD, Versal AI Edge Series",
+        "https://www.amd.com/en/products/adaptive-socs-and-fpgas/versal/ai-edge-series.html",
+    ),
+    (
+        "R11",
+        "Altera, Industrial solutions",
+        "https://www.altera.com/fpga-solutions/industrial",
+    ),
+    (
+        "R12",
+        "Altera, Agilex 5 SoC HPS features including three 2.5G TSN Ethernet MACs",
+        "https://docs.altera.com/r/docs/762191/current/agilextm-5-fpgas-and-socs-device-overview/additional-features-for-agilextm-5-socs",
+    ),
+    (
+        "R13",
+        "AMD, Industrial Networking solutions",
+        "https://www.amd.com/en/solutions/industrial/industrial-networking.html",
+    ),
+    (
+        "R14",
+        "Altera, Agilex 5 Functional Safety",
+        "https://docs.altera.com/api/khub/documents/xhgkkZ1PZaLEHFnNiUlbNA/content",
+    ),
+    (
+        "R15",
+        "AMD, Functional Safety",
+        "https://www.amd.com/en/products/adaptive-socs-and-fpgas/technologies/functional-safety.html",
+    ),
+    (
+        "R16",
+        "Altera, Agilex 3 FPGA and SoC FPGA overview",
+        "https://www.altera.com/products/fpga/agilex/3",
+    ),
+    (
+        "R17",
+        "AMD, Spartan UltraScale+ FPGA overview",
+        "https://www.amd.com/en/products/adaptive-socs-and-fpgas/fpga/spartan-ultrascale-plus.html",
+    ),
+    (
+        "R18",
+        "AMD, Vitis unified software platform",
+        "https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vitis.html",
+    ),
+]
+
 
 def rgb(hex_value: str) -> RGBColor:
     return RGBColor.from_string(hex_value)
@@ -215,6 +308,10 @@ def add_header(slide, title: str, section: str, number: int):
         size=7.5,
         color=MUTED,
     )
+
+
+def add_citation(slide, text: str):
+    add_text(slide, 0.62, 6.88, 12.0, 0.18, text, size=7.2, color=MUTED)
 
 
 def new_slide(prs: Presentation, title: str, section: str, number: int):
@@ -639,8 +736,297 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, x + 0.22, 4.87, 3.38, 0.86, value3, size=12, bold=True)
     add_text(slide, 0.65, 6.40, 11.9, 0.28, "Review decision: choose numeric 2027 creation targets after the 2027 sales objective is confirmed.", size=10.5, color=ORANGE, bold=True)
 
-    # 11 — Ecosystem
-    slide = new_slide(prs, "DFAE + ecosystem engagement: attach expertise to stage exits", "07 / Team execution", 11)
+    # 11 — Market signals
+    slide = new_slide(prs, "Market review: growth is real, but proof-of-value wins budgets", "07 / Market review", 11)
+    market_signals = [
+        (
+            "ROBOTICS",
+            ORANGE,
+            "9,100",
+            "robots installed in India in 2024",
+            "+7% YoY • India ranked #6 • automotive = 45% of installs",
+            "Commercial implication",
+            "Prioritize automotive suppliers, machine builders and control platforms; sell deterministic integration, not an FPGA.",
+        ),
+        (
+            "VIDEO + VISION",
+            TEAL,
+            "$5.7B",
+            "2025 global machine-vision forecast",
+            "+1.5% after a 3.9% decline in 2024 • price pressure remains",
+            "Commercial implication",
+            "Lead with workload benchmarks, integration time and sensor flexibility; generic camera growth is not enough.",
+        ),
+        (
+            "INDUSTRIAL",
+            BLUE,
+            "94%",
+            "of APAC manufacturers investing/planning AI",
+            "quality control 47% • process optimization 43% • cyber is critical",
+            "Commercial implication",
+            "Package edge AI with control, networking, safety and security around a measurable factory KPI.",
+        ),
+    ]
+    for index, (name, accent_color, metric, metric_label, evidence, implication_label, implication) in enumerate(market_signals):
+        x = 0.55 + index * 4.10
+        add_box(slide, x, 1.38, 3.82, 4.95, fill="14213D", line=accent_color)
+        add_text(slide, x + 0.22, 1.68, 3.38, 0.27, name, size=11, color=accent_color, bold=True)
+        add_text(slide, x + 0.22, 2.13, 3.38, 0.54, metric, size=29, color=WHITE, bold=True)
+        add_text(slide, x + 0.22, 2.72, 3.38, 0.46, metric_label, size=11, color=PALE, bold=True)
+        add_text(slide, x + 0.22, 3.40, 3.38, 0.68, evidence, size=10.5, color=MUTED)
+        add_text(slide, x + 0.22, 4.32, 3.38, 0.22, implication_label.upper(), size=8, color=accent_color, bold=True)
+        add_text(slide, x + 0.22, 4.66, 3.38, 1.15, implication, size=11.5, bold=True)
+    add_citation(slide, "[R1] IFR World Robotics 2025  •  [R3] Interact Analysis, Jun 2025  •  [R2] Rockwell APAC Smart Manufacturing 2025")
+
+    # 12 — Robotics market
+    slide = new_slide(prs, "Robotics: India is scaling; own the deterministic control layer", "07 / Market review", 12)
+    add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=ORANGE)
+    add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE", size=9, color=ORANGE, bold=True)
+    add_rich_text(
+        slide,
+        0.76,
+        2.12,
+        3.55,
+        3.62,
+        [
+            ("542K global robot installs in 2024", WHITE, 18, True),
+            ("4.664M operational stock; +9% YoY", PALE, 12, False),
+            ("India: 9.1K installs, +7%, #6 globally", WHITE, 15, True),
+            ("45% of India installs were automotive", PALE, 12, False),
+            ("IFR forecasts 575K global installs in 2025 and >700K by 2028.", WHITE, 12, False),
+        ],
+    )
+    add_box(slide, 4.78, 1.38, 3.78, 4.95, fill="14213D", line=TEAL)
+    add_text(slide, 5.03, 1.70, 3.28, 0.25, "COMPETITIVE BATTLEFIELD", size=9, color=TEAL, bold=True)
+    add_rich_text(
+        slide,
+        4.99,
+        2.12,
+        3.30,
+        3.70,
+        [
+            ("AMD Xilinx strength", ORANGE, 10, True),
+            ("Kria KR260: production SOM path, native ROS 2 and Kria Robotics Stack.", WHITE, 12, False),
+            ("Altera proof", TEAL, 10, True),
+            ("ROS 2 controller, Drive-on-Chip, safety, sensor fusion and 3×2.5G TSN reference designs.", WHITE, 12, False),
+            ("Win condition", BLUE, 10, True),
+            ("Demonstrate lower end-to-end jitter and fewer devices for the customer's exact control loop.", WHITE, 12, True),
+        ],
+    )
+    add_box(slide, 8.78, 1.38, 3.92, 4.95, fill="14213D", line=BLUE)
+    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED 2027 MOTION", size=9, color=BLUE, bold=True)
+    add_rich_text(
+        slide,
+        8.99,
+        2.12,
+        3.45,
+        3.78,
+        [
+            ("Target", BLUE, 10, True),
+            ("Robot OEMs, AMR makers, automotive suppliers and control-system integrators.", WHITE, 12, False),
+            ("Offer", BLUE, 10, True),
+            ("Sense→think→act workshop using Agilex 5 SoC, TSN and functional-safety architecture.", WHITE, 12, False),
+            ("Proposed scorecard", BLUE, 10, True),
+            ("12 named accounts • 6 workshops • 3 evaluations • 2 qualified opportunities • 1 DWIN.", WHITE, 12, True),
+        ],
+    )
+    add_citation(slide, "[R1] IFR World Robotics 2025  •  [R4] Altera Robotics Stack  •  [R5] Agilex 5  •  [R6] AMD Kria KR260")
+
+    # 13 — Video and vision market
+    slide = new_slide(prs, "Video + vision: recovery is selective; benchmark the whole pipeline", "07 / Market review", 13)
+    add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=TEAL)
+    add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE", size=9, color=TEAL, bold=True)
+    add_rich_text(
+        slide,
+        0.76,
+        2.12,
+        3.55,
+        3.65,
+        [
+            ("2024 global market: −3.9%", WHITE, 18, True),
+            ("Inventory correction and manufacturing softness", PALE, 12, False),
+            ("2025 forecast: +1.5% to $5.7B", WHITE, 16, True),
+            ("2028 forecast: $7B", PALE, 12, False),
+            ("Area-scan cameras fell 7.8%; APAC vendor price pressure makes undifferentiated hardware vulnerable.", WHITE, 12, False),
+        ],
+    )
+    add_box(slide, 4.78, 1.38, 3.78, 4.95, fill="14213D", line=ORANGE)
+    add_text(slide, 5.03, 1.70, 3.28, 0.25, "COMPETITIVE BATTLEFIELD", size=9, color=ORANGE, bold=True)
+    add_rich_text(
+        slide,
+        4.99,
+        2.12,
+        3.30,
+        3.72,
+        [
+            ("AMD Xilinx strength", ORANGE, 10, True),
+            ("KV260 quick start, multi-camera interfaces, Vitis Vision/AI and Versal AI Engine scale.", WHITE, 12, False),
+            ("Altera proof", TEAL, 10, True),
+            ("45+ VVP IP cores, >600 MHz claimed Fmax, 8K60+ optimization and FPGA AI Suite.", WHITE, 12, False),
+            ("Win condition", BLUE, 10, True),
+            ("Customer-model benchmark: ingest + ISP + inference + output latency, power and engineering weeks.", WHITE, 12, True),
+        ],
+    )
+    add_box(slide, 8.78, 1.38, 3.92, 4.95, fill="14213D", line=BLUE)
+    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED 2027 MOTION", size=9, color=BLUE, bold=True)
+    add_rich_text(
+        slide,
+        8.99,
+        2.12,
+        3.45,
+        3.78,
+        [
+            ("Named beachheads", BLUE, 10, True),
+            ("Outdu tracking/analytics; GE + Philips medical imaging; industrial inspection.", WHITE, 12, False),
+            ("Offer", BLUE, 10, True),
+            ("Bring-your-model vision benchmark day with two sensor interfaces and a production BOM.", WHITE, 12, False),
+            ("Proposed scorecard", BLUE, 10, True),
+            ("8 accounts • 4 benchmarks • 3 evaluations • 2 qualified opportunities • 1 DWIN.", WHITE, 12, True),
+        ],
+    )
+    add_citation(slide, "[R3] Interact Analysis  •  [R7] Altera VVP Suite  •  [R8] FPGA AI Suite  •  [R9] AMD KV260  •  [R10] Versal AI Edge")
+
+    # 14 — Industrial market
+    slide = new_slide(prs, "Industrial: AI spending converges with control, safety and cyber", "07 / Market review", 14)
+    add_box(slide, 0.55, 1.38, 4.00, 4.95, fill="14213D", line=BLUE)
+    add_text(slide, 0.80, 1.70, 3.50, 0.25, "MARKET EVIDENCE — APAC", size=9, color=BLUE, bold=True)
+    add_rich_text(
+        slide,
+        0.76,
+        2.12,
+        3.55,
+        3.65,
+        [
+            ("94% investing / planning AI", WHITE, 18, True),
+            ("47%: quality control is top AI use case", PALE, 12, False),
+            ("43%: process optimization", WHITE, 16, True),
+            ("95%: cyber standards important", PALE, 12, False),
+            ("The buying unit spans OT control, data, safety and security—not a single component owner.", WHITE, 12, False),
+        ],
+    )
+    add_box(slide, 4.78, 1.38, 3.78, 4.95, fill="14213D", line=ORANGE)
+    add_text(slide, 5.03, 1.70, 3.28, 0.25, "COMPETITIVE BATTLEFIELD", size=9, color=ORANGE, bold=True)
+    add_rich_text(
+        slide,
+        4.99,
+        2.12,
+        3.30,
+        3.72,
+        [
+            ("Shared table stakes", ORANGE, 10, True),
+            ("AMD and Altera both offer TSN, industrial connectivity and certified safety flows.", WHITE, 12, False),
+            ("Altera proof point", TEAL, 10, True),
+            ("Agilex 5 SoC integrates three hardened 2.5G TSN MACs; Drive-on-Chip and FSDP support.", WHITE, 12, False),
+            ("Win condition", BLUE, 10, True),
+            ("Quantify BOM consolidation, deterministic cycle time and certification work saved.", WHITE, 12, True),
+        ],
+    )
+    add_box(slide, 8.78, 1.38, 3.92, 4.95, fill="14213D", line=TEAL)
+    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED 2027 MOTION", size=9, color=TEAL, bold=True)
+    add_rich_text(
+        slide,
+        8.99,
+        2.12,
+        3.45,
+        3.78,
+        [
+            ("Named beachheads", TEAL, 10, True),
+            ("Emerson controller; Honeywell automation; machine builders via Arrow/Macnica.", WHITE, 12, False),
+            ("Offer", TEAL, 10, True),
+            ("Industrial platform clinic: TSN + PLC/control + safety + secure lifecycle.", WHITE, 12, False),
+            ("Proposed scorecard", TEAL, 10, True),
+            ("15 accounts • 6 clinics • 4 evaluations • 3 qualified opportunities • 1 DWIN.", WHITE, 12, True),
+        ],
+    )
+    add_citation(slide, "[R2] Rockwell APAC 2025  •  [R11–R15] Altera/AMD industrial networking and functional-safety sources")
+
+    # 15 — Portfolio map
+    slide = new_slide(prs, "Competitive portfolio map: no single one-for-one device comparison", "08 / Competition", 15)
+    portfolio_rows = [
+        [
+            "Cost / I/O edge",
+            "Agilex 3 C: FPGA + optional dual A55 SoC, AI tensor DSP, MIPI, 12.5G",
+            "Spartan UltraScale+: high I/O, 16.3G, PCIe Gen4, hardened LPDDR; no processor",
+            "Compare package, I/O mix, BOM, power and required processor—not density labels.",
+        ],
+        [
+            "Midrange embedded",
+            "Agilex 5 E: A76/A55 SoC options, 3×2.5G TSN, AI tensor blocks",
+            "Zynq UltraScale+ MPSoC / Kria K26: mature SOM and software ecosystem",
+            "Altera: consolidation + hard TSN. AMD: fast SOM/ROS path. Prove development effort.",
+        ],
+        [
+            "AI / vision scale",
+            "Agilex 5 D/E + FPGA AI Suite + VVP; custom streaming data path",
+            "Versal AI Edge + AI Engines; Kria KV260 for fast vision evaluation",
+            "TOPS are not directly comparable. Benchmark the customer's model and full pipeline.",
+        ],
+        [
+            "High-end adaptable",
+            "Agilex 7/9 families for high bandwidth, RF and complex acceleration",
+            "Versal Premium / AI Core / RF families",
+            "Treat as architecture-led pursuits; involve product-line DFAEs before device claims.",
+        ],
+    ]
+    add_table(
+        slide,
+        0.55,
+        1.35,
+        12.15,
+        4.95,
+        ["Battlefield", "Altera position", "AMD Xilinx position", "FAE comparison rule"],
+        portfolio_rows,
+        [1.35, 3.30, 3.30, 4.20],
+        font_size=8.6,
+        header_size=8.4,
+    )
+    add_text(slide, 0.65, 6.43, 11.9, 0.22, "Never compare LE vs logic-cell counts or headline TOPS as equivalent metrics; normalize the workload, precision, sparsity, clocks, power and tool version.", size=9.5, color=ORANGE, bold=True)
+    add_citation(slide, "[R5], [R8], [R10], [R16], [R17] — official vendor product pages; claims remain vendor-stated until customer benchmark")
+
+    # 16 — Competitive scorecard
+    slide = new_slide(prs, "Altera vs AMD Xilinx: evidence-based battlecard", "08 / Competition", 16)
+    score_rows = [
+        ["Robotics SW", "ROS 2 controller + Drive-on-Chip reference stack", "KR260 + native ROS 2 + KRS + production K26 SOM", "AMD advantage for software-first/SOM buyers; counter with deterministic consolidation proof."],
+        ["Vision IP", "45+ VVP cores; FPGA AI Suite; custom streaming fabric", "Vitis Vision/AI; KV260; Versal AI Engines", "Both credible. Win on measured end-to-end latency, power and engineering effort."],
+        ["AI scale", "Agilex 3/5/7 portfolio; vendor claims up to 152.6 INT8 TOPS on A5 D", "Versal AI Edge vendor table: 5–202 dense INT8 TOPS", "Do not rank by TOPS alone; architectures, devices and assumptions differ."],
+        ["Industrial TSN", "Agilex 5 SoC: three hardened 2.5G TSN MACs", "100M/1G TSN LogiCORE; broader industrial protocol ecosystem", "Lead with integration/BOM if hard TSN fits; validate exact protocol and topology."],
+        ["Functional safety", "TÜV-reviewed FSDP/methodology; stated suitability up to SIL3", "TÜV SÜD-certified flows; IEC 61508 / ISO 13849 support", "Table stakes for both. Compare exact device/tool/IP certificate scope."],
+        ["Cost / I/O", "Agilex 3: SoC option, MIPI, AI tensor DSP, 12.5G", "Spartan UltraScale+: up to 572 I/O, 16.3G, PCIe Gen4", "Use customer pinout + board-cost study. Neither wins every configuration."],
+    ]
+    add_table(
+        slide,
+        0.55,
+        1.32,
+        12.15,
+        5.20,
+        ["Criterion", "Altera evidence", "AMD Xilinx evidence", "Implication / honest position"],
+        score_rows,
+        [1.10, 3.08, 3.08, 4.89],
+        font_size=7.6,
+        header_size=7.8,
+    )
+    add_citation(slide, "[R4–R18] Official vendor sources. “Advantage” statements are sales assessments, not third-party benchmark conclusions.")
+
+    # 17 — Competitive win plan
+    slide = new_slide(prs, "How to win against AMD Xilinx: replace claims with customer evidence", "08 / Competition", 17)
+    win_steps = [
+        ("1  DISCOVER", ORANGE, "Installed device/tool flow? Decision owner? Workload? Pain: latency, power, I/O, BOM, safety or schedule?"),
+        ("2  BASELINE", RED, "Capture AMD reference: exact device/board, tool version, model precision, interfaces, clocks and measured power."),
+        ("3  PROVE", TEAL, "Run the same workload on Altera; publish reproducible scripts, resource use, latency distribution, power and BOM."),
+        ("4  DE-RISK", BLUE, "Close IP gaps, migration effort, safety scope, supply/lifecycle and support plan with named DFAEs."),
+        ("5  COMMERCIALIZE", GREEN, "Convert evaluation success into architecture freeze, DWIN evidence and production forecast."),
+    ]
+    for index, (label, accent_color, action) in enumerate(win_steps):
+        y = 1.38 + index * 0.97
+        add_box(slide, 0.55, y, 2.02, 0.72, fill="14213D", line=accent_color)
+        add_text(slide, 0.78, y + 0.20, 1.58, 0.25, label, size=11, color=accent_color, bold=True)
+        add_box(slide, 2.75, y, 9.95, 0.72, fill=NAVY_2, line=GRID)
+        add_text(slide, 3.02, y + 0.14, 9.42, 0.42, action, size=11.5, bold=True)
+    add_box(slide, 0.55, 6.38, 12.15, 0.35, fill="2B1D2F", line=ORANGE)
+    add_text(slide, 0.78, 6.43, 11.62, 0.20, "Red line: do not use vendor headline TOPS, power or performance claims as an apples-to-apples result without reproducing the workload.", size=9, color=ORANGE, bold=True)
+
+    # 18 — Ecosystem
+    slide = new_slide(prs, "DFAE + ecosystem engagement: attach expertise to stage exits", "09 / Team execution", 18)
     columns = [
         ("DISCOVERY", "Sales + FAE", "Sponsor, use case, value, budget and decision process", RED),
         ("ARCHITECTURE", "FAE + specialist DFAE", "Block diagram, device fit, IP/tools and risk register", ORANGE),
@@ -666,8 +1052,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, x, 4.70, 1.95, 0.20, when, size=8, color=MUTED, bold=True)
         add_text(slide, x, 5.00, 2.05, 0.62, action, size=11, bold=True)
 
-    # 12 — Commitments / gaps
-    slide = new_slide(prs, "Close the review with owners, evidence and missing inputs", "08 / Commitments", 12)
+    # 19 — Commitments / gaps
+    slide = new_slide(prs, "Close the review with owners, evidence and missing inputs", "10 / Commitments", 19)
     add_box(slide, 0.55, 1.38, 7.30, 4.95)
     add_text(slide, 0.82, 1.70, 6.75, 0.26, "PROPOSED COMMITMENTS", size=10, color=TEAL, bold=True)
     commitments = [
@@ -675,7 +1061,7 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         "Qualify Weather Radar and CPU Interface Card from 0% or remove value from the active forecast.",
         "Create the 15th strategic opportunity with a 2027 customer sponsor and use case.",
         "Publish a direct-account + distributor coverage map; current source has no disty pipeline.",
-        "Run one demand-creation motion per focus area and track evaluations created.",
+        "Run one sourced, benchmark-led demand-creation motion per focus area and track evaluations created.",
     ]
     for index, commitment in enumerate(commitments):
         y = 2.18 + index * 0.76
@@ -698,8 +1084,8 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, 8.78, y, 3.35, 0.28, item, size=11.5, bold=True)
     add_text(slide, 8.40, 5.76, 3.95, 0.34, "No invented numbers.\nFill, validate, commit.", size=13.5, color=TEAL, bold=True)
 
-    # 13 — Data definitions
-    slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 13)
+    # 20 — Data definitions
+    slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 20)
     notes = [
         ("Scope", "Rows where Technical Owner = Sahil Patni; 20 product lines consolidated by Opportunity ID into 14 opportunities."),
         ("Peak value", "Product-line Peak Value summed within each Opportunity ID. Source file does not encode currency."),
@@ -714,6 +1100,18 @@ def build_presentation(opportunities: list[dict[str, Any]], output: Path):
         add_text(slide, 0.65, y, 1.65, 0.26, label.upper(), size=9, color=TEAL if index < 4 else ORANGE, bold=True)
         add_text(slide, 2.20, y, 10.15, 0.48, note, size=11.5, color=WHITE)
     add_text(slide, 0.65, 6.56, 11.9, 0.24, "Regenerate with: python3 qbr/generate_sahil_qbr.py", size=9, color=MUTED)
+
+    # 21/22 — Reference appendix
+    for slide_number, start in ((21, 0), (22, 9)):
+        end = start + 9
+        title = "References: market evidence and solution sources" if start == 0 else "References: competitive product and tool sources"
+        slide = new_slide(prs, title, "Appendix / References", slide_number)
+        for index, (reference_id, reference_title, url) in enumerate(REFERENCES[start:end]):
+            y = 1.30 + index * 0.60
+            add_text(slide, 0.62, y, 0.55, 0.22, reference_id, size=9, color=TEAL, bold=True)
+            add_text(slide, 1.15, y, 4.40, 0.42, reference_title, size=8.2, color=WHITE, bold=True)
+            add_text(slide, 5.68, y, 6.92, 0.42, url, size=7.1, color=PALE)
+        add_text(slide, 0.65, 6.70, 11.9, 0.18, "Accessed 28 Jul 2026. Vendor specifications and performance figures are vendor-stated; validate against current datasheets and customer workloads.", size=7.5, color=ORANGE, bold=True)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     prs.save(output)
@@ -795,6 +1193,31 @@ def build_summary_workbook(
     for row in line_items:
         source_sheet.append([row[header] for header in source_headers])
 
+    reference_sheet = workbook.create_sheet("Market References")
+    reference_sheet.append(["ID", "Source", "URL", "Accessed", "Use"])
+    reference_uses = {
+        "R1": "Robotics market",
+        "R2": "Industrial / APAC market",
+        "R3": "Machine-vision market",
+        "R4": "Altera robotics",
+        "R5": "Altera Agilex 5",
+        "R6": "AMD robotics",
+        "R7": "Altera video / vision",
+        "R8": "Altera AI software",
+        "R9": "AMD vision",
+        "R10": "AMD AI portfolio",
+        "R11": "Altera industrial",
+        "R12": "Altera TSN / HPS",
+        "R13": "AMD industrial networking",
+        "R14": "Altera functional safety",
+        "R15": "AMD functional safety",
+        "R16": "Altera cost-optimized portfolio",
+        "R17": "AMD cost-optimized portfolio",
+        "R18": "AMD development tools",
+    }
+    for reference_id, reference_title, url in REFERENCES:
+        reference_sheet.append([reference_id, reference_title, url, date(2026, 7, 28), reference_uses[reference_id]])
+
     for sheet in workbook.worksheets:
         sheet.freeze_panes = "A2"
         sheet.auto_filter.ref = sheet.dimensions
@@ -815,6 +1238,8 @@ def build_summary_workbook(
                     cell.number_format = '#,##0.00'
     opportunity_sheet.column_dimensions["N"].width = 52
     opportunity_sheet.column_dimensions["O"].width = 48
+    reference_sheet.column_dimensions["B"].width = 58
+    reference_sheet.column_dimensions["C"].width = 90
 
     output.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(output)
@@ -829,6 +1254,10 @@ def build_notes(opportunities: list[dict[str, Any]], output: Path):
         if row["Design Win Date Parsed"]
         and date(2026, 10, 1) <= row["Design Win Date Parsed"] <= date(2026, 12, 31)
     ]
+    reference_text = "\n".join(
+        f"- **{reference_id}** — {reference_title}: {url}"
+        for reference_id, reference_title, url in REFERENCES
+    )
     text = f"""# Sahil FAE QBR — presenter notes
 
 Review: {REVIEW_DATE.strftime("%d %B %Y")}, 12:00–13:00  
@@ -851,6 +1280,41 @@ be calculated from this file. The review should end with named stage-exit eviden
   their weighted value is {fmt_value(sum(row["Weighted Value"] for row in q4))}.
 - The source contains 14—not 15—distinct opportunities. Use slot 15 as a concrete demand-creation commitment.
 - Every Sahil line is marked `Altera Opportunity`; distributor account is blank.
+
+## Market review talk track
+
+### Robotics
+
+- IFR recorded 542,000 global industrial-robot installations in 2024 and 4.664 million robots in
+  operation. India installed 9,100 units, up 7%, ranking sixth globally; automotive represented 45%.
+- AMD's strongest practical counter is not a single device specification: it is the KR260/K26 SOM
+  path with native ROS 2 and the Kria Robotics Stack.
+- The Altera response should be a measured sense-to-act demonstration combining deterministic ROS 2,
+  TSN, motion/control, safety and sensor fusion—not a generic FPGA feature presentation.
+
+### Video and vision
+
+- Interact Analysis reported a 3.9% global machine-vision decline in 2024 and forecast 1.5% growth to
+  $5.7 billion in 2025. Area-scan cameras were under pressure, including competition from APAC vendors.
+- AMD can lead with KV260 ease of evaluation, Vitis libraries and Versal AI Engine scale.
+- Altera should prove the complete ingest→ISP→AI→output pipeline using the customer's model and sensor:
+  latency distribution, power, image quality, resources, BOM and engineering effort.
+
+### Industrial
+
+- Rockwell's APAC survey found 94% had invested or planned to invest in AI; quality control and process
+  optimization were leading use cases, while cyber standards were broadly important.
+- TSN and functional safety are credible capabilities for both AMD and Altera. Avoid claiming exclusivity.
+- The specific Altera proof point is Agilex 5 SoC's three hardened 2.5G TSN MACs combined with
+  Drive-on-Chip and the functional-safety methodology. Quantify system consolidation and certification work.
+
+## Competitive positioning rules
+
+1. Do not compare Altera logic elements directly with AMD system logic cells.
+2. Do not compare headline TOPS without matching model, precision, sparsity, clocks, batch and power.
+3. Treat vendor power/performance claims as vendor-stated until reproduced.
+4. Capture the installed AMD device, board, tool version and workload before proposing migration.
+5. Win with a reproducible customer benchmark and a named de-risk plan.
 
 ## Inputs required before presenting
 
@@ -875,6 +1339,12 @@ for robotics/control, video/vision, and industrial platforms.”
   has already been achieved.
 - Proposed actions in the deck are planning recommendations inferred from stage/date/product data and
   should be validated with Sales and the customer.
+
+## References
+
+Accessed 28 July 2026.
+
+{reference_text}
 """
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(text, encoding="utf-8")
