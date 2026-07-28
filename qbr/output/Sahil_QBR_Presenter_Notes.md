@@ -2,13 +2,16 @@
 
 Review: 29 July 2026, 12:00–13:00  
 Prepared: 27 July 2026  
-Source: `Sahil Report.xlsx`
+Sources: `Sahil Report.xlsx`, `Sahil-Open Pipeline-2026.xlsx`,
+`Sahil-Open Pipeline-2027.xlsx`
 
 ## Opening message
 
-The available pipeline is meaningful—11.82M peak and 2.51M weighted across
-14 distinct opportunities—but conversion is concentrated and target attainment cannot
-be calculated from this file. The review should end with named stage-exit evidence, owners, and dates.
+The uploaded open-pipeline exports contain 12 qualified opportunities:
+8.22M peak and 2.51M weighted. The master report contains another
+2 Identify / 0% plays worth
+3.60M; these are not in either open export.
+Target attainment still cannot be calculated because target and actual-achievement data are absent.
 
 The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
 Only Sahil is named; no Arrow or Macnica specialist is committed, no distributor-linked opportunity is
@@ -16,14 +19,21 @@ present in the source, and solution/demo readiness has not been verified.
 
 ## Facts to land
 
-- 20 Sahil-owned product lines consolidate to 14 opportunities across
-  7 direct customers.
-- 3.60M is still Identify at 0% probability.
-- Outdu AI contributes 4.12M, or 34.9% of peak pipeline, while still at Define.
+- The 2026 open export contains 1 Sahil opportunity worth
+  4.12M.
+- The 2027 open export contains 11 Sahil opportunities worth
+  4.09M.
+- Combined qualified open pipeline is 8.22M across
+  6 direct customers.
+- 3.60M remains Identify at 0% outside
+  both open exports, taking the total discovered portfolio to 11.82M.
+- Outdu AI contributes 4.12M, or 50.2% of qualified open value.
 - Four Q4 2026 DWIN-dated plays total 5.04M;
   their weighted value is 1.26M.
 - The source contains 14—not 15—distinct opportunities. Use slot 15 as a concrete demand-creation commitment.
-- Every Sahil line is marked `Altera Opportunity`; distributor account is blank.
+- Every qualified Sahil opportunity is marked `Altera Opportunity`; distributor account is blank.
+- Treat “2026” and “2027” as the uploaded planning-bucket labels. They are not synonymous with Design
+  Win Date year; the 2027 export contains some opportunities with 2026 DWIN dates.
 
 ## Altera solution story
 
