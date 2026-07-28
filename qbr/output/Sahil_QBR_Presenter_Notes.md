@@ -9,11 +9,12 @@ Sources: `Sahil Report.xlsx`, `Sahil-Open Pipeline-2026.xlsx`,
 
 ## Opening message
 
-This report attributes records owned by Sahil Patni and Kasturi Rangan to Sahil. The uploaded exports
-contain 18 qualified opportunities:
-10.45M peak and 3.00M weighted. The master report contains another
-3 plays worth
-3.94M outside both exports.
+Total open pipeline is 17.3M for FY2026 and
+64.5M for FY2027, including Altera-direct and distribution.
+Within that, this report attributes records owned by Sahil Patni and Kasturi Rangan to Sahil:
+18 qualified direct opportunities, 10.45M peak and
+3.00M weighted. The master contains another 3 plays
+worth 3.94M outside both exports.
 Target attainment still cannot be calculated because FY2026 target and actual-achievement data are absent.
 
 The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
@@ -22,6 +23,15 @@ present in the source, and solution/demo readiness has not been verified.
 
 ## Facts to land
 
+- FY2026 total open is 17.3M:
+  4.25M direct +
+  13.09M channel.
+- FY2027 total open is 64.5M:
+  6.19M direct +
+  58.32M channel.
+- The FY2027 “22 Altera Opportunity” headline counts source rows/product lines. These consolidate to
+  16 distinct opportunity IDs across
+  7 direct-account customers.
 - The FY2026 open export contains 2 reporting-scope opportunities worth
   4.25M.
 - The FY2027 open export contains 16 reporting-scope opportunities worth

@@ -23,6 +23,7 @@ AS_OF = date(2026, 7, 28)
 REVIEW_DATE = date(2026, 7, 29)
 FAE_START_DATE = date(2026, 6, 1)
 REPORTING_OWNERS = {"Sahil Patni", "Kasturi Rangan"}
+SNAPSHOT_EXCLUDED_OWNERS = {"Balaji Maddina"}
 
 NAVY = "0B132B"
 NAVY_2 = "111C3A"
@@ -413,6 +414,46 @@ def read_open_pipeline_buckets(
     return buckets
 
 
+def read_total_pipeline_snapshot(sources: dict[str, Path]) -> dict[str, dict[str, Any]]:
+    """Summarize total open pipeline and direct-account coverage by fiscal bucket."""
+    snapshot: dict[str, dict[str, Any]] = {}
+    for bucket, source in sources.items():
+        workbook = load_workbook(source, data_only=True)
+        worksheet = workbook["Sahil-Open Pipeline"]
+        values = list(worksheet.iter_rows(values_only=True))
+        headers = values[0]
+        rows = [
+            dict(zip(headers, row))
+            for row in values[1:]
+            if row[2] not in SNAPSHOT_EXCLUDED_OWNERS
+        ]
+        direct_rows = [
+            row for row in rows if row["Opportunity Coverage"] == "Altera Opportunity"
+        ]
+        channel_rows = [
+            row
+            for row in rows
+            if row["Opportunity Coverage"] == "Channel Opportunity (DR)"
+        ]
+        snapshot[bucket] = {
+            "Total Open Value": sum(float(row["Peak Value"] or 0) for row in rows),
+            "Total Records": len(rows),
+            "Distinct Opportunities": len({row["Opportunity ID"] for row in rows}),
+            "Direct Value": sum(float(row["Peak Value"] or 0) for row in direct_rows),
+            "Direct Records": len(direct_rows),
+            "Distinct Direct Opportunities": len(
+                {row["Opportunity ID"] for row in direct_rows}
+            ),
+            "Direct Customers": len({row["Account Name"] for row in direct_rows}),
+            "Channel Value": sum(float(row["Peak Value"] or 0) for row in channel_rows),
+            "Channel Records": len(channel_rows),
+            "Distinct Channel Opportunities": len(
+                {row["Opportunity ID"] for row in channel_rows}
+            ),
+        }
+    return snapshot
+
+
 def add_text(
     slide,
     x: float,
@@ -671,11 +712,14 @@ def issue_in_group(group: str, issue_customer: str) -> bool:
 def build_presentation(
     opportunities: list[dict[str, Any]],
     open_buckets: dict[str, list[dict[str, Any]]],
+    total_snapshot: dict[str, dict[str, Any]],
     output: Path,
 ):
     total = sum(row["Peak Value"] for row in opportunities)
     open_2026 = open_buckets["2026"]
     open_2027 = open_buckets["2027"]
+    fy2026_snapshot = total_snapshot["2026"]
+    fy2027_snapshot = total_snapshot["2027"]
     open_opportunities = open_2026 + open_2027
     open_ids = {row["Opportunity ID"] for row in open_opportunities}
     outside_open_opportunities = [
@@ -734,7 +778,7 @@ def build_presentation(
     add_text(slide, 0.8, 3.25, 7.6, 0.32, "Wednesday, 29 July 2026  |  12:00–13:00", size=13, color=MUTED)
     add_text(slide, 0.8, 3.66, 7.9, 0.28, "Joined FAE team: 01 Jun 2026  •  Review point: FY2026 Q3 close", size=11, color=ORANGE, bold=True)
     add_box(slide, 9.25, 0.75, 3.25, 5.55, fill=NAVY_2, line=GRID)
-    add_text(slide, 9.62, 1.18, 2.5, 0.28, "PIPELINE SNAPSHOT", size=9, color=MUTED, bold=True)
+    add_text(slide, 9.62, 1.18, 2.5, 0.28, "SAHIL DIRECT SCOPE", size=9, color=MUTED, bold=True)
     add_text(slide, 9.62, 1.65, 2.5, 0.58, fmt_value(qualified_total), size=31, color=TEAL, bold=True)
     add_text(slide, 9.62, 2.18, 2.5, 0.26, "qualified open value", size=10, color=PALE)
     add_text(slide, 9.62, 2.72, 2.5, 0.58, str(len(open_opportunities)), size=31, color=BLUE, bold=True)
@@ -747,15 +791,15 @@ def build_presentation(
     # 2 — Executive snapshot
     slide = new_slide(
         prs,
-        f"Executive snapshot: {fmt_value(qualified_total)} qualified open; {fmt_value(total - qualified_total)} outside exports",
+        f"Pipeline snapshot: {fmt_value(fy2026_snapshot['Total Open Value'], 1)} FY2026 / {fmt_value(fy2027_snapshot['Total Open Value'], 1)} FY2027",
         "01 / Position",
         2,
     )
     card_width = 2.82
-    add_stat_card(slide, 0.55, 1.35, card_width, "Qualified open", fmt_value(qualified_total), f"{len(open_opportunities)} opportunities", TEAL)
-    add_stat_card(slide, 3.55, 1.35, card_width, "Weighted pipeline", fmt_value(weighted), "probability × peak", BLUE)
-    add_stat_card(slide, 6.55, 1.35, card_width, "FY2026 open export", fmt_value(sum(x["Peak Value"] for x in open_2026)), f"{len(open_2026)} opportunities", ORANGE)
-    add_stat_card(slide, 9.55, 1.35, card_width, "FY2027 open export", fmt_value(sum(x["Peak Value"] for x in open_2027)), f"{len(open_2027)} opportunities", GREEN)
+    add_stat_card(slide, 0.55, 1.35, card_width, "FY2026 total open", fmt_value(fy2026_snapshot["Total Open Value"], 1), f"{fy2026_snapshot['Direct Records']} direct records • {fy2026_snapshot['Direct Customers']} customers", TEAL)
+    add_stat_card(slide, 3.55, 1.35, card_width, "FY2027 total open", fmt_value(fy2027_snapshot["Total Open Value"], 1), f"{fy2027_snapshot['Direct Records']} direct records • {fy2027_snapshot['Direct Customers']} customers", BLUE)
+    add_stat_card(slide, 6.55, 1.35, card_width, "Sahil direct qualified", fmt_value(qualified_total), f"{len(open_opportunities)} distinct opportunities", ORANGE)
+    add_stat_card(slide, 9.55, 1.35, card_width, "Sahil weighted", fmt_value(weighted), "probability × peak", GREEN)
     add_box(slide, 0.55, 2.78, 7.55, 3.85)
     add_rich_text(
         slide,
@@ -765,10 +809,10 @@ def build_presentation(
         3.25,
         [
             ("WHAT THE DATA SAYS", TEAL, 10, True),
-            (f"• {fmt_value(sum(x['Peak Value'] for x in outside_open_opportunities))} across {len(outside_open_opportunities)} plays is outside both exports: {fmt_value(sum(x['Peak Value'] for x in identify_opportunities))} Identify + {fmt_value(sum(x['Peak Value'] for x in other_outside_opportunities))} Define.", WHITE, 14, False),
-            (f"• Outdu AI is {fmt_value(4_125_000)} ({4_125_000 / qualified_total:.0%} of qualified open value) but remains Define.", WHITE, 15, False),
-            (f"• Q4 FY2026 (Aug–Oct) DWIN-dated pipeline is {fmt_value(sum(x['Peak Value'] for x in q4_fy2026))}; weighted value is {fmt_value(sum(x['Weighted Value'] for x in q4_fy2026))}.", WHITE, 15, False),
-            ("• Bucket membership comes from the uploaded files; it is not derived from Design Win Date.", WHITE, 15, False),
+            (f"• FY2026 splits into {fmt_value(fy2026_snapshot['Direct Value'])} direct + {fmt_value(fy2026_snapshot['Channel Value'])} channel.", WHITE, 14, False),
+            (f"• FY2027 splits into {fmt_value(fy2027_snapshot['Direct Value'])} direct + {fmt_value(fy2027_snapshot['Channel Value'])} channel.", WHITE, 14, False),
+            (f"• The supplied “22 Altera Opportunity” is {fy2027_snapshot['Direct Records']} source rows, consolidating to {fy2027_snapshot['Distinct Direct Opportunities']} distinct opportunity IDs.", WHITE, 14, False),
+            (f"• Sahil's direct scope is {fmt_value(qualified_total)} across {len(open_opportunities)} distinct qualified opportunities; do not mix row counts and opportunity counts.", WHITE, 14, False),
         ],
     )
     add_box(slide, 8.35, 2.78, 4.35, 3.85, fill="14213D", line=ORANGE)
@@ -806,8 +850,8 @@ def build_presentation(
     indicators = [
         ("Qualified open", f"{len(open_opportunities)} / {fmt_value(qualified_total)}"),
         ("Weighted pipeline", fmt_value(weighted)),
-        ("FY2026 export", f"{len(open_2026)} / {fmt_value(sum(x['Peak Value'] for x in open_2026))}"),
-        ("FY2027 export", f"{len(open_2027)} / {fmt_value(sum(x['Peak Value'] for x in open_2027))}"),
+        ("Sahil FY2026 direct", f"{len(open_2026)} / {fmt_value(sum(x['Peak Value'] for x in open_2026))}"),
+        ("Sahil FY2027 direct", f"{len(open_2027)} / {fmt_value(sum(x['Peak Value'] for x in open_2027))}"),
     ]
     for index, (label, value) in enumerate(indicators):
         x = 0.82 + index * 2.9
@@ -1702,6 +1746,7 @@ def build_summary_workbook(
     line_items: list[dict[str, Any]],
     opportunities: list[dict[str, Any]],
     open_buckets: dict[str, list[dict[str, Any]]],
+    total_snapshot: dict[str, dict[str, Any]],
     output: Path,
 ):
     workbook = Workbook()
@@ -1739,8 +1784,16 @@ def build_summary_workbook(
         for row in open_opportunities
         if in_period(row["Design Win Date Parsed"], date(2026, 11, 1), date(2027, 10, 31))
     ]
+    fy2026_snapshot = total_snapshot["2026"]
+    fy2027_snapshot = total_snapshot["2027"]
     metrics = [
         ("Metric", "Value", "Definition"),
+        ("FY2026 total open value", fy2026_snapshot["Total Open Value"], "Altera + distribution from uploaded FY2026 export"),
+        ("FY2026 Altera opportunity records", fy2026_snapshot["Direct Records"], "Source rows; 2 distinct opportunity IDs"),
+        ("FY2026 direct-account customers", fy2026_snapshot["Direct Customers"], "Distinct Account Name on Altera Opportunity rows"),
+        ("FY2027 total open value", fy2027_snapshot["Total Open Value"], "Altera + distribution from uploaded FY2027 export"),
+        ("FY2027 Altera opportunity records", fy2027_snapshot["Direct Records"], f"Source rows; {fy2027_snapshot['Distinct Direct Opportunities']} distinct opportunity IDs"),
+        ("FY2027 direct-account customers", fy2027_snapshot["Direct Customers"], "Distinct Account Name on Altera Opportunity rows"),
         ("Qualified open opportunities", len(open_opportunities), "Combined uploaded FY2026 + FY2027 planning exports"),
         ("Qualified open peak value", qualified_total, "Currency absent from source"),
         ("Qualified open weighted value", weighted, "Peak Value × normalized Probability"),
@@ -1770,6 +1823,36 @@ def build_summary_workbook(
     ]
     for row in metrics:
         summary.append(row)
+
+    snapshot_sheet = workbook.create_sheet("Total Pipeline Snapshot")
+    snapshot_sheet.append(
+        [
+            "Fiscal Bucket",
+            "Total Open Value",
+            "Direct Value",
+            "Channel Value",
+            "Altera Opportunity Records",
+            "Distinct Altera Opportunities",
+            "Direct-Account Customers",
+            "All Records",
+            "Distinct All Opportunities",
+        ]
+    )
+    for bucket in ("2026", "2027"):
+        item = total_snapshot[bucket]
+        snapshot_sheet.append(
+            [
+                f"FY{bucket}",
+                item["Total Open Value"],
+                item["Direct Value"],
+                item["Channel Value"],
+                item["Direct Records"],
+                item["Distinct Direct Opportunities"],
+                item["Direct Customers"],
+                item["Total Records"],
+                item["Distinct Opportunities"],
+            ]
+        )
 
     opportunity_sheet = workbook.create_sheet("Opportunities")
     headers = [
@@ -2055,6 +2138,9 @@ def build_summary_workbook(
                 "Weighted Value",
                 "Qualified Open Value",
                 "Outside-Export Value",
+                "Total Open Value",
+                "Direct Value",
+                "Channel Value",
             }
         }
         for row in sheet.iter_rows(min_row=2):
@@ -2063,6 +2149,7 @@ def build_summary_workbook(
                     cell.number_format = '#,##0.00'
     opportunity_sheet.column_dimensions["P"].width = 52
     opportunity_sheet.column_dimensions["Q"].width = 48
+    snapshot_sheet.column_dimensions["A"].width = 18
     reconciliation_sheet.column_dimensions["E"].width = 56
     reference_sheet.column_dimensions["B"].width = 58
     reference_sheet.column_dimensions["C"].width = 90
@@ -2082,11 +2169,14 @@ def build_summary_workbook(
 def build_notes(
     opportunities: list[dict[str, Any]],
     open_buckets: dict[str, list[dict[str, Any]]],
+    total_snapshot: dict[str, dict[str, Any]],
     output: Path,
 ):
     total = sum(row["Peak Value"] for row in opportunities)
     open_2026 = open_buckets["2026"]
     open_2027 = open_buckets["2027"]
+    fy2026_snapshot = total_snapshot["2026"]
+    fy2027_snapshot = total_snapshot["2027"]
     open_opportunities = open_2026 + open_2027
     open_ids = {row["Opportunity ID"] for row in open_opportunities}
     outside_open_opportunities = [
@@ -2139,11 +2229,12 @@ Sources: `Sahil Report.xlsx`, `Sahil-Open Pipeline-2026.xlsx`,
 
 ## Opening message
 
-This report attributes records owned by Sahil Patni and Kasturi Rangan to Sahil. The uploaded exports
-contain {len(open_opportunities)} qualified opportunities:
-{fmt_value(qualified_total)} peak and {fmt_value(weighted)} weighted. The master report contains another
-{len(outside_open_opportunities)} plays worth
-{fmt_value(sum(row["Peak Value"] for row in outside_open_opportunities))} outside both exports.
+Total open pipeline is {fmt_value(fy2026_snapshot["Total Open Value"], 1)} for FY2026 and
+{fmt_value(fy2027_snapshot["Total Open Value"], 1)} for FY2027, including Altera-direct and distribution.
+Within that, this report attributes records owned by Sahil Patni and Kasturi Rangan to Sahil:
+{len(open_opportunities)} qualified direct opportunities, {fmt_value(qualified_total)} peak and
+{fmt_value(weighted)} weighted. The master contains another {len(outside_open_opportunities)} plays
+worth {fmt_value(sum(row["Peak Value"] for row in outside_open_opportunities))} outside both exports.
 Target attainment still cannot be calculated because FY2026 target and actual-achievement data are absent.
 
 The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
@@ -2152,6 +2243,15 @@ present in the source, and solution/demo readiness has not been verified.
 
 ## Facts to land
 
+- FY2026 total open is {fmt_value(fy2026_snapshot["Total Open Value"], 1)}:
+  {fmt_value(fy2026_snapshot["Direct Value"])} direct +
+  {fmt_value(fy2026_snapshot["Channel Value"])} channel.
+- FY2027 total open is {fmt_value(fy2027_snapshot["Total Open Value"], 1)}:
+  {fmt_value(fy2027_snapshot["Direct Value"])} direct +
+  {fmt_value(fy2027_snapshot["Channel Value"])} channel.
+- The FY2027 “22 Altera Opportunity” headline counts source rows/product lines. These consolidate to
+  {fy2027_snapshot["Distinct Direct Opportunities"]} distinct opportunity IDs across
+  {fy2027_snapshot["Direct Customers"]} direct-account customers.
 - The FY2026 open export contains {len(open_2026)} reporting-scope opportunities worth
   {fmt_value(sum(row["Peak Value"] for row in open_2026))}.
 - The FY2027 open export contains {len(open_2027)} reporting-scope opportunities worth
@@ -2318,21 +2418,27 @@ def main():
         {"2026": args.open_2026, "2027": args.open_2027},
         opportunities,
     )
+    total_snapshot = read_total_pipeline_snapshot(
+        {"2026": args.open_2026, "2027": args.open_2027}
+    )
 
     build_presentation(
         opportunities,
         open_buckets,
+        total_snapshot,
         args.output_dir / "Sahil_QBR_2026-07-29.pptx",
     )
     build_summary_workbook(
         line_items,
         opportunities,
         open_buckets,
+        total_snapshot,
         args.output_dir / "Sahil_QBR_Pipeline_Summary.xlsx",
     )
     build_notes(
         opportunities,
         open_buckets,
+        total_snapshot,
         args.output_dir / "Sahil_QBR_Presenter_Notes.md",
     )
     print(f"Generated QBR artifacts in {args.output_dir}")
