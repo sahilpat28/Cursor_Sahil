@@ -19,8 +19,9 @@ from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 
 
-AS_OF = date(2026, 7, 27)
+AS_OF = date(2026, 7, 28)
 REVIEW_DATE = date(2026, 7, 29)
+FAE_START_DATE = date(2026, 6, 1)
 REPORTING_OWNERS = {"Sahil Patni", "Kasturi Rangan"}
 
 NAVY = "0B132B"
@@ -327,6 +328,10 @@ def fmt_date(value: date | None) -> str:
     return value.strftime("%d %b %Y") if value else "—"
 
 
+def in_period(value: date | None, start: date, end: date) -> bool:
+    return value is not None and start <= value <= end
+
+
 def normalize_probability(value: Any) -> float:
     probability = float(value or 0)
     return probability * 100 if 0 < probability <= 1 else probability
@@ -515,7 +520,7 @@ def add_header(slide, title: str, section: str, number: int):
         7.18,
         12.15,
         0.18,
-        "Prepared 27 Jul 2026  •  Source: Sahil Report.xlsx  •  Values are in source units (currency not encoded)",
+        f"Prepared {AS_OF.strftime('%d %b %Y')}  •  Source values are in source units (currency not encoded)",
         size=7.5,
         color=MUTED,
     )
@@ -692,16 +697,23 @@ def build_presentation(
     qualified_total = sum(row["Peak Value"] for row in open_opportunities)
     weighted = sum(row["Weighted Value"] for row in open_opportunities)
     customers = sorted({row["Account Name"] for row in open_opportunities})
-    dw_2026 = [
+    fy2026_dwin = [
         row
         for row in open_opportunities
-        if row["Design Win Date Parsed"] and row["Design Win Date Parsed"].year == 2026
+        if in_period(
+            row["Design Win Date Parsed"],
+            date(2025, 11, 1),
+            date(2026, 10, 31),
+        )
     ]
-    q4_2026 = [
+    q4_fy2026 = [
         row
         for row in open_opportunities
-        if row["Design Win Date Parsed"]
-        and date(2026, 10, 1) <= row["Design Win Date Parsed"] <= date(2026, 12, 31)
+        if in_period(
+            row["Design Win Date Parsed"],
+            date(2026, 8, 1),
+            date(2026, 10, 31),
+        )
     ]
 
     prs = Presentation()
@@ -717,9 +729,10 @@ def build_presentation(
     accent.fill.fore_color.rgb = rgb(TEAL)
     accent.line.fill.background()
     add_text(slide, 0.8, 0.72, 4.0, 0.28, "QUARTERLY BUSINESS REVIEW", size=10, color=TEAL, bold=True)
-    add_text(slide, 0.8, 1.22, 8.6, 1.32, "Own the next gate.\nBuild the 2027 engine.", size=35, bold=True)
+    add_text(slide, 0.8, 1.22, 8.6, 1.32, "Own the next gate.\nBuild the FY2027 engine.", size=35, bold=True)
     add_text(slide, 0.8, 2.78, 7.9, 0.42, "FAE plan review  •  Altera + Arrow + Macnica", size=18, color=PALE)
     add_text(slide, 0.8, 3.25, 7.6, 0.32, "Wednesday, 29 July 2026  |  12:00–13:00", size=13, color=MUTED)
+    add_text(slide, 0.8, 3.66, 7.9, 0.28, "Joined FAE team: 01 Jun 2026  •  Review point: FY2026 Q3 close", size=11, color=ORANGE, bold=True)
     add_box(slide, 9.25, 0.75, 3.25, 5.55, fill=NAVY_2, line=GRID)
     add_text(slide, 9.62, 1.18, 2.5, 0.28, "PIPELINE SNAPSHOT", size=9, color=MUTED, bold=True)
     add_text(slide, 9.62, 1.65, 2.5, 0.58, fmt_value(qualified_total), size=31, color=TEAL, bold=True)
@@ -729,7 +742,7 @@ def build_presentation(
     add_text(slide, 9.62, 3.78, 2.5, 0.58, str(len(customers)), size=31, color=ORANGE, bold=True)
     add_text(slide, 9.62, 4.31, 2.5, 0.26, "direct-account customers", size=10, color=PALE)
     add_text(slide, 9.62, 5.02, 2.5, 0.68, "Target + actual\ninputs required", size=15, color=RED, bold=True)
-    add_text(slide, 0.8, 6.78, 8.3, 0.24, "Prepared from master + 2026/2027 open-pipeline exports  •  Values shown without assumed currency", size=8, color=MUTED)
+    add_text(slide, 0.8, 6.78, 8.3, 0.24, "Fiscal year: 01 Nov–31 Oct  •  Values shown without assumed currency", size=8, color=MUTED)
 
     # 2 — Executive snapshot
     slide = new_slide(
@@ -741,8 +754,8 @@ def build_presentation(
     card_width = 2.82
     add_stat_card(slide, 0.55, 1.35, card_width, "Qualified open", fmt_value(qualified_total), f"{len(open_opportunities)} opportunities", TEAL)
     add_stat_card(slide, 3.55, 1.35, card_width, "Weighted pipeline", fmt_value(weighted), "probability × peak", BLUE)
-    add_stat_card(slide, 6.55, 1.35, card_width, "2026 open export", fmt_value(sum(x["Peak Value"] for x in open_2026)), f"{len(open_2026)} opportunities", ORANGE)
-    add_stat_card(slide, 9.55, 1.35, card_width, "2027 open export", fmt_value(sum(x["Peak Value"] for x in open_2027)), f"{len(open_2027)} opportunities", GREEN)
+    add_stat_card(slide, 6.55, 1.35, card_width, "FY2026 open export", fmt_value(sum(x["Peak Value"] for x in open_2026)), f"{len(open_2026)} opportunities", ORANGE)
+    add_stat_card(slide, 9.55, 1.35, card_width, "FY2027 open export", fmt_value(sum(x["Peak Value"] for x in open_2027)), f"{len(open_2027)} opportunities", GREEN)
     add_box(slide, 0.55, 2.78, 7.55, 3.85)
     add_rich_text(
         slide,
@@ -754,7 +767,7 @@ def build_presentation(
             ("WHAT THE DATA SAYS", TEAL, 10, True),
             (f"• {fmt_value(sum(x['Peak Value'] for x in outside_open_opportunities))} across {len(outside_open_opportunities)} plays is outside both exports: {fmt_value(sum(x['Peak Value'] for x in identify_opportunities))} Identify + {fmt_value(sum(x['Peak Value'] for x in other_outside_opportunities))} Define.", WHITE, 14, False),
             (f"• Outdu AI is {fmt_value(4_125_000)} ({4_125_000 / qualified_total:.0%} of qualified open value) but remains Define.", WHITE, 15, False),
-            (f"• Q4 2026 DWIN-dated pipeline is {fmt_value(sum(x['Peak Value'] for x in q4_2026))}, yet weighted value is only {fmt_value(sum(x['Weighted Value'] for x in q4_2026))}.", WHITE, 15, False),
+            (f"• Q4 FY2026 (Aug–Oct) DWIN-dated pipeline is {fmt_value(sum(x['Peak Value'] for x in q4_fy2026))}; weighted value is {fmt_value(sum(x['Weighted Value'] for x in q4_fy2026))}.", WHITE, 15, False),
             ("• Bucket membership comes from the uploaded files; it is not derived from Design Win Date.", WHITE, 15, False),
         ],
     )
@@ -767,18 +780,18 @@ def build_presentation(
         3.20,
         [
             ("DECISIONS FOR THE REVIEW", ORANGE, 10, True),
-            ("1  Confirm 2026 target and YTD actual.", WHITE, 15, True),
-            (f"2  Agree stage-exit evidence for {len(q4_2026)} Q4 DWINs.", WHITE, 15, True),
+            ("1  Confirm FY2026 target and YTD actual.", WHITE, 15, True),
+            (f"2  Agree stage-exit evidence for {len(q4_fy2026)} Q4 FY2026 DWINs.", WHITE, 15, True),
             ("3  Assign DFAE support to top conversion plays.", WHITE, 15, True),
             ("4  Select a distributor plan or confirm direct-only coverage.", WHITE, 15, True),
         ],
     )
 
     # 3 — Target vs achievement
-    slide = new_slide(prs, "2026 target vs current achievement: source inputs are incomplete", "01 / Position", 3)
+    slide = new_slide(prs, "FY2026 target vs current achievement: source inputs are incomplete", "01 / Position", 3)
     add_text(slide, 0.55, 1.28, 12.0, 0.32, "Do not use open opportunity value as booked achievement or target attainment.", size=13, color=ORANGE, bold=True)
     labels = [
-        ("2026 ANNUAL TARGET", "[ INPUT REQUIRED ]", "Sales target is not in the source file"),
+        ("FY2026 ANNUAL TARGET", "[ INPUT REQUIRED ]", "Sales target is not in the source file"),
         ("YTD ACTUAL ACHIEVEMENT", "[ INPUT REQUIRED ]", "Bookings/revenue/DWIN actuals are not in the source file"),
         ("GAP TO TARGET", "[ CALCULATE AFTER INPUT ]", "Target − YTD actual"),
     ]
@@ -793,8 +806,8 @@ def build_presentation(
     indicators = [
         ("Qualified open", f"{len(open_opportunities)} / {fmt_value(qualified_total)}"),
         ("Weighted pipeline", fmt_value(weighted)),
-        ("2026 export", f"{len(open_2026)} / {fmt_value(sum(x['Peak Value'] for x in open_2026))}"),
-        ("2027 export", f"{len(open_2027)} / {fmt_value(sum(x['Peak Value'] for x in open_2027))}"),
+        ("FY2026 export", f"{len(open_2026)} / {fmt_value(sum(x['Peak Value'] for x in open_2026))}"),
+        ("FY2027 export", f"{len(open_2027)} / {fmt_value(sum(x['Peak Value'] for x in open_2027))}"),
     ]
     for index, (label, value) in enumerate(indicators):
         x = 0.82 + index * 2.9
@@ -831,8 +844,8 @@ def build_presentation(
     add_text(slide, 8.35, 5.94, 3.85, 0.26, f"Identify outside exports = {fmt_value(total - qualified_total)}", size=13, color=RED, bold=True)
 
     # 5 — 2026 closure plan
-    slide = new_slide(prs, f"2026 DWIN-dated pipeline: convert {len(dw_2026)} named plays", "03 / Closure", 5)
-    ordered_dw = sorted(dw_2026, key=lambda row: row["Design Win Date Parsed"])
+    slide = new_slide(prs, f"Q4 FY2026 DWIN pipeline: convert {len(q4_fy2026)} named plays", "03 / Closure", 5)
+    ordered_dw = sorted(q4_fy2026, key=lambda row: row["Design Win Date Parsed"])
     rows = [
         [
             customer_name(row["Account Name"]),
@@ -944,12 +957,12 @@ def build_presentation(
     add_text(slide, 0.78, 6.50, 11.65, 0.20, f"Coverage check: {len(open_opportunities)}/{len(open_opportunities)} qualified open opportunities are direct; distributor account is blank in both exports.", size=9.5, color=ORANGE, bold=True)
 
     # 9 — Key account plans
-    slide = new_slide(prs, "Q4 2026 / 2027 account plans: convert now, then expand adjacencies", "05 / Accounts", 9)
+    slide = new_slide(prs, "Q4 FY2026 / FY2027 account plans: convert, then expand", "05 / Accounts", 9)
     account_plans = [
         ["Outdu", "AI response + tracking", "Close 21 Oct architecture, BOM and evaluation gate", "Replicate video/vision pipeline across tracking + analytics"],
         ["Honeywell", "Radar + industrial/aerospace control", "Qualify 3.00M radar; close two Design-stage evidence packs", "Create radar/thermal-control solution campaign"],
         ["Juniper", "PCIe FPGA + PQC interface", "Move CFPGA through validation; qualify PQC from 0%", "Position Agilex 3 for security/control-plane refresh"],
-        ["GE HealthCare", "CT, anesthesia, power control", "Recover 2026 SP-PDU gate; define CT/anesthesia evaluations", "Medical imaging + controller platform expansion"],
+        ["GE HealthCare", "CT, anesthesia, power control", "Recover SP-PDU gate; define CT/anesthesia evaluations", "Medical imaging + controller platform expansion"],
         ["Emerson", "RX3i controller", "Freeze dual-device architecture before 16 Dec", "Industrial automation controller modernization"],
         ["Philips", "CT + MRI UI", "Secure CT design evidence; define MRI UI success criteria", "Imaging workflow and low-power control adjacency"],
         ["Ciena", "NID + access/aggregation routers", "Prioritize five open platforms and close architecture gaps", "Secure-control and network-interface platform expansion"],
@@ -960,7 +973,7 @@ def build_presentation(
         1.35,
         12.15,
         4.95,
-        ["Account", "Current plays", "Q4 2026 proposed focus", "2027 proposed expansion"],
+        ["Account", "Current plays", "Q4 FY2026 (Aug–Oct)", "FY2027 expansion (Nov–Oct)"],
         account_plans,
         [1.18, 2.28, 4.10, 4.59],
         font_size=9.0,
@@ -1003,8 +1016,9 @@ def build_presentation(
     slide = new_slide(prs, "External support execution: 16 substantive issue threads in 75 days", "06 / Account coverage", 11)
     category_counts = Counter(issue[3] for issue in SUPPORT_ISSUES)
     resolved_count = sum(issue[5] == "Resolved" for issue in SUPPORT_ISSUES)
+    pre_fae_threads = sum(issue[2] < FAE_START_DATE for issue in SUPPORT_ISSUES)
     add_stat_card(slide, 0.55, 1.35, 2.82, "Issue threads", str(len(SUPPORT_ISSUES)), "15 May–28 Jul 2026", TEAL)
-    add_stat_card(slide, 3.55, 1.35, 2.82, "Coverage window", "75 days", "external technical email", BLUE)
+    add_stat_card(slide, 3.55, 1.35, 2.82, "FAE team start", "01 Jun", f"{pre_fae_threads} threads latest pre-start", BLUE)
     add_stat_card(slide, 6.55, 1.35, 2.82, "Technical themes", str(len(category_counts)), "from tools to board bring-up", ORANGE)
     add_stat_card(slide, 9.55, 1.35, 2.82, "Explicitly resolved", str(resolved_count), "closure proven in summaries", GREEN)
     category_colors = {
@@ -1038,7 +1052,7 @@ def build_presentation(
             ("Others show guidance, workaround, escalation or pending validation—not assumed closure.", PALE, 10, False),
         ],
     )
-    add_citation(slide, "Source: user-provided distinct external email-thread analysis, 15 May–28 Jul 2026. Internal-only/admin threads excluded.")
+    add_citation(slide, "75-day ledger. Sahil joined FAE on 01 Jun 2026; three threads show latest activity before that date and should be framed as transition/pre-start support.")
 
     # 12 — Support-to-growth conversion
     slide = new_slide(prs, "Convert support into growth: primary-account actions", "06 / Account coverage", 12)
@@ -1077,7 +1091,7 @@ def build_presentation(
     add_text(slide, 0.78, 6.24, 11.62, 0.28, "Critical gap: 4 of 5 primary accounts had no substantive issue thread in this window. Move from reactive support to scheduled architecture creation.", size=10.2, color=ORANGE, bold=True)
 
     # 13 — Demand creation
-    slide = new_slide(prs, "FY2027 demand creation: three repeatable motions", "07 / 2027 creation", 13)
+    slide = new_slide(prs, "FY2027 demand creation (Nov 2026–Oct 2027): three motions", "07 / FY2027 creation", 13)
     initiatives = [
         (
             "ROBOTICS + CONTROL",
@@ -1121,7 +1135,7 @@ def build_presentation(
         add_text(slide, x + 0.22, 3.73, 3.38, 0.70, value2, size=12, bold=True)
         add_text(slide, x + 0.22, 4.60, 3.38, 0.22, label3.upper(), size=8, color=MUTED, bold=True)
         add_text(slide, x + 0.22, 4.87, 3.38, 0.86, value3, size=12, bold=True)
-    add_text(slide, 0.65, 6.40, 11.9, 0.28, "Review decision: choose numeric 2027 creation targets after the 2027 sales objective is confirmed.", size=10.5, color=ORANGE, bold=True)
+    add_text(slide, 0.65, 6.40, 11.9, 0.28, "Review decision: approve numeric FY2027 creation targets after the FY2027 sales objective is confirmed.", size=10.5, color=ORANGE, bold=True)
 
     # 14 — Critical review verdict
     slide = new_slide(prs, "Critical-review verdict: strong analysis, incomplete execution system", "08 / Readiness", 14)
@@ -1153,7 +1167,7 @@ def build_presentation(
         header_size=8.5,
         row_fills=readiness_fills,
     )
-    add_text(slide, 3.98, 6.47, 8.60, 0.22, "Review decision: approve the joint Altera–Arrow–Macnica tiger team, owners, readiness dates and Q4 scorecard.", size=9.8, color=ORANGE, bold=True)
+    add_text(slide, 3.98, 6.47, 8.60, 0.22, "Review decision: approve the joint tiger team, readiness dates and Q4 FY2026 scorecard.", size=9.8, color=ORANGE, bold=True)
 
     # 15 — Altera solution stack
     slide = new_slide(prs, "Altera solution arsenal: lead with demonstrable systems, not device slides", "09 / Solution stack", 15)
@@ -1291,7 +1305,7 @@ def build_presentation(
         ("BY 14 AUG", "READY", ORANGE, "Run internal enablement; verify solution access; establish ≥1 working robotics and ≥1 camera/AI demo path."),
         ("BY 31 AUG", "TARGET", BLUE, "Build 30-account map: 15 Arrow + 15 Macnica; rank pains, installed competition and sponsor."),
         ("SEP–OCT", "ENGAGE", TEAL, "12 customer workshops; 8 benchmark/evaluation starts; joint Sales–FAE–disti follow-up in 48 hours."),
-        ("Q4 CLOSE", "CONVERT", GREEN, "Proposed target: 6 qualified opportunities, 3 Develop/Design-stage plays and 2 DWINs."),
+        ("Q4 FY26", "CONVERT", GREEN, "By 31 Oct: 6 qualified opportunities, 3 Develop/Design-stage plays and 2 DWINs."),
     ]
     for index, (when, name, accent_color, action) in enumerate(phases):
         y = 1.35 + index * 0.98
@@ -1381,7 +1395,7 @@ def build_presentation(
         ],
     )
     add_box(slide, 8.78, 1.38, 3.92, 4.95, fill="14213D", line=BLUE)
-    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED 2027 MOTION", size=9, color=BLUE, bold=True)
+    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED FY2027 MOTION", size=9, color=BLUE, bold=True)
     add_rich_text(
         slide,
         8.99,
@@ -1435,7 +1449,7 @@ def build_presentation(
         ],
     )
     add_box(slide, 8.78, 1.38, 3.92, 4.95, fill="14213D", line=BLUE)
-    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED 2027 MOTION", size=9, color=BLUE, bold=True)
+    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED FY2027 MOTION", size=9, color=BLUE, bold=True)
     add_rich_text(
         slide,
         8.99,
@@ -1489,7 +1503,7 @@ def build_presentation(
         ],
     )
     add_box(slide, 8.78, 1.38, 3.92, 4.95, fill="14213D", line=TEAL)
-    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED 2027 MOTION", size=9, color=TEAL, bold=True)
+    add_text(slide, 9.03, 1.70, 3.42, 0.25, "PROPOSED FY2027 MOTION", size=9, color=TEAL, bold=True)
     add_rich_text(
         slide,
         8.99,
@@ -1637,7 +1651,7 @@ def build_presentation(
     add_box(slide, 8.10, 1.38, 4.60, 4.95, fill="14213D", line=RED)
     add_text(slide, 8.38, 1.70, 4.05, 0.26, "INPUTS TO COMPLETE BEFORE PRESENTING", size=10, color=RED, bold=True)
     missing = [
-        "2026 target",
+        "FY2026 target",
         "YTD actual / achieved DWINs",
         "Gap-closure value and dates",
         "Support activity history",
@@ -1654,12 +1668,12 @@ def build_presentation(
     # 28 — Data definitions
     slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 28)
     notes = [
-        ("Scope", f"Reporting scope attributes Sahil Patni + Kasturi Rangan to Sahil. Master: {len(opportunities)} opportunities; open exports: {len(open_opportunities)}."),
-        ("Buckets", "“2026” and “2027” are the user-provided export labels. Membership is not inferred from Design Win Date; the 2027 export includes some 2026 DWIN dates."),
+        ("Scope", f"Sahil joined FAE on 01 Jun 2026. Reporting attributes Sahil Patni + Kasturi Rangan to Sahil: {len(opportunities)} discovered / {len(open_opportunities)} open."),
+        ("Fiscal", "Altera FY runs 01 Nov–31 Oct. FY2026 Q4 is 01 Aug–31 Oct 2026; FY2027 is 01 Nov 2026–31 Oct 2027."),
+        ("Buckets", "Uploaded 2026/2027 files are treated as fiscal planning buckets; membership is retained from each file rather than recalculated from DWIN Date."),
         ("Peak value", "Product-line Peak Value summed within each Opportunity ID. Source file does not encode currency."),
         ("Weighted value", "Consolidated peak value × source probability. Identify opportunities at 0% therefore contribute zero."),
         ("DWIN-dated", "Opportunity Design Win Date falls in the stated year. This is a scheduled date, not proof of an achieved design win."),
-        ("Dates", "Source mixes Excel dates and text dates; both were normalized for analysis."),
         ("Coverage", f"All {len(open_opportunities)} uploaded open opportunities are direct and Distributor Account is blank. No channel-owned pipeline is evidenced."),
     ]
     for index, (label, note) in enumerate(notes):
@@ -1715,15 +1729,29 @@ def build_summary_workbook(
     ) + sorted(outside_open_opportunities, key=lambda row: row["Peak Value"], reverse=True)
     qualified_total = sum(row["Peak Value"] for row in open_opportunities)
     weighted = sum(row["Weighted Value"] for row in open_opportunities)
+    q4_fy2026 = [
+        row
+        for row in open_opportunities
+        if in_period(row["Design Win Date Parsed"], date(2026, 8, 1), date(2026, 10, 31))
+    ]
+    fy2027_dwin = [
+        row
+        for row in open_opportunities
+        if in_period(row["Design Win Date Parsed"], date(2026, 11, 1), date(2027, 10, 31))
+    ]
     metrics = [
         ("Metric", "Value", "Definition"),
-        ("Qualified open opportunities", len(open_opportunities), "Combined uploaded 2026 + 2027 open exports"),
+        ("Qualified open opportunities", len(open_opportunities), "Combined uploaded FY2026 + FY2027 planning exports"),
         ("Qualified open peak value", qualified_total, "Currency absent from source"),
         ("Qualified open weighted value", weighted, "Peak Value × normalized Probability"),
-        ("2026 open-export opportunities", len(open_buckets["2026"]), "User-provided planning bucket"),
-        ("2026 open-export peak value", sum(row["Peak Value"] for row in open_buckets["2026"]), "User-provided planning bucket"),
-        ("2027 open-export opportunities", len(open_buckets["2027"]), "User-provided planning bucket"),
-        ("2027 open-export peak value", sum(row["Peak Value"] for row in open_buckets["2027"]), "User-provided planning bucket"),
+        ("FY2026 open-export opportunities", len(open_buckets["2026"]), "User-provided fiscal planning bucket"),
+        ("FY2026 open-export peak value", sum(row["Peak Value"] for row in open_buckets["2026"]), "User-provided fiscal planning bucket"),
+        ("FY2027 open-export opportunities", len(open_buckets["2027"]), "User-provided fiscal planning bucket"),
+        ("FY2027 open-export peak value", sum(row["Peak Value"] for row in open_buckets["2027"]), "User-provided fiscal planning bucket"),
+        ("Q4 FY2026 DWIN-dated opportunities", len(q4_fy2026), "Design Win Date from 01 Aug–31 Oct 2026"),
+        ("Q4 FY2026 DWIN-dated peak value", sum(row["Peak Value"] for row in q4_fy2026), "Scheduled date; not proof of achieved DWIN"),
+        ("FY2027 DWIN-dated opportunities", len(fy2027_dwin), "Design Win Date from 01 Nov 2026–31 Oct 2027"),
+        ("FY2027 DWIN-dated peak value", sum(row["Peak Value"] for row in fy2027_dwin), "Scheduled date; not proof of achieved DWIN"),
         ("Identify outside open exports", len(identify_opportunities), "Master-report opportunities absent from both open exports"),
         ("Identify peak value", sum(row["Peak Value"] for row in identify_opportunities), "0% probability in master report"),
         ("Other outside open exports", len(other_outside_opportunities), "Non-Identify master opportunities absent from both exports"),
@@ -1731,10 +1759,13 @@ def build_summary_workbook(
         ("Total discovered opportunities", len(opportunities), "Qualified open + outside-export plays"),
         ("Total discovered peak value", total, "Qualified open + outside-export plays"),
         ("Reporting scope", "Sahil + Kasturi", "Only these two source Technical Owner values are included"),
+        ("FAE team start", FAE_START_DATE, "Sahil joined the FAE team on 01 Jun 2026"),
+        ("Fiscal calendar", "01 Nov–31 Oct", "FY2026 Q4 = Aug–Oct 2026"),
         ("Product line items", len(line_items), "Technical Owner = Sahil Patni or Kasturi Rangan"),
         ("External support issue threads", len(SUPPORT_ISSUES), "Distinct substantive external email threads, 15 May–28 Jul 2026"),
+        ("Threads latest before FAE start", sum(issue[2] < FAE_START_DATE for issue in SUPPORT_ISSUES), "Transition/pre-start context; FAE start = 01 Jun 2026"),
         ("Explicitly resolved support threads", sum(issue[5] == "Resolved" for issue in SUPPORT_ISSUES), "Closure explicitly recorded in supplied summaries"),
-        ("2026 annual target", "INPUT REQUIRED", "Not present in source"),
+        ("FY2026 annual target", "INPUT REQUIRED", "Not present in source"),
         ("YTD actual achievement", "INPUT REQUIRED", "Not present in source"),
     ]
     for row in metrics:
@@ -1762,7 +1793,7 @@ def build_summary_workbook(
     ]
     opportunity_sheet.append(headers)
     bucket_by_id = {
-        row["Opportunity ID"]: bucket
+        row["Opportunity ID"]: f"FY{bucket}"
         for bucket, bucket_rows in open_buckets.items()
         for row in bucket_rows
     }
@@ -1774,7 +1805,7 @@ def build_summary_workbook(
                     row["Opportunity ID"],
                     "Identify / outside open exports"
                     if row["Opportunity Stage"] == "Identify"
-                    else "Outside uploaded 2026/2027",
+                    else "Outside uploaded FY2026/FY2027",
                 ),
                 row["Technical Owner"],
                 row["Opportunity ID"],
@@ -1798,18 +1829,18 @@ def build_summary_workbook(
     reconciliation_sheet.append(["Population", "Opportunities", "Peak Value", "Weighted Value", "Interpretation"])
     reconciliation_rows = [
         [
-            "2026 open export",
+            "FY2026 open export",
             len(open_buckets["2026"]),
             sum(row["Peak Value"] for row in open_buckets["2026"]),
             sum(row["Weighted Value"] for row in open_buckets["2026"]),
-            "User-provided planning bucket; not derived from DWIN year",
+            "User-provided fiscal planning bucket; membership retained from export",
         ],
         [
-            "2027 open export",
+            "FY2027 open export",
             len(open_buckets["2027"]),
             sum(row["Peak Value"] for row in open_buckets["2027"]),
             sum(row["Weighted Value"] for row in open_buckets["2027"]),
-            "User-provided planning bucket; includes some 2026 DWIN dates",
+            "User-provided fiscal planning bucket; membership retained from export",
         ],
         [
             "Qualified open combined",
@@ -1856,7 +1887,7 @@ def build_summary_workbook(
         "Weighted Value",
     ]
     for bucket, bucket_rows in open_buckets.items():
-        bucket_sheet = workbook.create_sheet(f"Open Pipeline {bucket}")
+        bucket_sheet = workbook.create_sheet(f"Open Pipeline FY{bucket}")
         bucket_sheet.append(open_headers)
         for rank, row in enumerate(bucket_rows, start=1):
             bucket_sheet.append(
@@ -1932,13 +1963,22 @@ def build_summary_workbook(
 
     support_sheet = workbook.create_sheet("External Support Issues")
     support_sheet.append(
-        ["#", "Issue", "Customer / Partner", "Latest Activity", "Theme", "Technical Outcome / Next Action", "Status"]
+        ["#", "Issue", "Customer / Partner", "Latest Activity", "FAE Context", "Theme", "Technical Outcome / Next Action", "Status"]
     )
     for index, (issue, customer, latest, category, outcome, status) in enumerate(
         SUPPORT_ISSUES, start=1
     ):
         support_sheet.append(
-            [index, issue, customer, latest, category, outcome, status]
+            [
+                index,
+                issue,
+                customer,
+                latest,
+                "Pre-start / transition" if latest < FAE_START_DATE else "FAE tenure",
+                category,
+                outcome,
+                status,
+            ]
         )
 
     source_sheet = workbook.create_sheet("Sahil Line Items")
@@ -1983,7 +2023,7 @@ def build_summary_workbook(
         ["Readiness", "Joint tiger team", "Verify solution access, kits, skills and benchmark playbooks", date(2026, 8, 14), "≥1 robotics + ≥1 camera/AI demo path", "OPEN"],
         ["Targeting", "Arrow + Macnica", "Create non-duplicated joint account map", date(2026, 8, 31), "30 accounts: 15 per distributor", "OPEN"],
         ["Engagement", "Joint tiger team", "Run segment workshops and launch evaluations", date(2026, 10, 31), "12 workshops; 8 evaluations", "OPEN"],
-        ["Conversion", "Sales + FAE + distis", "Advance evidence-backed opportunities", date(2026, 12, 31), "6 qualified; 3 Develop/Design; 2 DWINs", "PROPOSED"],
+        ["Q4 FY2026 conversion", "Sales + FAE + distis", "Advance evidence-backed opportunities", date(2026, 10, 31), "6 qualified; 3 Develop/Design; 2 DWINs", "PROPOSED"],
     ]
     for row in joint_rows:
         joint_sheet.append(row)
@@ -2032,7 +2072,8 @@ def build_summary_workbook(
     allocation_sheet.column_dimensions["B"].width = 18
     support_sheet.column_dimensions["B"].width = 54
     support_sheet.column_dimensions["C"].width = 25
-    support_sheet.column_dimensions["F"].width = 76
+    support_sheet.column_dimensions["E"].width = 22
+    support_sheet.column_dimensions["G"].width = 76
 
     output.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(output)
@@ -2063,16 +2104,20 @@ def build_notes(
     ]
     qualified_total = sum(row["Peak Value"] for row in open_opportunities)
     weighted = sum(row["Weighted Value"] for row in open_opportunities)
-    q4 = [
+    q4_fy2026 = [
         row
         for row in open_opportunities
-        if row["Design Win Date Parsed"]
-        and date(2026, 10, 1) <= row["Design Win Date Parsed"] <= date(2026, 12, 31)
+        if in_period(
+            row["Design Win Date Parsed"],
+            date(2026, 8, 1),
+            date(2026, 10, 31),
+        )
     ]
     support_categories = Counter(issue[3] for issue in SUPPORT_ISSUES)
     support_issue_text = "\n".join(
         (
             f"{index}. **{issue}** — {customer}; latest {latest.strftime('%d %b %Y')}; "
+            f"{'pre-start/transition' if latest < FAE_START_DATE else 'FAE tenure'}; "
             f"{category}; **{status}**. {outcome}"
         )
         for index, (issue, customer, latest, category, outcome, status) in enumerate(
@@ -2087,6 +2132,8 @@ def build_notes(
 
 Review: {REVIEW_DATE.strftime("%d %B %Y")}, 12:00–13:00  
 Prepared: {AS_OF.strftime("%d %B %Y")}  
+Joined FAE team: {FAE_START_DATE.strftime("%d %B %Y")}  
+Altera fiscal year: 01 November–31 October (FY2026 Q4 = Aug–Oct 2026)  
 Sources: `Sahil Report.xlsx`, `Sahil-Open Pipeline-2026.xlsx`,
 `Sahil-Open Pipeline-2027.xlsx`
 
@@ -2097,7 +2144,7 @@ contain {len(open_opportunities)} qualified opportunities:
 {fmt_value(qualified_total)} peak and {fmt_value(weighted)} weighted. The master report contains another
 {len(outside_open_opportunities)} plays worth
 {fmt_value(sum(row["Peak Value"] for row in outside_open_opportunities))} outside both exports.
-Target attainment still cannot be calculated because target and actual-achievement data are absent.
+Target attainment still cannot be calculated because FY2026 target and actual-achievement data are absent.
 
 The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
 Only Sahil is named; no Arrow or Macnica specialist is committed, no distributor-linked opportunity is
@@ -2105,9 +2152,9 @@ present in the source, and solution/demo readiness has not been verified.
 
 ## Facts to land
 
-- The 2026 open export contains {len(open_2026)} reporting-scope opportunities worth
+- The FY2026 open export contains {len(open_2026)} reporting-scope opportunities worth
   {fmt_value(sum(row["Peak Value"] for row in open_2026))}.
-- The 2027 open export contains {len(open_2027)} reporting-scope opportunities worth
+- The FY2027 open export contains {len(open_2027)} reporting-scope opportunities worth
   {fmt_value(sum(row["Peak Value"] for row in open_2027))}.
 - Combined qualified open pipeline is {fmt_value(qualified_total)} across
   {len({row["Account Name"] for row in open_opportunities})} direct customers.
@@ -2116,12 +2163,13 @@ present in the source, and solution/demo readiness has not been verified.
   {fmt_value(sum(row["Peak Value"] for row in other_outside_opportunities))} is also outside.
 - Total discovered reporting-scope portfolio is {fmt_value(total)} across {len(opportunities)} opportunities.
 - Outdu AI contributes {fmt_value(4_125_000)}, or {4_125_000 / qualified_total:.1%} of qualified open value.
-- {len(q4)} Q4 2026 DWIN-dated plays total {fmt_value(sum(row["Peak Value"] for row in q4))};
-  their weighted value is {fmt_value(sum(row["Weighted Value"] for row in q4))}.
+- {len(q4_fy2026)} Q4 FY2026 (Aug–Oct) DWIN-dated plays total
+  {fmt_value(sum(row["Peak Value"] for row in q4_fy2026))}; weighted value is
+  {fmt_value(sum(row["Weighted Value"] for row in q4_fy2026))}.
 - A genuine Top 15 can now be shown from {len(open_opportunities)} qualified open opportunities.
 - Every qualified reporting-scope opportunity is marked `Altera Opportunity`; distributor account is blank.
-- Treat “2026” and “2027” as the uploaded planning-bucket labels. They are not synonymous with Design
-  Win Date year; the 2027 export contains some opportunities with 2026 DWIN dates.
+- Treat “2026” and “2027” as FY2026 and FY2027 planning-bucket labels. Altera FY runs 01 Nov–31 Oct;
+  retain file membership rather than recalculating the buckets from Design Win Date.
 
 ## Account ownership and support execution
 
@@ -2132,6 +2180,9 @@ present in the source, and solution/demo readiness has not been verified.
   New FAE. The image spelling “Outdo” is normalized to Outdu.
 - From 15 May to 28 July 2026, {len(SUPPORT_ISSUES)} distinct substantive external issue threads were
   handled: {", ".join(f"{category} {count}" for category, count in support_categories.most_common())}.
+- Sahil joined the FAE team on 01 June. {sum(issue[2] < FAE_START_DATE for issue in SUPPORT_ISSUES)}
+  threads have latest activity before that date and should be described as pre-start/transition support,
+  not post-join FAE execution.
 - Only {sum(issue[5] == "Resolved" for issue in SUPPORT_ISSUES)} thread explicitly records confirmed
   resolution. The remaining summaries show guidance, workaround, escalation, investigation or pending
   validation and should not be presented as closed without confirmation.
@@ -2172,7 +2223,7 @@ This cannot be a Sahil-only program.
   path, with owners and repeatable benchmark instructions.
 - **Targeting by 31 August:** 30 named accounts—15 Arrow and 15 Macnica—with sponsor, use case,
   installed competition and next action.
-- **Proposed Q4 scorecard:** 12 workshops, 8 evaluations, 6 qualified opportunities,
+- **Proposed Q4 FY2026 scorecard (Aug–Oct):** 12 workshops, 8 evaluations, 6 qualified opportunities,
   3 Develop/Design-stage plays and 2 DWINs. These targets need explicit review approval.
 
 ## Market review talk track
@@ -2212,9 +2263,9 @@ This cannot be a Sahil-only program.
 
 ## Inputs required before presenting
 
-1. 2026 annual target.
+1. FY2026 annual target.
 2. YTD actual achievement and the exact definition used (revenue, bookings, DWINs, or another measure).
-3. Achieved 2026 DWIN count/value.
+3. Achieved FY2026 DWIN count/value.
 4. Support activities completed and open technical gaps.
 5. Market-share baseline by key customer.
 6. Distributor account targets and joint plans.
@@ -2222,9 +2273,9 @@ This cannot be a Sahil-only program.
 
 ## Suggested close
 
-“I will manage the portfolio by evidence, not activity: qualify the two 0% plays, close the Q4 stage
-gates, create the fifteenth strategic opportunity, and run one repeatable 2027 demand-creation motion
-for robotics/control, video/vision, and industrial platforms.”
+“I will manage the portfolio by evidence, not activity: qualify the two 0% plays, close the Q4 FY2026
+stage gates, advance the qualified Top 15, and run one repeatable FY2027 demand-creation motion for
+robotics/control, video/vision, and industrial platforms.”
 
 ## Important definitions
 
