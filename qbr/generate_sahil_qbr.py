@@ -21,7 +21,7 @@ from pptx.util import Inches, Pt
 
 AS_OF = date(2026, 7, 27)
 REVIEW_DATE = date(2026, 7, 29)
-OWNER = "Sahil Patni"
+REPORTING_OWNERS = {"Sahil Patni", "Kasturi Rangan"}
 
 NAVY = "0B132B"
 NAVY_2 = "111C3A"
@@ -185,7 +185,7 @@ def read_pipeline(source: Path) -> tuple[list[dict[str, Any]], list[dict[str, An
     line_items = [
         dict(zip(headers, row))
         for row in values[1:]
-        if row[2] == OWNER
+        if row[2] in REPORTING_OWNERS
     ]
 
     opportunities: dict[str, dict[str, Any]] = {}
@@ -230,13 +230,13 @@ def read_open_pipeline_buckets(
         rows = [
             dict(zip(headers, row))
             for row in values[1:]
-            if row[2] == OWNER
+            if row[2] in REPORTING_OWNERS
         ]
         ids = list(dict.fromkeys(row["Opportunity ID"] for row in rows))
         unknown_ids = [opportunity_id for opportunity_id in ids if opportunity_id not in canonical]
         if unknown_ids:
             raise ValueError(
-                f"{source} contains Sahil opportunities absent from the canonical report: {unknown_ids}"
+                f"{source} contains reporting-scope opportunities absent from the canonical report: {unknown_ids}"
             )
         duplicate_ids = seen_ids.intersection(ids)
         if duplicate_ids:
@@ -468,6 +468,8 @@ def customer_name(value: str) -> str:
         "JUNIPER NETWORKS": "Juniper",
         "Outdu Mediatech Private Limited": "Outdu",
         "Philips India Limited - Innovation Center": "Philips",
+        "CIENA INDIA PVT LTD": "Ciena",
+        "Boeing International Corporation India Pvt. Ltd.": "Boeing",
     }
     return replacements.get(value, value)
 
@@ -482,12 +484,22 @@ def build_presentation(
     open_2027 = open_buckets["2027"]
     open_opportunities = open_2026 + open_2027
     open_ids = {row["Opportunity ID"] for row in open_opportunities}
-    identify_opportunities = [
+    outside_open_opportunities = [
         row for row in opportunities if row["Opportunity ID"] not in open_ids
+    ]
+    identify_opportunities = [
+        row
+        for row in outside_open_opportunities
+        if row["Opportunity Stage"] == "Identify"
+    ]
+    other_outside_opportunities = [
+        row
+        for row in outside_open_opportunities
+        if row["Opportunity Stage"] != "Identify"
     ]
     ranked_opportunities = sorted(
         open_opportunities, key=lambda row: row["Peak Value"], reverse=True
-    ) + sorted(identify_opportunities, key=lambda row: row["Peak Value"], reverse=True)
+    )
     qualified_total = sum(row["Peak Value"] for row in open_opportunities)
     weighted = sum(row["Weighted Value"] for row in open_opportunities)
     customers = sorted({row["Account Name"] for row in open_opportunities})
@@ -531,11 +543,16 @@ def build_presentation(
     add_text(slide, 0.8, 6.78, 8.3, 0.24, "Prepared from master + 2026/2027 open-pipeline exports  •  Values shown without assumed currency", size=8, color=MUTED)
 
     # 2 — Executive snapshot
-    slide = new_slide(prs, "Executive snapshot: 8.22M qualified open; 3.60M still unqualified", "01 / Position", 2)
+    slide = new_slide(
+        prs,
+        f"Executive snapshot: {fmt_value(qualified_total)} qualified open; {fmt_value(total - qualified_total)} outside exports",
+        "01 / Position",
+        2,
+    )
     card_width = 2.82
     add_stat_card(slide, 0.55, 1.35, card_width, "Qualified open", fmt_value(qualified_total), f"{len(open_opportunities)} opportunities", TEAL)
     add_stat_card(slide, 3.55, 1.35, card_width, "Weighted pipeline", fmt_value(weighted), "probability × peak", BLUE)
-    add_stat_card(slide, 6.55, 1.35, card_width, "2026 open export", fmt_value(sum(x["Peak Value"] for x in open_2026)), f"{len(open_2026)} opportunity", ORANGE)
+    add_stat_card(slide, 6.55, 1.35, card_width, "2026 open export", fmt_value(sum(x["Peak Value"] for x in open_2026)), f"{len(open_2026)} opportunities", ORANGE)
     add_stat_card(slide, 9.55, 1.35, card_width, "2027 open export", fmt_value(sum(x["Peak Value"] for x in open_2027)), f"{len(open_2027)} opportunities", GREEN)
     add_box(slide, 0.55, 2.78, 7.55, 3.85)
     add_rich_text(
@@ -546,7 +563,7 @@ def build_presentation(
         3.25,
         [
             ("WHAT THE DATA SAYS", TEAL, 10, True),
-            (f"• {fmt_value(sum(x['Peak Value'] for x in identify_opportunities))} across two Identify / 0% plays is absent from both open-pipeline exports.", WHITE, 15, False),
+            (f"• {fmt_value(sum(x['Peak Value'] for x in outside_open_opportunities))} across {len(outside_open_opportunities)} plays is outside both exports: {fmt_value(sum(x['Peak Value'] for x in identify_opportunities))} Identify + {fmt_value(sum(x['Peak Value'] for x in other_outside_opportunities))} Define.", WHITE, 14, False),
             (f"• Outdu AI is {fmt_value(4_125_000)} ({4_125_000 / qualified_total:.0%} of qualified open value) but remains Define.", WHITE, 15, False),
             (f"• Q4 2026 DWIN-dated pipeline is {fmt_value(sum(x['Peak Value'] for x in q4_2026))}, yet weighted value is only {fmt_value(sum(x['Weighted Value'] for x in q4_2026))}.", WHITE, 15, False),
             ("• Bucket membership comes from the uploaded files; it is not derived from Design Win Date.", WHITE, 15, False),
@@ -562,7 +579,7 @@ def build_presentation(
         [
             ("DECISIONS FOR THE REVIEW", ORANGE, 10, True),
             ("1  Confirm 2026 target and YTD actual.", WHITE, 15, True),
-            ("2  Agree stage-exit evidence for four Q4 DWINs.", WHITE, 15, True),
+            (f"2  Agree stage-exit evidence for {len(q4_2026)} Q4 DWINs.", WHITE, 15, True),
             ("3  Assign DFAE support to top conversion plays.", WHITE, 15, True),
             ("4  Select a distributor plan or confirm direct-only coverage.", WHITE, 15, True),
         ],
@@ -625,7 +642,7 @@ def build_presentation(
     add_text(slide, 8.35, 5.94, 3.85, 0.26, f"Identify outside exports = {fmt_value(total - qualified_total)}", size=13, color=RED, bold=True)
 
     # 5 — 2026 closure plan
-    slide = new_slide(prs, "2026 DWIN-dated pipeline: convert five named plays", "03 / Closure", 5)
+    slide = new_slide(prs, f"2026 DWIN-dated pipeline: convert {len(dw_2026)} named plays", "03 / Closure", 5)
     ordered_dw = sorted(dw_2026, key=lambda row: row["Design Win Date Parsed"])
     rows = [
         [
@@ -666,8 +683,9 @@ def build_presentation(
 
     # 6/7 — Top opportunities
     for slide_number, chunk_start in ((6, 0), (7, 7)):
-        chunk = ranked_opportunities[chunk_start:chunk_start + 7]
-        title = "Top qualified opportunities 1–7: protect the concentration" if chunk_start == 0 else "Top 8–14: qualified open plus two Identify bets"
+        chunk_end = 7 if chunk_start == 0 else 15
+        chunk = ranked_opportunities[chunk_start:chunk_end]
+        title = "Top qualified opportunities 1–7: protect the concentration" if chunk_start == 0 else "Top qualified opportunities 8–15: build breadth"
         slide = new_slide(prs, title, "04 / Top opportunities", slide_number)
         table_rows = []
         fills = []
@@ -684,13 +702,7 @@ def build_presentation(
                     suggested_gate(row),
                 ]
             )
-            if row["Opportunity ID"] in {item["Opportunity ID"] for item in identify_opportunities}:
-                fills.append("3B1D28")
-            else:
-                fills.append("14213D" if rank <= 3 else (NAVY_2 if rank % 2 else "152446"))
-        if chunk_start == 7:
-            table_rows.append(["15", "—", "OPEN SLOT", "—", "—", "—", "—", "Add a qualified 2027 demand-creation play"])
-            fills.append("2B1D2F")
+            fills.append("14213D" if rank <= 3 else (NAVY_2 if rank % 2 else "152446"))
         add_table(
             slide,
             0.55,
@@ -706,10 +718,10 @@ def build_presentation(
         if chunk_start == 0:
             add_text(slide, 0.65, 6.43, 11.9, 0.22, f"Qualified ranks 1–3 contribute {top_three / qualified_total:.1%} of qualified open value; inspect weekly.", size=10.5, color=ORANGE, bold=True)
         else:
-            add_text(slide, 0.65, 6.43, 11.9, 0.22, "Ranks 13–14 are 0% Identify plays outside both open exports; slot 15 remains a new qualified creation commitment.", size=10.5, color=ORANGE, bold=True)
+            add_text(slide, 0.65, 6.43, 11.9, 0.22, f"{len(open_opportunities)} qualified open opportunities exist; three lower-value plays sit below this Top 15.", size=10.5, color=ORANGE, bold=True)
 
     # 8 — Customer portfolio
-    slide = new_slide(prs, "Qualified customer portfolio: Outdu is 60% of open value", "05 / Accounts", 8)
+    slide = new_slide(prs, "Qualified customer portfolio: Outdu and Ciena lead open value", "05 / Accounts", 8)
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in open_opportunities:
         grouped[row["Account Name"]].append(row)
@@ -740,7 +752,7 @@ def build_presentation(
         add_text(slide, 8.76, y - 0.01, 1.10, 0.22, f"W {fmt_value(customer_weighted)}", size=8.5, color=MUTED)
         add_text(slide, 10.06, y - 0.01, 0.85, 0.22, f"{count} opps", size=8.5, color=MUTED)
     add_box(slide, 0.55, 6.42, 12.15, 0.42, fill="14213D", line=GRID)
-    add_text(slide, 0.78, 6.50, 11.65, 0.20, "Coverage check: 12/12 qualified open opportunities are direct; distributor account is blank in both uploaded Sahil exports.", size=9.5, color=ORANGE, bold=True)
+    add_text(slide, 0.78, 6.50, 11.65, 0.20, f"Coverage check: {len(open_opportunities)}/{len(open_opportunities)} qualified open opportunities are direct; distributor account is blank in both exports.", size=9.5, color=ORANGE, bold=True)
 
     # 9 — Key account plans
     slide = new_slide(prs, "Q4 2026 / 2027 account plans: convert now, then expand adjacencies", "05 / Accounts", 9)
@@ -751,6 +763,7 @@ def build_presentation(
         ["GE HealthCare", "CT, anesthesia, power control", "Recover 2026 SP-PDU gate; define CT/anesthesia evaluations", "Medical imaging + controller platform expansion"],
         ["Emerson", "RX3i controller", "Freeze dual-device architecture before 16 Dec", "Industrial automation controller modernization"],
         ["Philips", "CT + MRI UI", "Secure CT design evidence; define MRI UI success criteria", "Imaging workflow and low-power control adjacency"],
+        ["Ciena", "NID + access/aggregation routers", "Prioritize five open platforms and close architecture gaps", "Secure-control and network-interface platform expansion"],
     ]
     add_table(
         slide,
@@ -821,11 +834,11 @@ def build_presentation(
     add_text(slide, 0.84, 3.38, 2.52, 1.72, "The market case and opportunity analysis are strong. The team, demos, distributor ownership and conversion system are not yet committed.", size=13, color=PALE, bold=True)
     add_text(slide, 0.84, 5.52, 2.52, 0.40, "Fix the operating model before launching campaigns.", size=11, color=ORANGE, bold=True)
     readiness_rows = [
-        ["Pipeline facts", "GREEN", "12 qualified open opportunities + 2 unqualified Identify plays"],
+        ["Pipeline facts", "GREEN", f"{len(open_opportunities)} qualified open + {len(outside_open_opportunities)} outside-export plays"],
         ["Market + competition", "GREEN", "Three sourced segments and an honest AMD battlecard"],
         ["Solution portfolio", "AMBER", "Solutions exist; access, kit, maturity and demo owners need verification"],
         ["Distributor team", "RED", "No Arrow or Macnica specialist is named"],
-        ["Channel pipeline", "RED", "0/12 qualified open opportunities linked to a distributor"],
+        ["Channel pipeline", "RED", f"0/{len(open_opportunities)} qualified open opportunities linked to a distributor"],
         ["Execution scorecard", "AMBER", "Proposed metrics exist; leadership and distis have not committed"],
     ]
     readiness_fills = ["14362E", "14362E", "3A2F16", "3B1D28", "3B1D28", "3A2F16"]
@@ -1343,13 +1356,13 @@ def build_presentation(
     # 25 — Data definitions
     slide = new_slide(prs, "Appendix: scope, definitions and data-quality notes", "Appendix", 25)
     notes = [
-        ("Scope", "Master report: 20 Sahil product lines / 14 opportunities. Uploaded open exports: 12 qualified opportunities; 2 Identify plays remain outside."),
+        ("Scope", f"Reporting scope attributes Sahil Patni + Kasturi Rangan to Sahil. Master: {len(opportunities)} opportunities; open exports: {len(open_opportunities)}."),
         ("Buckets", "“2026” and “2027” are the user-provided export labels. Membership is not inferred from Design Win Date; the 2027 export includes some 2026 DWIN dates."),
         ("Peak value", "Product-line Peak Value summed within each Opportunity ID. Source file does not encode currency."),
         ("Weighted value", "Consolidated peak value × source probability. Identify opportunities at 0% therefore contribute zero."),
         ("DWIN-dated", "Opportunity Design Win Date falls in the stated year. This is a scheduled date, not proof of an achieved design win."),
         ("Dates", "Source mixes Excel dates and text dates; both were normalized for analysis."),
-        ("Coverage", "All 12 uploaded open opportunities are direct and Distributor Account is blank. No channel-owned pipeline is evidenced."),
+        ("Coverage", f"All {len(open_opportunities)} uploaded open opportunities are direct and Distributor Account is blank. No channel-owned pipeline is evidenced."),
     ]
     for index, (label, note) in enumerate(notes):
         y = 1.36 + index * 0.72
@@ -1386,12 +1399,22 @@ def build_summary_workbook(
     total = sum(row["Peak Value"] for row in opportunities)
     open_opportunities = open_buckets["2026"] + open_buckets["2027"]
     open_ids = {row["Opportunity ID"] for row in open_opportunities}
-    identify_opportunities = [
+    outside_open_opportunities = [
         row for row in opportunities if row["Opportunity ID"] not in open_ids
+    ]
+    identify_opportunities = [
+        row
+        for row in outside_open_opportunities
+        if row["Opportunity Stage"] == "Identify"
+    ]
+    other_outside_opportunities = [
+        row
+        for row in outside_open_opportunities
+        if row["Opportunity Stage"] != "Identify"
     ]
     ranked_opportunities = sorted(
         open_opportunities, key=lambda row: row["Peak Value"], reverse=True
-    ) + sorted(identify_opportunities, key=lambda row: row["Peak Value"], reverse=True)
+    ) + sorted(outside_open_opportunities, key=lambda row: row["Peak Value"], reverse=True)
     qualified_total = sum(row["Peak Value"] for row in open_opportunities)
     weighted = sum(row["Weighted Value"] for row in open_opportunities)
     metrics = [
@@ -1405,9 +1428,12 @@ def build_summary_workbook(
         ("2027 open-export peak value", sum(row["Peak Value"] for row in open_buckets["2027"]), "User-provided planning bucket"),
         ("Identify outside open exports", len(identify_opportunities), "Master-report opportunities absent from both open exports"),
         ("Identify peak value", sum(row["Peak Value"] for row in identify_opportunities), "0% probability in master report"),
-        ("Total discovered opportunities", len(opportunities), "Qualified open + Identify"),
-        ("Total discovered peak value", total, "Qualified open + Identify"),
-        ("Product line items", len(line_items), "Rows where Technical Owner = Sahil Patni"),
+        ("Other outside open exports", len(other_outside_opportunities), "Non-Identify master opportunities absent from both exports"),
+        ("Other outside peak value", sum(row["Peak Value"] for row in other_outside_opportunities), "Review reason for exclusion"),
+        ("Total discovered opportunities", len(opportunities), "Qualified open + outside-export plays"),
+        ("Total discovered peak value", total, "Qualified open + outside-export plays"),
+        ("Reporting scope", "Sahil + Kasturi", "Only these two source Technical Owner values are included"),
+        ("Product line items", len(line_items), "Technical Owner = Sahil Patni or Kasturi Rangan"),
         ("2026 annual target", "INPUT REQUIRED", "Not present in source"),
         ("YTD actual achievement", "INPUT REQUIRED", "Not present in source"),
     ]
@@ -1418,6 +1444,7 @@ def build_summary_workbook(
     headers = [
         "Rank",
         "Open Pipeline Bucket",
+        "Source Technical Owner",
         "Opportunity ID",
         "Account",
         "Opportunity",
@@ -1443,7 +1470,13 @@ def build_summary_workbook(
         opportunity_sheet.append(
             [
                 rank,
-                bucket_by_id.get(row["Opportunity ID"], "Identify / outside open exports"),
+                bucket_by_id.get(
+                    row["Opportunity ID"],
+                    "Identify / outside open exports"
+                    if row["Opportunity Stage"] == "Identify"
+                    else "Outside uploaded 2026/2027",
+                ),
+                row["Technical Owner"],
                 row["Opportunity ID"],
                 row["Account Name"],
                 row["Opportunity Name"],
@@ -1493,6 +1526,13 @@ def build_summary_workbook(
             "Weather Radar and CPU Interface Card; 0% probability",
         ],
         [
+            "Other outside open exports",
+            len(other_outside_opportunities),
+            sum(row["Peak Value"] for row in other_outside_opportunities),
+            sum(row["Weighted Value"] for row in other_outside_opportunities),
+            "Data Recorder (Kasturi): Define / 25%; reason for exclusion requires review",
+        ],
+        [
             "Total discovered portfolio",
             len(opportunities),
             total,
@@ -1505,6 +1545,7 @@ def build_summary_workbook(
 
     open_headers = [
         "Rank",
+        "Source Technical Owner",
         "Opportunity ID",
         "Account",
         "Opportunity",
@@ -1521,6 +1562,7 @@ def build_summary_workbook(
             bucket_sheet.append(
                 [
                     rank,
+                    row["Technical Owner"],
                     row["Opportunity ID"],
                     row["Account Name"],
                     row["Opportunity Name"],
@@ -1606,8 +1648,8 @@ def build_summary_workbook(
             for cell in row:
                 if cell.column in value_columns and isinstance(cell.value, (int, float)):
                     cell.number_format = '#,##0.00'
-    opportunity_sheet.column_dimensions["O"].width = 52
-    opportunity_sheet.column_dimensions["P"].width = 48
+    opportunity_sheet.column_dimensions["P"].width = 52
+    opportunity_sheet.column_dimensions["Q"].width = 48
     reconciliation_sheet.column_dimensions["E"].width = 56
     reference_sheet.column_dimensions["B"].width = 58
     reference_sheet.column_dimensions["C"].width = 90
@@ -1628,8 +1670,18 @@ def build_notes(
     open_2027 = open_buckets["2027"]
     open_opportunities = open_2026 + open_2027
     open_ids = {row["Opportunity ID"] for row in open_opportunities}
-    identify_opportunities = [
+    outside_open_opportunities = [
         row for row in opportunities if row["Opportunity ID"] not in open_ids
+    ]
+    identify_opportunities = [
+        row
+        for row in outside_open_opportunities
+        if row["Opportunity Stage"] == "Identify"
+    ]
+    other_outside_opportunities = [
+        row
+        for row in outside_open_opportunities
+        if row["Opportunity Stage"] != "Identify"
     ]
     qualified_total = sum(row["Peak Value"] for row in open_opportunities)
     weighted = sum(row["Weighted Value"] for row in open_opportunities)
@@ -1652,10 +1704,11 @@ Sources: `Sahil Report.xlsx`, `Sahil-Open Pipeline-2026.xlsx`,
 
 ## Opening message
 
-The uploaded open-pipeline exports contain {len(open_opportunities)} qualified opportunities:
+This report attributes records owned by Sahil Patni and Kasturi Rangan to Sahil. The uploaded exports
+contain {len(open_opportunities)} qualified opportunities:
 {fmt_value(qualified_total)} peak and {fmt_value(weighted)} weighted. The master report contains another
-{len(identify_opportunities)} Identify / 0% plays worth
-{fmt_value(sum(row["Peak Value"] for row in identify_opportunities))}; these are not in either open export.
+{len(outside_open_opportunities)} plays worth
+{fmt_value(sum(row["Peak Value"] for row in outside_open_opportunities))} outside both exports.
 Target attainment still cannot be calculated because target and actual-achievement data are absent.
 
 The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
@@ -1664,19 +1717,21 @@ present in the source, and solution/demo readiness has not been verified.
 
 ## Facts to land
 
-- The 2026 open export contains {len(open_2026)} Sahil opportunity worth
+- The 2026 open export contains {len(open_2026)} reporting-scope opportunities worth
   {fmt_value(sum(row["Peak Value"] for row in open_2026))}.
-- The 2027 open export contains {len(open_2027)} Sahil opportunities worth
+- The 2027 open export contains {len(open_2027)} reporting-scope opportunities worth
   {fmt_value(sum(row["Peak Value"] for row in open_2027))}.
 - Combined qualified open pipeline is {fmt_value(qualified_total)} across
   {len({row["Account Name"] for row in open_opportunities})} direct customers.
 - {fmt_value(sum(row["Peak Value"] for row in identify_opportunities))} remains Identify at 0% outside
-  both open exports, taking the total discovered portfolio to {fmt_value(total)}.
+  both open exports; one additional Define-stage Data Recorder worth
+  {fmt_value(sum(row["Peak Value"] for row in other_outside_opportunities))} is also outside.
+- Total discovered reporting-scope portfolio is {fmt_value(total)} across {len(opportunities)} opportunities.
 - Outdu AI contributes {fmt_value(4_125_000)}, or {4_125_000 / qualified_total:.1%} of qualified open value.
-- Four Q4 2026 DWIN-dated plays total {fmt_value(sum(row["Peak Value"] for row in q4))};
+- {len(q4)} Q4 2026 DWIN-dated plays total {fmt_value(sum(row["Peak Value"] for row in q4))};
   their weighted value is {fmt_value(sum(row["Weighted Value"] for row in q4))}.
-- The source contains 14—not 15—distinct opportunities. Use slot 15 as a concrete demand-creation commitment.
-- Every qualified Sahil opportunity is marked `Altera Opportunity`; distributor account is blank.
+- A genuine Top 15 can now be shown from {len(open_opportunities)} qualified open opportunities.
+- Every qualified reporting-scope opportunity is marked `Altera Opportunity`; distributor account is blank.
 - Treat “2026” and “2027” as the uploaded planning-bucket labels. They are not synonymous with Design
   Win Date year; the 2027 export contains some opportunities with 2026 DWIN dates.
 
@@ -1800,7 +1855,7 @@ def main():
 
     line_items, opportunities = read_pipeline(args.source)
     if not opportunities:
-        raise SystemExit(f"No records found for Technical Owner = {OWNER!r}")
+        raise SystemExit(f"No records found for reporting owners: {sorted(REPORTING_OWNERS)}")
     open_buckets = read_open_pipeline_buckets(
         {"2026": args.open_2026, "2027": args.open_2027},
         opportunities,

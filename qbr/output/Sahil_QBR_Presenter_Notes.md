@@ -7,10 +7,11 @@ Sources: `Sahil Report.xlsx`, `Sahil-Open Pipeline-2026.xlsx`,
 
 ## Opening message
 
-The uploaded open-pipeline exports contain 12 qualified opportunities:
-8.22M peak and 2.51M weighted. The master report contains another
-2 Identify / 0% plays worth
-3.60M; these are not in either open export.
+This report attributes records owned by Sahil Patni and Kasturi Rangan to Sahil. The uploaded exports
+contain 18 qualified opportunities:
+10.45M peak and 3.00M weighted. The master report contains another
+3 plays worth
+3.94M outside both exports.
 Target attainment still cannot be calculated because target and actual-achievement data are absent.
 
 The deck is strong enough to expose the issues, but the execution system is not yet ready to scale.
@@ -19,19 +20,21 @@ present in the source, and solution/demo readiness has not been verified.
 
 ## Facts to land
 
-- The 2026 open export contains 1 Sahil opportunity worth
-  4.12M.
-- The 2027 open export contains 11 Sahil opportunities worth
-  4.09M.
-- Combined qualified open pipeline is 8.22M across
-  6 direct customers.
+- The 2026 open export contains 2 reporting-scope opportunities worth
+  4.25M.
+- The 2027 open export contains 16 reporting-scope opportunities worth
+  6.19M.
+- Combined qualified open pipeline is 10.45M across
+  7 direct customers.
 - 3.60M remains Identify at 0% outside
-  both open exports, taking the total discovered portfolio to 11.82M.
-- Outdu AI contributes 4.12M, or 50.2% of qualified open value.
-- Four Q4 2026 DWIN-dated plays total 5.04M;
-  their weighted value is 1.26M.
-- The source contains 14—not 15—distinct opportunities. Use slot 15 as a concrete demand-creation commitment.
-- Every qualified Sahil opportunity is marked `Altera Opportunity`; distributor account is blank.
+  both open exports; one additional Define-stage Data Recorder worth
+  338K is also outside.
+- Total discovered reporting-scope portfolio is 14.38M across 21 opportunities.
+- Outdu AI contributes 4.12M, or 39.5% of qualified open value.
+- 8 Q4 2026 DWIN-dated plays total 6.71M;
+  their weighted value is 1.62M.
+- A genuine Top 15 can now be shown from 18 qualified open opportunities.
+- Every qualified reporting-scope opportunity is marked `Altera Opportunity`; distributor account is blank.
 - Treat “2026” and “2027” as the uploaded planning-bucket labels. They are not synonymous with Design
   Win Date year; the 2027 export contains some opportunities with 2026 DWIN dates.
 
