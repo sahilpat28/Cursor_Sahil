@@ -13,6 +13,8 @@ Si5518 cleans this SyncE recovered clock and feeds it back to the F-Tiles to clo
 - **156.25 MHz (REFCLK-5):** main Ethernet reference for all rates.  
 - **390.625 MHz (REFCLK-4):** SyncE cleaned clock, returned to F-Tiles so TX stays frequency-locked to RX.
 
+For your design: use **156.25 MHz** as the Ethernet REFCLK. For SyncE, feed the recovered clock into Si5518 (or equivalent) and return the cleaned reference to the F-Tile REFCLK. The kit shows 390.625 MHz on REFCLK-4 for evaluation; you do not need to copy both clocks unless your SyncE clocking plan requires it.
+
 **REF 2**  
 - **REFCLK-4 (Global):** all 4 FGT quads.  
 - **REFCLK-6 (Regional):** Quad 2 & 3 only (SyncE recovery quads).  
@@ -32,5 +34,5 @@ For your board: SyncE cleaned clock must return to F-Tile Ethernet REFCLK; DDR/H
 To support your design further, please share a block diagram of your interfaces (QSFP-DD / F-Tile mapping, Ethernet modes, SyncE/PTP clocking, and other major interfaces such as DDR/HBM if used).
 
 Regards,  
-Rushikesh Purohit  
+Sahil Patni  
 Altera
