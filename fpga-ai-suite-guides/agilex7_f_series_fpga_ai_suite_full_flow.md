@@ -488,3 +488,76 @@ This document is strong enough to share as a technical planning and support-requ
 Prepared by Sahil Patni as a technical guidance note based on publicly available Altera documentation, FPGA AI Suite workflow analysis, and prior FPGA AI Suite bring-up experience.
 
 This document is not an official Altera publication. Altera does not make any representation, warranty, endorsement, or support commitment based on this document unless confirmed separately in writing by Altera or its authorized support team. Users should verify final installation, licensing, board support, and deployment procedures against the official Altera documentation and support channels.
+
+---
+
+## 19. Reference documents and links
+
+Use the latest FPGA AI Suite Handbook as the primary reference. Older documents are included below only for background/context because several 2024.3 and 2025.1 documents have been superseded by the unified Handbook.
+
+### Current / primary references
+
+1. FPGA AI Suite Handbook 2026.1.1  
+   https://docs.altera.com/r/docs/863373/2026.1.1/fpga-ai-suite-handbook/fpga-ai-suite-handbook
+
+2. FPGA AI Suite Handbook - current  
+   https://docs.altera.com/r/docs/863373/current
+
+3. FPGA AI Suite Design Examples, Section 2.6  
+   https://docs.altera.com/r/docs/863373/2026.1.1/fpga-ai-suite-handbook/the-fpga-ai-suite-design-examples
+
+4. FPGA AI Suite Operating System Prerequisites  
+   https://docs.altera.com/r/docs/863373/2026.1.1/fpga-ai-suite-handbook/fpga-ai-suite-operating-system-prerequisites
+
+5. Installing FPGA AI Suite  
+   https://docs.altera.com/r/docs/863373/2026.1.1/fpga-ai-suite-handbook/installing-fpga-ai-suite
+
+6. Installing OpenVINO Toolkit for FPGA AI Suite  
+   https://docs.altera.com/r/docs/863373/2026.1.1/fpga-ai-suite-handbook/installing-openvinotm-toolkit
+
+7. Setting Required Environment Variables  
+   https://docs.altera.com/r/docs/863373/2026.1.1/fpga-ai-suite-handbook/setting-required-environment-variables
+
+8. FPGA AI Suite PCIe-based System Example Design, Altera FPGA Developer Site  
+   https://altera-fpga.github.io/rel-26.1/ed-ai-suite/agilex7/pcie/pcie_getting_started_extended/
+
+9. Altera FPGA Developer Site - Example Design Summary  
+   https://altera-fpga.github.io/rel-26.1/ed-demo-list/ed-list/
+
+### Agilex 7 F-Series board references
+
+10. Agilex 7 FPGA F-Series Development Kit, 2x F-Tile, AGF023 product page  
+    https://www.altera.com/products/devkit/po-3004/agilex-7-fpga-f-series-development-kit-2x-f-tile-agf023
+
+11. Agilex 7 FPGA F-Series, 2x F-Tile, Development Kit User Guide  
+    https://resources.ampheo.com/static/datasheets/altera-intel/dk-dev-agf023fa.pdf
+
+### Model conversion / OpenVINO references
+
+12. OpenVINO 2025 Documentation  
+    https://docs.openvino.ai/2025/documentation.html
+
+13. OpenVINO Model Conversion documentation  
+    https://docs.openvino.ai/2025/openvino-workflow/model-preparation.html
+
+### Legacy / superseded documents used for background context
+
+14. FPGA AI Suite Getting Started Guide 2025.1  
+    https://docs.altera.com/r/docs/768970/2025.1/fpga-ai-suite-getting-started-guide/fpga-ai-suite-getting-started-guide
+
+15. FPGA AI Suite Design Examples User Guide 2025.1  
+    https://docs.altera.com/r/docs/848957/2025.1/fpga-ai-suite-design-examples-user-guide/fpga-ai-suite-design-examples-user-guide
+
+16. FPGA AI Suite IP Reference Manual 2025.1  
+    https://docs.altera.com/r/docs/768974/2025.1/fpga-ai-suite-ip-reference-manual/fpga-ai-suite-ip-reference-manual
+
+17. FPGA AI Suite SoC Design Example User Guide 2024.3  
+    https://docs.altera.com/r/docs/768979/2024.3/fpga-ai-suite-soc-design-example-user-guide/fpga-ai-suite-soc-design-example-user-guide
+
+18. Altera Community discussion: Understanding FPGA AI Suite with Quartus  
+    https://community.altera.com/discussions/acceleration/understanding-fpga-ai-suite-with-quartus/265613
+
+### Note
+
+Always verify release compatibility, board support, and design-example availability against the latest Altera documentation and support portal before final implementation.
+
