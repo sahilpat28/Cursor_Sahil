@@ -26,8 +26,10 @@ The second (Regional) connection on the kit is for evaluation only. Not required
 **REF 4**  
 On the kit, Si5518 is the board SyncE/1588 master, so DDR/HBM/NOC/SDM clocks are derived from it for demo convenience.
 
-This is **not** a device requirement.  
+This is not a device requirement.  
 For your board: SyncE cleaned clock must return to F-Tile Ethernet REFCLK; DDR/HBM/NOC/SDM may use independent clocks if SyncE is needed only for Ethernet.
+
+To support your design further, please share a block diagram of your interfaces (QSFP-DD / F-Tile mapping, Ethernet modes, SyncE/PTP clocking, and other major interfaces such as DDR/HBM if used).
 
 Regards,  
 Rushikesh Purohit  
