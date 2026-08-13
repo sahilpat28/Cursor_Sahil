@@ -1,0 +1,418 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+3 0 obj
+<< /Length 4928 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 714.00 Td (FPGA AI Suite Full Flow Guidance for Agilex 7 FPGA) Tj ET
+BT /Helvetica 18 Tf 0.050 0.180 0.350 rg 54.00 691.50 Td (F-Series Development Kit) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 661.00 Td (Target board: Agilex 7 FPGA F-Series Development Kit, Production 1, 2x F-Tile) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 644.50 Td (Likely kit family: Agilex 7 FPGA F-Series 2x F-Tile, AGF023-class platform) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 628.00 Td (Workstation: Intel Xeon W5-3433, Windows 11 Pro + Ubuntu dual boot, 256 GB RAM, NVIDIA RTX 5000) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 615.50 Td (Ada) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 599.00 Td (Research model: pretrained BERT model for MRPC paraphrase detection) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 582.50 Td (Purpose: installation, board setup, FPGA AI Suite deployment path, and support items to request) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 570.00 Td (from Altera/Intel technical team) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 533.50 Td (1. Executive summary) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 508.00 Td (The workstation is suitable for FPGA AI Suite development and Quartus Prime Pro compilation. The) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 495.50 Td (software flow for the BERT model is already well aligned with FPGA AI Suite: PyTorch model) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 483.00 Td (training, ONNX export, OpenVINO IR conversion, DLA Compiler analysis, and heterogeneous CPU-FPGA) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 470.50 Td (evaluation.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 450.00 Td (The main technical caveat is board support. In the current FPGA AI Suite 2026.1.1 design-example) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 437.50 Td (matrix, the Agilex 7 F-Series 2x F-Tile development kit is not listed as an out-of-box FPGA AI) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 425.00 Td (Suite target. The listed Agilex 7 AI Suite examples target boards such as Agilex 7 I-Series) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 412.50 Td (Development Kit, DE10-Agilex, and N6001. Therefore, using the F-Series kit may require a board-) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 400.00 Td (specific port, BSP/OFS support package, or a custom Quartus integration of the FPGA AI Suite IP.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 363.50 Td (2. Recommended software versions) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 338.00 Td (Use one consistent release set. Do not mix versions from older documents unless directed by) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 325.50 Td (Altera support.) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 305.00 Td (| Component | Recommended version |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 295.62 Td (|---|---|) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 286.25 Td (| FPGA AI Suite | 2026.1.1 |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 276.88 Td (| Quartus Prime Pro | 26.1 |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 267.50 Td (| OpenVINO Toolkit | 2025.4 |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 258.12 Td (| Open Model Zoo tools | 2024.6 if using `omz_downloader` / `omz_converter` |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 248.75 Td (| Python | 3.12 |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 239.38 Td (| Ubuntu native support | 22.04 LTS or 24.04 LTS |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 230.00 Td (| Windows support | Docker-based FPGA AI Suite flow |) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 216.62 Td (For Ubuntu 26.04 or other unsupported host versions, use the FPGA AI Suite Docker image instead) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 204.12 Td (of native installation.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 167.62 Td (3. Important board-support clarification) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 142.12 Td (Officially listed FPGA AI Suite design examples) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 119.12 Td (The FPGA AI Suite 2026.1.1 design-example documentation lists targets such as:) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 98.62 Td (- Agilex 5 FPGA E-Series 065B Modular Development Kit) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 84.12 Td (- Agilex 7 FPGA I-Series Development Kit ES2) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 69.62 Td (- Terasic DE10-Agilex Development Board) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 1 of 8) Tj ET
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 3 0 R >>
+endobj
+5 0 obj
+<< /Length 4554 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 720.00 Td (- FPGA SmartNIC N6001-PL Platform) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 705.50 Td (- Agilex 7 I-Series Transceiver-SoC Development Kit) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 691.00 Td (- Arria 10 SX SoC FPGA Development Kit) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 672.50 Td (Board in this request) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 649.50 Td (The requested board is:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 627.00 Td (Agilex 7 FPGA F-Series Development Kit, Production 1, 2x F-Tile) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 606.38 Td (This board is a high-speed transceiver and PCIe/CXL-capable F-Series platform. It is not the) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 593.88 Td (same as the Agilex 7 I-Series board called out by the FPGA AI Suite examples.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 573.38 Td (Practical implication) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 550.38 Td (The model can be compiled and analyzed with FPGA AI Suite using an Agilex 7 architecture file,) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 537.88 Td (but producing a working FPGA implementation on this exact F-Series board may require one of the) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 525.38 Td (following:) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 504.88 Td (1. An official Altera FPGA AI Suite example/BSP for this exact F-Series kit.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 488.38 Td (2. Porting an existing Agilex 7 FPGA AI Suite example design to the F-Series kit.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 471.88 Td (3. Custom integration of FPGA AI Suite IP into a Quartus project for this board.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 455.38 Td (4. A board-specific PCIe/OFS, DDR, clocking, reset, and pin assignment adaptation.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 434.88 Td (This should be explicitly confirmed with Altera technical support before committing to a) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 422.38 Td (deployment schedule.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 385.88 Td (4. Requested support from Altera/Intel) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 360.38 Td (Ask Altera support to confirm/provide:) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 339.88 Td (1. Whether FPGA AI Suite 2026.1.1 officially supports the Agilex 7 F-Series 2x F-Tile kit.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 323.38 Td (2. The correct board design identifier, if one exists.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 306.88 Td (3. The recommended architecture file for this device and board.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 290.38 Td (4. Any required OFS/BSP/reference design package for the F-Series kit.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 273.88 Td (5. Whether a PCIe-attached AI Suite design exists for this board.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 257.38 Td (6. Required kernel drivers, PCIe drivers, and runtime plugin configuration.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 240.88 Td (7. Required license features for FPGA AI Suite/CoreDLA and Quartus Prime Pro.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 224.38 Td (8. Recommended path for integrating a BERT/OpenVINO model into the FPGA implementation.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 207.88 Td (9. Known limitations for transformer/BERT-style models in FPGA AI Suite.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 191.38 Td (10. Recommended method to measure latency, throughput, FPGA IP throughput, and end-to-end system) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 178.88 Td (throughput.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 142.38 Td (5. Installation flow) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 116.88 Td (5.1 Windows 11 path) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 93.88 Td (For Windows, use Docker. Native Windows is not the preferred path for FPGA AI Suite development.) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 71.38 Td (docker pull alterafpga/fpgaaisuite:2026.1.1-quartus) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 2 of 8) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 4334 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 720.00 Td (Create a workspace:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 697.50 Td (mkdir C:\\fpga-ai-work) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 676.88 Td (Run container:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 654.38 Td (docker run -it --name fpga-ai-suite-2026 -v C:\\fpga-ai-work:/workspace alteraf) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 643.75 Td (  pga/fpgaaisuite:2026.1.1-quartus) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 623.12 Td (What this does: starts FPGA AI Suite in a Linux container with OpenVINO, FPGA AI Suite tools,) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 610.62 Td (and Quartus tools.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 590.12 Td (Why required: it avoids Windows dependency/version mismatch and gives a reproducible FPGA AI) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 577.62 Td (Suite environment.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 557.12 Td (5.2 Linux path) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 534.12 Td (For Ubuntu 22.04/24.04, native or Docker is possible. For newer unsupported Ubuntu releases,) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 521.62 Td (Docker is recommended.) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 499.12 Td (docker pull alterafpga/fpgaaisuite:2026.1.1-quartus) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 478.50 Td (Recommended startup with workspace, JTAG, and license mount:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 456.00 Td (docker run -it \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 445.38 Td (  --name fpga-ai-suite-2026 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 434.75 Td (  --network host \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 424.12 Td (  --privileged \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 413.50 Td (  -v /dev/bus/usb:/dev/bus/usb \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 402.88 Td (  -v ~/fpga-ai-work:/workspace \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 392.25 Td (  -v /path/to/license.dat:/licenses/altera_license.dat:ro \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 381.62 Td (  -e LM_LICENSE_FILE=/licenses/altera_license.dat \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 371.00 Td (  -e ALTERAD_LICENSE_FILE=/licenses/altera_license.dat \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 360.38 Td (  alterafpga/fpgaaisuite:2026.1.1-quartus) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 339.75 Td (What this does: starts the full Quartus-enabled FPGA AI Suite image and exposes USB-JTAG,) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 327.25 Td (network host ID, workspace, and license file.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 306.75 Td (Why required: Quartus and FPGA AI Suite license checks often depend on host ID; --network host) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 294.25 Td (helps node-locked license validation in Docker.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 257.75 Td (6. Tool verification) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 232.25 Td (Inside Docker:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 209.75 Td (python3 -c "import openvino; print\(openvino.__version__\)") Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 199.12 Td (echo $COREDLA_ROOT) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 188.50 Td (dla_compiler --version) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 177.88 Td (quartus_pgm --version) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 167.25 Td (jtagconfig) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 146.62 Td (Expected:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 124.12 Td (OpenVINO 2025.4.x) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 113.50 Td (FPGA AI Suite 2026.1.1) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 102.88 Td (Quartus Programmer 26.1) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 82.25 Td (If using a node-locked license, verify:) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 3 of 8) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 3955 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (lmutil lmhostid) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td (lmutil lmdiag -c /licenses/altera_license.dat <feature_id>) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 688.75 Td (Success should indicate that the license is valid for the current node.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 652.25 Td (7. Initial board setup and verification) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 626.75 Td (7.1 Quartus board-level checks) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 603.75 Td (Before using FPGA AI Suite, verify the board with vendor-provided kit tools:) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 583.25 Td (1. Install Quartus Prime Pro 26.1.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 566.75 Td (2. Install the Agilex 7 F-Series device support package.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 550.25 Td (3. Install board package/design examples if provided.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 533.75 Td (4. Verify JTAG visibility.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 517.25 Td (5. Run Board Test System or Golden Top design if available.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 500.75 Td (6. Verify DDR, PCIe, clocks, QSFP, and transceiver-related examples as applicable.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 480.25 Td (7.2 JTAG detection) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 455.25 Td (jtagconfig) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 434.62 Td (What this does: checks whether Quartus can detect the USB-JTAG cable and board devices.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 414.12 Td (Why required: programming and System Console debug cannot proceed without JTAG visibility.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 393.62 Td (7.3 Program a simple board test bitstream) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 368.62 Td (quartus_pgm -c 1 -m jtag -o "p;<board_test_or_golden_top>.sof") Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 348.00 Td (What this does: programs the FPGA over JTAG.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 327.50 Td (Why required: verifies the basic programming path before attempting FPGA AI Suite hardware) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 315.00 Td (integration.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 278.50 Td (8. Model preparation flow for BERT) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 253.00 Td (The research flow already completed is correct:) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 232.50 Td (1. Train or fine-tune BERT in PyTorch using MRPC.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 216.00 Td (2. Export PyTorch model to ONNX.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 199.50 Td (3. Verify ONNX inference output against PyTorch.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 183.00 Td (4. Convert ONNX to OpenVINO IR using OVC.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 166.50 Td (5. Generate FP32 and optionally FP16 IR.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 150.00 Td (6. Run FPGA AI Suite DLA Compiler against an Agilex 7 architecture file.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 133.50 Td (7. Review unsupported layers, CPU fallback, and FPGA partitioning.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 117.00 Td (8. Generate performance and resource estimates.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 100.50 Td (9. Evaluate in HETERO CPU-FPGA mode where applicable.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 80.00 Td (Example conversion:) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 4 of 8) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 4307 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (ovc bert_mrpc.onnx --output_model bert_mrpc_fp32.xml) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 699.38 Td (What this does: converts ONNX to OpenVINO IR.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 678.88 Td (Why required: FPGA AI Suite compiler consumes OpenVINO IR model representation.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 642.38 Td (9. DLA Compiler analysis) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 616.88 Td (Example command:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 594.38 Td (dla_compiler \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 583.75 Td (  --march $COREDLA_ROOT/example_architectures/AGX7_Generic.arch \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 573.12 Td (  --network-file ./bert_mrpc_fp32.xml \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 562.50 Td (  --o $COREDLA_WORK/demo/BERT_AGX7_Generic.aot \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 551.88 Td (  --fanalyze-performance) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 531.25 Td (What this does: compiles/analyzes the OpenVINO model for a selected FPGA AI Suite architecture.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 510.75 Td (Why required: it estimates performance, identifies FPGA/CPU partitions, and creates an AOT) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 498.25 Td (compiled model if possible.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 477.75 Td (Important outputs:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 455.25 Td (compiled_model_dir/<network>/reports/performance-report_0.txt) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 444.62 Td (compiled_model_dir/<network>/model_analyzer_report.txt) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 434.00 Td (unsupported layer messages) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 423.38 Td (AOT compiled model) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 402.75 Td (Area estimate:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 380.25 Td (dla_compiler --fanalyze-area --march $COREDLA_ROOT/example_architectures/AGX7_) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 369.62 Td (  Generic.arch) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 349.00 Td (What this does: estimates FPGA AI Suite IP resource usage for the selected architecture.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 328.50 Td (Why required: helps judge whether the selected architecture can fit the target FPGA device.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 292.00 Td (10. Moving from optimized model to FPGA implementation) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 266.50 Td (Supported-board path) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 243.50 Td (For officially supported FPGA AI Suite boards, use the appropriate dla_build_example_design.py) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 231.00 Td (design identifier.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 210.50 Td (Example pattern:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 188.00 Td ($COREDLA_ROOT/bin/dla_build_example_design.py build \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 177.38 Td (  --licensed \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 166.75 Td (  --output-dir <build_dir> \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 156.12 Td (  --num-instances 1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 145.50 Td (  --seed 1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 134.88 Td (  <design_example_identifier> \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 124.25 Td (  <architecture_file>) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 103.62 Td (F-Series board path) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 80.62 Td (For the Agilex 7 F-Series 2x F-Tile kit, first confirm whether Altera provides a board-specific) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 68.12 Td (design identifier. If not, the design must be ported.) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 5 of 8) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 3918 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 720.00 Td (Porting typically requires:) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 699.50 Td (1. Quartus project for the F-Series kit.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 683.00 Td (2. Correct device selection and board pin assignments.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 666.50 Td (3. Correct clock/reset topology.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 650.00 Td (4. DDR4 memory controller integration.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 633.50 Td (5. PCIe/CXL/OFS subsystem integration if using host-attached inference.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 617.00 Td (6. FPGA AI Suite IP integration.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 600.50 Td (7. Runtime plugin and memory-map consistency.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 584.00 Td (8. Matching .arch file between compiler and hardware.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 567.50 Td (9. Timing closure in Quartus.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 551.00 Td (10. Board-specific programming and runtime validation.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 514.50 Td (11. Quartus compilation and programming file generation) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 489.00 Td (Expected Quartus flow:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 466.50 Td (Analysis & Synthesis) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 455.88 Td (Fitter / place-and-route) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 445.25 Td (Timing Analyzer) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 434.62 Td (Assembler) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 424.00 Td (Programming file generation) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 403.38 Td (Successful output:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 380.88 Td (.sof for JTAG programming) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 370.25 Td (.jic or flash image if persistent boot is required) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 359.62 Td (fit/timing/QoR reports) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 339.00 Td (Example programming:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 316.50 Td (quartus_pgm -c 1 -m jtag -o "p;<generated_bitstream>.sof") Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 295.88 Td (What this does: configures the FPGA with the compiled design.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 275.38 Td (Why required: the FPGA must contain the hardware accelerator design before runtime execution.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 238.88 Td (12. Runtime execution and verification) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 213.38 Td (A runtime command generally needs:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 190.88 Td (model XML or compiled AOT model) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 180.25 Td (plugin XML) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 169.62 Td (architecture file) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 159.00 Td (input data) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 148.38 Td (FPGA device selection) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 137.75 Td (runtime design-specific parameters) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 117.12 Td (Example pattern:) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 94.62 Td (./dla_benchmark \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 84.00 Td (  -b=1 \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 73.38 Td (  -m=<model.xml> \\) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 6 of 8) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 13 0 R >>
+endobj
+15 0 obj
+<< /Length 4670 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 720.00 Td (  -d=HETERO:FPGA,CPU \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 709.38 Td (  -i=<input_images> \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 698.75 Td (  -niter=<iterations> \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 688.12 Td (  -plugins=<plugins.xml> \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 677.50 Td (  -arch_file=<architecture.arch> \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 666.88 Td (  -api=async \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 656.25 Td (  -perf_est \\) Tj ET
+BT /Courier 8.5 Tf 0.050 0.050 0.050 rg 66.00 645.62 Td (  -dump_output) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 625.00 Td (What this does: runs inference through OpenVINO and FPGA AI Suite runtime.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 604.50 Td (Why required: validates real deployment behavior and collects measured performance.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 568.00 Td (13. Measurement plan) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 542.50 Td (Collect these metrics:) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 522.00 Td (| Metric | Source |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 512.62 Td (|---|---|) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 503.25 Td (| FPGA resource utilization | Quartus fit/QoR reports |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 493.88 Td (| ALMs, DSPs, RAM blocks, M20Ks | Quartus and DLA area reports |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 484.50 Td (| Estimated IP throughput | `dla_compiler --fanalyze-performance` |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 475.12 Td (| Measured IP throughput | `dla_benchmark -perf_est` output |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 465.75 Td (| System throughput | `dla_benchmark` output |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 456.38 Td (| Latency | `dla_benchmark` output |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 447.00 Td (| Clock frequency | runtime and timing reports |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 437.62 Td (| CPU fallback layers | compiler/model analyzer reports |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 428.25 Td (| Unsupported layers | DLA messages file |) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 414.88 Td (For BERT/transformer workloads, carefully inspect unsupported operators and CPU fallback.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 402.38 Td (Transformer models may not map fully to FPGA AI Suite IP, depending on operator coverage and) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 389.88 Td (architecture settings.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 353.38 Td (14. Recommended phased plan) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 327.88 Td (Phase 1: Workstation and software bring-up) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 304.88 Td (- Install Docker/Quartus image or native supported toolchain.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 290.38 Td (- Verify OpenVINO, FPGA AI Suite, Quartus, JTAG.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 275.88 Td (- Verify license.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 257.38 Td (Phase 2: Board bring-up) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 234.38 Td (- Verify JTAG.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 219.88 Td (- Program vendor-provided Golden Top/BTS design.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 205.38 Td (- Run board memory/PCIe tests.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 186.88 Td (Phase 3: Model compiler validation) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 163.88 Td (- Compile BERT OpenVINO IR with Agilex 7 architecture.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 149.38 Td (- Review unsupported layers and CPU fallback.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 134.88 Td (- Capture performance/resource estimates.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 116.38 Td (Phase 4: FPGA AI Suite design implementation) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 93.38 Td (- Use official board-specific AI Suite design if available.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 78.88 Td (- If unavailable, port a reference design to the Agilex 7 F-Series kit.) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 7 of 8) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 15 0 R >>
+endobj
+17 0 obj
+<< /Length 4257 >>
+stream
+BT /Helvetica 8 Tf 0.350 0.350 0.350 rg 54.00 738.00 Td (Agilex 7 F-Series FPGA AI Suite Full Flow Guidance) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 720.00 Td (- Integrate FPGA AI Suite IP, memory subsystem, PCIe/OFS/HPS path, and runtime plugin.) Tj ET
+BT /Helvetica 12 Tf 0.100 0.100 0.100 rg 54.00 701.50 Td (Phase 5: Hardware deployment) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 678.50 Td (- Compile Quartus design.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 664.00 Td (- Generate `.sof`/`.jic`.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 649.50 Td (- Program board.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 635.00 Td (- Run model through FPGA AI Suite runtime.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 64.00 620.50 Td (- Measure throughput, latency, and resource utilization.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 586.00 Td (15. Key risks and mitigations) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 560.50 Td (| Risk | Mitigation |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 551.12 Td (|---|---|) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 541.75 Td (| F-Series board not listed as AI Suite example target | Ask Altera for official BSP/reference design or porti) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 532.38 Td (| BERT operators may not fully map to FPGA | Inspect compiler partitioning and unsupported layer reports |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 523.00 Td (| PCIe/OFS setup may be board-specific | Request F-Series PCIe/OFS package and driver instructions |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 513.62 Td (| License mismatch | Verify with `lmutil lmdiag` before long Quartus builds |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 504.25 Td (| Timing closure | Start with generic architecture, then optimize |) Tj ET
+BT /Courier 7.5 Tf 0.000 0.000 0.000 rg 54.00 494.88 Td (| End-to-end throughput lower than IP throughput | Separate host transfer overhead from FPGA IP throughput |) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 465.50 Td (16. Suggested message to technical support) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 440.00 Td (We request confirmation whether FPGA AI Suite 2026.1.1 provides an official design example,) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 427.50 Td (board support package, or OFS PCIe flow for the Agilex 7 FPGA F-Series Development Kit,) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 415.00 Td (Production 1, 2x F-Tile. If not, please provide recommended porting steps from the closest) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 402.50 Td (supported Agilex 7 FPGA AI Suite design example to this F-Series kit, including board-specific) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 390.00 Td (Quartus project setup, PCIe/OFS integration, DDR interface setup, runtime plugin configuration,) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 377.50 Td (and recommended architecture file for deploying an OpenVINO BERT model compiled with the FPGA AI) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 365.00 Td (Suite DLA Compiler.) Tj ET
+BT /Helvetica 14 Tf 0.050 0.250 0.450 rg 54.00 328.50 Td (17. Conclusion) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 303.00 Td (The software/model preparation flow is ready through OpenVINO and FPGA AI Suite DLA Compiler.) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 290.50 Td (The workstation is suitable for Quartus and FPGA AI Suite development. The main open item is) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 278.00 Td (board-specific FPGA AI Suite hardware support for the Agilex 7 F-Series 2x F-Tile development) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 265.50 Td (kit. If Altera provides an official board-specific reference design, deployment can follow that) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 253.00 Td (path. Otherwise, FPGA implementation requires porting/integration of the FPGA AI Suite IP into a) Tj ET
+BT /Helvetica 10 Tf 0.000 0.000 0.000 rg 54.00 240.50 Td (Quartus design for this exact board.) Tj ET
+BT /Helvetica 8 Tf 0.4 0.4 0.4 rg 286.00 28 Td (Page 8 of 8) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 19 0 R /MediaBox [0 0 612 792] /Resources << /Font << /Helvetica 1 0 R /Courier 2 0 R >> >> /Contents 17 0 R >>
+endobj
+19 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R] /Count 8 >>
+endobj
+20 0 obj
+<< /Type /Catalog /Pages 19 0 R >>
+endobj
+xref
+0 21
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000000153 00000 n 
+0000005133 00000 n 
+0000005282 00000 n 
+0000009888 00000 n 
+0000010037 00000 n 
+0000014423 00000 n 
+0000014572 00000 n 
+0000018579 00000 n 
+0000018729 00000 n 
+0000023089 00000 n 
+0000023240 00000 n 
+0000027211 00000 n 
+0000027362 00000 n 
+0000032085 00000 n 
+0000032236 00000 n 
+0000036546 00000 n 
+0000036697 00000 n 
+0000036802 00000 n 
+trailer
+<< /Size 21 /Root 20 0 R >>
+startxref
+36853
+%%EOF
