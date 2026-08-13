@@ -14,6 +14,31 @@ The workstation is suitable for FPGA AI Suite development and Quartus Prime Pro 
 
 The main technical caveat is board support. In the current FPGA AI Suite 2026.1.1 design-example matrix, the Agilex 7 F-Series 2x F-Tile development kit is not listed as an out-of-box FPGA AI Suite target. The listed Agilex 7 AI Suite examples target boards such as Agilex 7 I-Series Development Kit, DE10-Agilex, and N6001. Therefore, using the F-Series kit may require a board-specific port, BSP/OFS support package, or a custom Quartus integration of the FPGA AI Suite IP.
 
+### Recommended decision path
+
+For this university engagement, the most concrete technical path is:
+
+1. Install and validate the software toolchain first: Quartus Prime Pro, FPGA AI Suite, OpenVINO, license, and JTAG.
+2. Verify the Agilex 7 F-Series kit independently using the board vendor's Golden Top, Board Test System, memory, PCIe, and JTAG examples.
+3. Continue using FPGA AI Suite DLA Compiler for BERT model analysis, partitioning, and performance/resource estimation.
+4. Ask Altera support to confirm whether an official FPGA AI Suite board support package or design identifier exists for the Agilex 7 F-Series 2x F-Tile kit.
+5. If no official design exists, treat the FPGA hardware stage as a board-porting task: adapt an Agilex 7 AI Suite reference design to the F-Series board, including PCIe/OFS, DDR, clocks, resets, pin constraints, and runtime plugin integration.
+
+### What can be committed immediately
+
+The following activities can proceed immediately on the workstation:
+
+- Toolchain installation and validation.
+- Model conversion and FPGA AI Suite compiler analysis.
+- Quartus/JTAG board bring-up using board-provided examples.
+- Collection of compiler estimates for BERT: area, estimated throughput, unsupported layers, and CPU/FPGA partitioning.
+
+The following activities require board-specific confirmation or porting:
+
+- Final FPGA AI Suite hardware bitstream for the Agilex 7 F-Series kit.
+- PCIe/OFS runtime flow on the exact F-Series board.
+- End-to-end BERT execution on that FPGA board.
+
 ---
 
 ## 2. Recommended software versions
@@ -453,3 +478,13 @@ We request confirmation whether FPGA AI Suite 2026.1.1 provides an official desi
 ## 17. Conclusion
 
 The software/model preparation flow is ready through OpenVINO and FPGA AI Suite DLA Compiler. The workstation is suitable for Quartus and FPGA AI Suite development. The main open item is board-specific FPGA AI Suite hardware support for the Agilex 7 F-Series 2x F-Tile development kit. If Altera provides an official board-specific reference design, deployment can follow that path. Otherwise, FPGA implementation requires porting/integration of the FPGA AI Suite IP into a Quartus design for this exact board.
+
+This document is strong enough to share as a technical planning and support-request document because it separates confirmed software flow from board-specific assumptions. It should not be presented as a guarantee of out-of-box FPGA AI Suite support for the F-Series kit unless Altera confirms that support separately.
+
+---
+
+## 18. Authorship and disclaimer
+
+Prepared by Sahil Patni as a technical guidance note based on publicly available Altera documentation, FPGA AI Suite workflow analysis, and prior FPGA AI Suite bring-up experience.
+
+This document is not an official Altera publication. Altera does not make any representation, warranty, endorsement, or support commitment based on this document unless confirmed separately in writing by Altera or its authorized support team. Users should verify final installation, licensing, board support, and deployment procedures against the official Altera documentation and support channels.
