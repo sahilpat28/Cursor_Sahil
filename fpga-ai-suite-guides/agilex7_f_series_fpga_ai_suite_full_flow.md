@@ -2,9 +2,9 @@
 
 **Target board:** Agilex 7 FPGA F-Series Development Kit, Production 1, 2x F-Tile  
 **Likely kit family:** Agilex 7 FPGA F-Series 2x F-Tile, AGF023-class platform  
-**Workstation:** Intel Xeon W5-3433, Windows 11 Pro + Ubuntu dual boot, 256 GB RAM, NVIDIA RTX 5000 Ada  
+**Workstation:** Xeon W5-3433, Windows 11 Pro + Ubuntu dual boot, 256 GB RAM, NVIDIA RTX 5000 Ada  
 **Research model:** pretrained BERT model for MRPC paraphrase detection  
-**Purpose:** installation, board setup, FPGA AI Suite deployment path, and support items to request from Altera/Intel technical team
+**Purpose:** installation, board setup, FPGA AI Suite deployment path, and support items to request from Altera technical team
 
 ---
 
@@ -95,7 +95,7 @@ This should be explicitly confirmed with Altera technical support before committ
 
 ---
 
-## 4. Requested support from Altera/Intel
+## 4. Requested support from Altera
 
 Ask Altera support to confirm/provide:
 
@@ -530,7 +530,7 @@ Use the latest FPGA AI Suite Handbook as the primary reference. Older documents 
     https://www.altera.com/products/devkit/po-3004/agilex-7-fpga-f-series-development-kit-2x-f-tile-agf023
 
 11. Agilex 7 FPGA F-Series, 2x F-Tile, Development Kit User Guide  
-    https://resources.ampheo.com/static/datasheets/altera-intel/dk-dev-agf023fa.pdf
+    Refer to the official Agilex 7 F-Series development kit user guide available from the board/product documentation portal.
 
 ### Model conversion / OpenVINO references
 

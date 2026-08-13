@@ -67,7 +67,7 @@ Quartus builds/configures FPGA hardware. OpenVINO plus the FPGA AI Suite runtime
 
 ## A1. Choose the correct Docker installer
 
-For Intel i5/i7/i9 or AMD Ryzen Windows systems, choose:
+For standard x86-64 Windows workstations, choose:
 
 ```text
 Docker Desktop for Windows - AMD64
