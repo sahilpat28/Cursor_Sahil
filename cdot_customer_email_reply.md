@@ -2,20 +2,21 @@ Subject: RE: Reg., Clarification on F-Tile Reference Clock and 390.625 MHz SyncE
 
 Hi Thulasi Ramu,
 
-Thank you for pointing this out. Your interpretation is correct, and we apologize for the ambiguity in our earlier response.
+Thank you for pointing this out. Your interpretation is correct, and we apologize for our earlier incorrect statement.
 
-We had mixed two different recovered-clock paths:
+We had conflated two different clock paths:
 
-- **390.625 MHz** is the `o_clk_rec_div` fabric output for 25GE–400GE; it is **not** the dedicated SyncE clock output in Table 29 and is **not** specified as an Ethernet REFCLK input.
-- The documented SyncE path uses the dedicated `o_cdr_divclk` output on Refclk8/9. Table 29 shows this output as approximately **26–39 MHz**; it is sent to the external cleanup PLL.
-- The cleanup PLL then provides a supported transceiver reference clock back to the F-Tile. For your design, please use the recommended **156.25 MHz** REFCLK.
+- **390.625 MHz** is the `o_clk_rec_div` output for 25GE–400GE. It is not the dedicated SyncE output in Table 29 and is not a supported FGT REFCLK input.
+- Table 29 applies to the dedicated `o_cdr_divclk` SyncE output on Refclk8/9 (approximately **26–39 MHz**), which feeds the external cleanup PLL.
 
-Also, the FGT/System PLL REFCLK input range is documented as **25–380 MHz**. Therefore, the 390.625 MHz route physically provisioned on the Development Kit must not be interpreted or copied as the supported Ethernet SyncE REFCLK path.
+For your design, use the recommended **156.25 MHz** F-Tile Ethernet REFCLK. For SyncE, route the Table 29 CDR output to the cleanup PLL and configure the PLL to return a supported PMA reference clock; we recommend **156.25 MHz**.
+
+The Development Kit physically provisions 390.625 MHz clock routes, but no published specification provides an exception to the **380 MHz maximum** FGT REFCLK input frequency. Therefore, please do not copy the 390.625 MHz REFCLK connection into your Ethernet design.
 
 **References:**
 - [F-Tile Ethernet Hard IP User Guide, Section 5, Table 25](https://docs.altera.com/r/docs/683023/25.3.1/f-tile-ethernet-hard-ip-user-guide/clocks) — `i_clk_ref` and `o_clk_rec_div`
 - [F-Tile Ethernet Hard IP User Guide, Section 5.5, Figure 26 / Table 29](https://docs.altera.com/r/docs/683023/25.3.1/f-tile-ethernet-hard-ip-user-guide/clock-connections-in-synchronous-ethernet-operation) — documented SyncE connection and `o_cdr_divclk`
-- [F-Tile Architecture User Guide, Section 2.4.1.2, Table 24](https://docs.altera.com/r/docs/683872/25.3/f-tile-architecture-and-pma-and-fec-direct-phy-ip-user-guide/fgt-and-system-pll-reference-clock-network) — FGT/System PLL REFCLK range and connectivity
+- [Agilex 7 M-Series Device Data Sheet, F-Tile Transceiver Reference Clock Specifications, Table 62](https://docs.altera.com/r/docs/769310/current/agilextm-7-fpgas-and-socs-device-data-sheet-m-series/f-tile-transceiver-reference-clock-specifications) — 380 MHz maximum REFCLK input frequency
 
 Regards,  
 Sahil Patni  
