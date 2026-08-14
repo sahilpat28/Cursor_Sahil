@@ -2,19 +2,20 @@ Subject: RE: Reg., Clarification on F-Tile Reference Clock and 390.625 MHz SyncE
 
 Hi Thulasi Ramu,
 
-Thank you for pointing this out. Your interpretation of Table 29 is correct, and we would like to correct our earlier statement.
+Thank you for pointing this out. Your interpretation is correct, and we apologize for the ambiguity in our earlier response.
 
-**390.625 MHz is not specified as an F-Tile REFCLK input for SyncE.** We had mixed two different recovered-clock paths:
+We had mixed two different recovered-clock paths:
 
-- **F-Tile REFCLK input:** For the Ethernet modes discussed, the documented values are 156.25, 312.5, or 322.265625 MHz; 156.25 MHz is recommended.
-- **Dedicated SyncE CDR output (`o_cdr_divclk`):** Table 29 shows approximately 26–39 MHz. This clock is sent to the external cleanup PLL.
-- **`o_clk_rec_div`:** 390.625 MHz for 25GE–400GE. This is a separate fabric clock output and is not the dedicated SyncE output shown in Table 29.
+- **390.625 MHz** is the `o_clk_rec_div` fabric output for 25GE–400GE; it is **not** the dedicated SyncE clock output in Table 29 and is **not** specified as an Ethernet REFCLK input.
+- The documented SyncE path uses the dedicated `o_cdr_divclk` output on Refclk8/9. Table 29 shows this output as approximately **26–39 MHz**; it is sent to the external cleanup PLL.
+- The cleanup PLL then provides a supported transceiver reference clock back to the F-Tile. For your design, please use the recommended **156.25 MHz** REFCLK.
 
-Therefore, for your design, please use the dedicated CDR output shown in Table 29 as the SyncE source to the cleanup PLL and return a cleaned **156.25 MHz** clock to the F-Tile REFCLK.
+Also, the FGT/System PLL REFCLK input range is documented as **25–380 MHz**. Therefore, the 390.625 MHz route physically provisioned on the Development Kit must not be interpreted or copied as the supported Ethernet SyncE REFCLK path.
 
-The 390.625 MHz connection shown on REFCLK-4 of the Development Kit is board-specific clock provision; it should not be interpreted as a documented SyncE requirement.
-
-**References:** *F-Tile Ethernet Hard IP User Guide* (Document 683023, Version 25.3.1), Section 5, Table 25 (`i_clk_ref` and `o_clk_rec_div`), and Section 5.5, Figure 26 / Table 29 (`o_cdr_divclk` and SyncE cleanup PLL connection).
+**References:**
+- [F-Tile Ethernet Hard IP User Guide, Section 5, Table 25](https://docs.altera.com/r/docs/683023/25.3.1/f-tile-ethernet-hard-ip-user-guide/clocks) — `i_clk_ref` and `o_clk_rec_div`
+- [F-Tile Ethernet Hard IP User Guide, Section 5.5, Figure 26 / Table 29](https://docs.altera.com/r/docs/683023/25.3.1/f-tile-ethernet-hard-ip-user-guide/clock-connections-in-synchronous-ethernet-operation) — documented SyncE connection and `o_cdr_divclk`
+- [F-Tile Architecture User Guide, Section 2.4.1.2, Table 24](https://docs.altera.com/r/docs/683872/25.3/f-tile-architecture-and-pma-and-fec-direct-phy-ip-user-guide/fgt-and-system-pll-reference-clock-network) — FGT/System PLL REFCLK range and connectivity
 
 Regards,  
 Sahil Patni  
