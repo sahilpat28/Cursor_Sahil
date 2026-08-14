@@ -19,8 +19,9 @@ For your new design, please follow the current documented SyncE path:
 Please do not apply 390.625 MHz to an FGT REFCLK input; the published maximum is 380 MHz. The Development Kit schematic should be used for board connectivity, while the Ethernet IP User Guide and device data sheet define the supported clock frequencies and operation.
 
 **References:**
-- [F-Tile Ethernet Hard IP User Guide, Section 5, Table 25](https://docs.altera.com/r/docs/683023/25.3.1/f-tile-ethernet-hard-ip-user-guide/clocks) — `i_clk_ref` and `o_clk_rec_div`
-- [F-Tile Ethernet Hard IP User Guide, Section 5.5, Figure 26 / Table 29](https://docs.altera.com/r/docs/683023/25.3.1/f-tile-ethernet-hard-ip-user-guide/clock-connections-in-synchronous-ethernet-operation) — documented SyncE connection and `o_cdr_divclk`
+- [F-Tile Ethernet Hard IP User Guide 26.1.1, Section 5, Table 25](https://docs.altera.com/r/docs/683023/26.1.1/f-tile-ethernet-hard-ip-user-guide/clocks) — `i_clk_ref` and `o_clk_rec_div`
+- [F-Tile Ethernet Hard IP User Guide 26.1.1, Section 5.5, Figure 25 / Table 29](https://docs.altera.com/r/docs/683023/26.1.1/f-tile-ethernet-hard-ip-user-guide/clock-connections-in-synchronous-ethernet-operation) — documented SyncE connection and `o_cdr_divclk`
+- [F-Tile Ethernet Hard IP User Guide 26.1.1, Section 4.5](https://docs.altera.com/r/docs/683023/26.1.1/f-tile-ethernet-hard-ip-user-guide/auto-negotiation-and-link-training) — auto-negotiation and link training
 - [Agilex 7 M-Series Device Data Sheet, F-Tile Transceiver Reference Clock Specifications, Table 62](https://docs.altera.com/r/docs/769310/current/agilextm-7-fpgas-and-socs-device-data-sheet-m-series/f-tile-transceiver-reference-clock-specifications) — 380 MHz maximum REFCLK input frequency
 
 Regards,  
