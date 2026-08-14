@@ -2,36 +2,40 @@ Subject: RE: Reg., Clarification on F-Tile Reference Clock and 390.625 MHz SyncE
 
 Hi Thulasi Ramu,
 
-Thank you for your queries. Please find our responses below.
+Thank you for the follow-up. Your reading of Table 29 is correct. Please see the clarification below.
 
-**Background**  
-390.625 MHz is the RX recovered clock (`o_clk_rec_div`) for 25GE–400GE (line rate ÷ 66).  
-Si5518 cleans this SyncE recovered clock and feeds it back to the F-Tiles to close the SyncE lock loop.  
-156.25 MHz is the recommended Ethernet reference for all rates.
+**Clarification on REF 1 / 390.625 MHz**
 
-**REF 1**  
-- **156.25 MHz (REFCLK-5):** main Ethernet reference for all rates.  
-- **390.625 MHz (REFCLK-4):** SyncE cleaned clock, returned to F-Tiles so TX stays frequency-locked to RX.
+There is **no Altera document requirement** that 390.625 MHz must be provided to the F-Tile REFCLK input for SyncE.
 
-For your design: use **156.25 MHz** as the Ethernet REFCLK. For SyncE, feed the recovered clock into Si5518 (or equivalent) and return the cleaned reference to the F-Tile REFCLK. The kit shows 390.625 MHz on REFCLK-4 for evaluation; you do not need to copy both clocks unless your SyncE clocking plan requires it.
+Please separate these two items:
 
-**REF 2**  
-- **REFCLK-4 (Global):** all 4 FGT quads.  
-- **REFCLK-6 (Regional):** Quad 2 & 3 only (SyncE recovery quads).  
+1. **F-Tile REFCLK / PMA reference (`i_clk_ref`)**  
+   Allowed frequencies are **156.25 / 312.5 / 322.265625 MHz** (156.25 MHz recommended).  
+   **Reference:** *F-Tile Ethernet Hard IP User Guide*, Section **5. Clocks**, Table 25 (`i_clk_ref`).
 
-Both are kit flexibility; use only what your quad placement needs.
+2. **SyncE recovered clock to cleanup PLL (Table 29)**  
+   Table 29 is for the **dedicated CDR clock output** (`o_cdr_divclk` = refclk / N), available from FGT Quads 2/3 (Refclk8/9).  
+   That output is **~26–39 MHz**, not 390.625 MHz.  
+   **Reference:** *F-Tile Ethernet Hard IP User Guide*, Section **5.5 Clock Connections in Synchronous Ethernet Operation**, Table 29.
 
-**REF 3**  
-Correct — one Global 156.25 MHz REFCLK can feed all 4 quads.  
-The second (Regional) connection on the kit is for evaluation only. Not required in your design if all quads share one clock domain.
+3. **Where 390.625 MHz appears**  
+   390.625 MHz is the fabric recovered clock **`o_clk_rec_div`** for 25GE–400GE (SERDES rate ÷ 66).  
+   This is a **different** clock from Table 29.  
+   **Reference:** *F-Tile Ethernet Hard IP User Guide*, Section **5. Clocks**, Table 25 (`o_clk_rec_div`).
 
-**REF 4**  
-On the kit, Si5518 is the board SyncE/1588 master, so DDR/HBM/NOC/SDM clocks are derived from it for demo convenience.
+**SyncE usage (documented)**  
+Recovered clock → off-chip cleanup PLL (e.g. Si5518) → cleaned clock returned as F-Tile REFCLK at a **legal** reference frequency (**typically 156.25 MHz**).  
+**Reference:** Section **5.5** (SyncE cleanup PLL model).
 
-This is not a device requirement.  
-For your board: SyncE cleaned clock must return to F-Tile Ethernet REFCLK; DDR/HBM/NOC/SDM may use independent clocks if SyncE is needed only for Ethernet.
+**About the Development Kit**  
+390.625 MHz on REFCLK-4 in the Agilex 7 M-Series Development Kit is a **kit schematic / evaluation implementation**. It is **not** a User Guide requirement to use 390.625 MHz as the SyncE REFCLK input.
 
-To support your design further, please share a block diagram of your interfaces (QSFP-DD / F-Tile mapping, Ethernet modes, SyncE/PTP clocking, and other major interfaces such as DDR/HBM if used).
+**For your design**  
+- Use **156.25 MHz** as F-Tile Ethernet REFCLK.  
+- For SyncE, use the dedicated CDR recovered clock path (Table 29 / Section 5.5) into your cleanup PLL, and return **cleaned 156.25 MHz** to F-Tile REFCLK.
+
+Please also share your interface block diagram when available.
 
 Regards,  
 Sahil Patni  
