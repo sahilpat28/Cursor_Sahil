@@ -2,20 +2,21 @@ Subject: RE: Reg., Clarification on F-Tile Reference Clock and 390.625 MHz SyncE
 
 Hi Thulasi Ramu,
 
-Thank you. Your observation is correct. The schematic labels and Table 29 refer to different clock paths:
+Thank you. The schematic and Table 29 describe different aspects of the clocking:
 
-- **Table 29 — `o_cdr_divclk`:** This is the dedicated recovered-clock output on Refclk8/9. Its frequency is `REFCLK/N`, approximately **26–39 MHz** for the configurations shown.
-- **Table 25 — `o_clk_rec_div`:** This is a separate Ethernet IP logical clock output: **156.25 MHz for 10GE, 312.5 MHz for 40GE, and 390.625 MHz for the other Ethernet modes**.
+1. **Table 29 (`o_cdr_divclk`)** defines the actual dedicated recovered-clock output on Refclk8/9. Its frequency is `REFCLK/N`, approximately **26–39 MHz** for the configurations shown.
 
-The **156.25/390.625 MHz “recovered clock” names in the Development Kit schematic are board net labels/provisions**. They do not change the frequency of the current Ethernet Hard IP dedicated CDR output specified in Table 29.
+2. The **156.25/390.625 MHz “recovered clock” names in the Development Kit schematic are static board net names showing physical routing to the external clock devices**. A schematic net name does not configure the F-Tile CDR divider or guarantee the operating frequency. For the current Ethernet Hard IP, the frequency on the dedicated recovered-clock pin is determined by `cdr_n_counter` and follows Table 29.
 
-We also need to correct our previous statement: Section 4.4.2 specifies 390.625 MHz for the **PTP ToD clock in FPGA logic**, but it does not specify that this clock enters through REFCLK-4/6. Please disregard that earlier interpretation.
+3. **Table 25 (`o_clk_rec_div`)** describes a separate Ethernet IP logical clock output: **156.25 MHz for 10GE, 312.5 MHz for 40GE, and 390.625 MHz for the other Ethernet modes**. This is not the dedicated package recovered-clock output described in Table 29.
+
+Similarly, the 390.625 MHz PTP ToD clock described in Section 4.4.2 is an FPGA logic clock; it is not an FGT PMA reference-clock specification.
 
 For your new design, please follow the current documented SyncE path:
 
 **Refclk8/9 dedicated CDR output (Table 29) → external cleanup PLL → supported F-Tile PMA reference clock (156.25 MHz recommended).**
 
-Please do not apply 390.625 MHz to an FGT REFCLK input; the published maximum is 380 MHz. We are separately raising the Development Kit schematic labeling/configuration inconsistency with the board/IP team.
+Please do not apply 390.625 MHz to an FGT REFCLK input; the published maximum is 380 MHz. The Development Kit schematic should be used for board connectivity, while the Ethernet IP User Guide and device data sheet define the supported clock frequencies and operation.
 
 **References:**
 - [F-Tile Ethernet Hard IP User Guide, Section 5, Table 25](https://docs.altera.com/r/docs/683023/25.3.1/f-tile-ethernet-hard-ip-user-guide/clocks) — `i_clk_ref` and `o_clk_rec_div`
