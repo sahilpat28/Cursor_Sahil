@@ -18,13 +18,9 @@ Bharat Electronics Limited
 32, 1st Street, Sector 16,  
 Panchkula, Haryana – 134113
 
-| Item | Serial No / Model | QTY |
-|------|-------------------|-----|
-| Cyclone® 10 GX FPGA Development Kit (Board: DK-DEV-10CX220-B; FPGA: 10CX220YF780E5G) | DK-DEV-10CX220-B | 1 |
-| Power Supply | NA | 1 |
-| AC Adapter (as applicable) | NA | 1 |
-| USB Cable | NA | 1 |
-| Ethernet Cable | NA | 1 |
+| Item | Serial No | QTY |
+|------|-----------|-----|
+| Cyclone® 10 GX Development Kit DK-DEV-10CX220-B / M88434-001 (with Power adaptor) | 10CGX0010064 | 1 |
 
 These items are company property and are being taken out on a **returnable** basis. They shall be returned to Altera Semiconductor Technology India Pvt. Ltd. after the visit.
 
