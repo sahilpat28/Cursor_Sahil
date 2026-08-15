@@ -3,20 +3,20 @@
 ![Altera](assets/altera_logo.png)
 
 **Altera Semiconductor Technology India Pvt. Ltd.**  
-Eco Space 4B, 3rd Floor, Deverabeesanahalli, Varthur Hobli, Outer Ring Road, Bangalore – 560103, Karnataka, India  
+Eco Space 4B, 3rd Floor, Deverabeesanahalli, Varthur Hobli,  
+Outer Ring Road, Bangalore – 560103, Karnataka, India  
 CIN: 24122000009366UTIB
 
-**Altera Confidential**  
 **Date:** 14th Aug 2026
 
 ## TO WHOM SO EVER IT MAY CONCERN
 
 ### Returnable Gate Pass
 
-The following items are carried by **Mr. Sahil Patni** (Employee ID: **12041332**) for demonstration / technical evaluation purposes.
+The following items are carried by **Mr. Sahil Patni** (Employee ID: **12041332**) for demonstration and technical evaluation purposes.
 
 **Destination / Consignee:**  
-**Rajesh Gulati**  
+**Mr. Rajesh Gulati**  
 Bharat Electronics Limited  
 32, 1st Street, Sector 16,  
 Panchkula, Haryana – 134113
@@ -31,10 +31,8 @@ For any clarification, please contact **+91 70208 23940**.
 
 Thank you,  
 
-**Altera Semiconductor Technology India Pvt. Ltd.**  
-
 **Sahil Patni**  
+**Altera Semiconductor Technology India Pvt. Ltd.**  
 Field Application Engineer (FAE) | India  
 Employee ID: 12041332  
-+91 70208 23940  
-(Authorized Carrier)
++91 70208 23940
