@@ -20,3 +20,15 @@ proc
 check
 stat
 
+design -reset
+read_verilog hdl/rtl/axis_mpu/gts_axis_to_mpu.v
+read_verilog hdl/rtl/axis_mpu/mpu_regmap_example.v
+read_verilog hdl/rtl/axis_mpu/mpu_to_axi4lite.v
+read_verilog hdl/rtl/axis_mpu/axi4lite_regmap_example.v
+read_verilog hdl/rtl/axis_mpu/gts_axis_mpu_example_top.v
+read_verilog hdl/rtl/axis_mpu/gts_axis_axi4lite_example_top.v
+hierarchy -check -top gts_axis_mpu_example_top
+proc
+check
+stat
+
