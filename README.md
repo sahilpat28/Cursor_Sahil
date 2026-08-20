@@ -81,7 +81,8 @@ For symbol-spaced estimation, the unambiguous acquisition range is roughly
 ```text
 hdl/
   rtl/         # Verilog-2001 modem RTL
-  tb/          # self-checking Verilog testbench
+  rtl/axis_mpu # GTS AXI-Stream to MPU/AXI4-Lite register-map IP
+  tb/          # self-checking Verilog testbenches
   constraints/ # generic 500 MHz clock constraint
   synth/       # Yosys sanity check and Quartus Agilex timing scripts
   reports/     # timing-analysis status report
@@ -101,7 +102,11 @@ tests/test_eight_psk_modem.py
 
 ## Verilog RTL
 
-The Verilog implementation is in `hdl/rtl` and is clocked at 500 MHz. It moves
+The repository also includes a GTS AXI-Stream to MPU bus adapter so Agilex 3
+PCIe BAR accesses can hit a simple register map instead of the memory-backed
+PIO design example. See `hdl/rtl/axis_mpu/README.md`.
+
+The Verilog modem implementation is in `hdl/rtl` and is clocked at 500 MHz. It moves
 eight consecutive complex Q1.15 samples per clock on packed DAC/ADC buses, so it
 maintains the requested 4 GSPS converter throughput without a 4 GHz RTL clock.
 

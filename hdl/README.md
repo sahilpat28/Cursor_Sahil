@@ -25,6 +25,8 @@ rtl/psk8_modem_top.v   Integrated TX/RX datapath
 rtl/psk8_modem_quartus_top.v
                        Quartus compile wrapper with internal sample buses
 tb/tb_psk8_modem.v     Self-checking loopback simulation
+rtl/axis_mpu/          GTS AXI-Stream to MPU/AXI4-Lite register-map example
+tb/tb_gts_axis_mpu.v   Self-checking AXI-S to MPU/register-map simulation
 constraints/psk8_modem_500mhz.sdc
                        Generic 2 ns clock constraint
 synth/yosys_synth_sanity.ys
@@ -120,7 +122,11 @@ Expected result:
 
 ```text
 PASS: recovered 1024 PRBS31 8-PSK symbols at 500 MHz RTL clock with CFO correction
+PASS: GTS AXI-Stream to MPU/AXI4-Lite register-map example
 ```
+
+`make sim-mpu` runs only the Agilex 3 GTS AXI-Stream to MPU register-map
+example. See `rtl/axis_mpu/README.md`.
 
 ## Synthesis and Timing
 
