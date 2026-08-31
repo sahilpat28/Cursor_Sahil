@@ -9,7 +9,6 @@ import re
 from pathlib import Path
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
@@ -28,6 +27,7 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = ROOT / "agilex5-camera-4kp30-bring-up.md"
 DEFAULT_OUTPUT = ROOT / "agilex5-camera-4kp30-bring-up.pdf"
+REVISION = "Revision 1.0  |  31 August 2026"
 
 
 def inline_markup(text: str) -> str:
@@ -45,9 +45,21 @@ def footer(canvas, document) -> None:
     canvas.line(18 * mm, 13 * mm, width - 18 * mm, 13 * mm)
     canvas.setFillColor(colors.HexColor("#41515e"))
     canvas.setFont("Helvetica", 7.5)
-    canvas.drawString(18 * mm, 8.5 * mm, "Agilex 5 E-Series 065B 4Kp30 Camera + AI Bring-Up")
+    canvas.drawString(18 * mm, 8.5 * mm, f"{REVISION}  •  Agilex 5 Camera + AI Bring-Up")
     canvas.drawRightString(width - 18 * mm, 8.5 * mm, f"Page {document.page}")
     canvas.restoreState()
+
+
+def later_page_header(canvas, document) -> None:
+    canvas.saveState()
+    width, height = A4
+    canvas.setFillColor(colors.HexColor("#41515e"))
+    canvas.setFont("Helvetica-Bold", 7.5)
+    canvas.drawString(18 * mm, height - 10.5 * mm, "AGILEX 5 CAMERA + AI  |  TECHNICAL FIELD GUIDE")
+    canvas.setStrokeColor(colors.HexColor("#b7c4ce"))
+    canvas.line(18 * mm, height - 12.5 * mm, width - 18 * mm, height - 12.5 * mm)
+    canvas.restoreState()
+    footer(canvas, document)
 
 
 def make_styles() -> dict[str, ParagraphStyle]:
@@ -57,10 +69,28 @@ def make_styles() -> dict[str, ParagraphStyle]:
             "GuideTitle",
             parent=base["Title"],
             fontName="Helvetica-Bold",
-            fontSize=23,
-            leading=28,
+            fontSize=24,
+            leading=29,
             textColor=colors.HexColor("#0b3954"),
-            spaceAfter=6 * mm,
+            spaceAfter=3 * mm,
+        ),
+        "eyebrow": ParagraphStyle(
+            "GuideEyebrow",
+            fontName="Helvetica-Bold",
+            fontSize=8,
+            leading=10,
+            textColor=colors.HexColor("#0b6f9c"),
+            spaceAfter=2 * mm,
+            tracking=1.25,
+        ),
+        "subtitle": ParagraphStyle(
+            "GuideSubtitle",
+            parent=base["BodyText"],
+            fontName="Helvetica",
+            fontSize=11,
+            leading=14,
+            textColor=colors.HexColor("#41515e"),
+            spaceAfter=5 * mm,
         ),
         "h2": ParagraphStyle(
             "GuideH2",
@@ -105,8 +135,8 @@ def make_styles() -> dict[str, ParagraphStyle]:
         "code": ParagraphStyle(
             "GuideCode",
             fontName="Courier",
-            fontSize=6.8,
-            leading=8.4,
+            fontSize=7.8,
+            leading=9.6,
             leftIndent=3.2 * mm,
             rightIndent=2 * mm,
             textColor=colors.HexColor("#17212b"),
@@ -117,6 +147,14 @@ def make_styles() -> dict[str, ParagraphStyle]:
             fontName="Helvetica",
             fontSize=7.7,
             leading=9.5,
+        ),
+        "code_label": ParagraphStyle(
+            "GuideCodeLabel",
+            fontName="Helvetica-Bold",
+            fontSize=6.5,
+            leading=8,
+            textColor=colors.white,
+            tracking=0.8,
         ),
     }
 
@@ -164,6 +202,7 @@ def build_story(markdown: str, body_width: float, styles: dict[str, ParagraphSty
             continue
 
         if line.startswith("```"):
+            language = line[3:].strip().upper()
             code_lines = []
             index += 1
             while index < len(lines) and not lines[index].startswith("```"):
@@ -173,25 +212,31 @@ def build_story(markdown: str, body_width: float, styles: dict[str, ParagraphSty
             code_style = ParagraphStyle(
                 "SizedGuideCode",
                 parent=styles["code"],
-                fontSize=max(5.1, min(6.8, (body_width - 10 * mm) / (longest_line * 0.6))),
-                leading=max(6.4, min(8.4, (body_width - 10 * mm) / (longest_line * 0.6) + 1.6)),
+                fontSize=max(6.4, min(7.8, (body_width - 10 * mm) / (longest_line * 0.6))),
+                leading=max(7.8, min(9.6, (body_width - 10 * mm) / (longest_line * 0.6) + 1.8)),
             )
-            story.append(
-                Table(
-                    [[XPreformatted(html.escape("\n".join(code_lines)), code_style)]],
-                    colWidths=[body_width],
-                    style=TableStyle(
-                        [
-                            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#f0f4f7")),
-                            ("BOX", (0, 0), (-1, -1), 0.45, colors.HexColor("#b7c4ce")),
-                            ("LEFTPADDING", (0, 0), (-1, -1), 2.2 * mm),
-                            ("RIGHTPADDING", (0, 0), (-1, -1), 2.2 * mm),
-                            ("TOPPADDING", (0, 0), (-1, -1), 2 * mm),
-                            ("BOTTOMPADDING", (0, 0), (-1, -1), 2 * mm),
-                        ]
-                    ),
-                )
+            label = "HOST TERMINAL COMMANDS" if language == "BASH" else "EXPECTED OUTPUT / REFERENCE"
+            code_table = Table(
+                [
+                    [Paragraph(label, styles["code_label"])],
+                    [XPreformatted(html.escape("\n".join(code_lines)), code_style)],
+                ],
+                colWidths=[body_width],
+                style=TableStyle(
+                    [
+                        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#164e70")),
+                        ("BACKGROUND", (0, 1), (-1, -1), colors.HexColor("#f0f4f7")),
+                        ("BOX", (0, 0), (-1, -1), 0.45, colors.HexColor("#9eb5c4")),
+                        ("LEFTPADDING", (0, 0), (-1, -1), 2.2 * mm),
+                        ("RIGHTPADDING", (0, 0), (-1, -1), 2.2 * mm),
+                        ("TOPPADDING", (0, 0), (-1, 0), 1.1 * mm),
+                        ("BOTTOMPADDING", (0, 0), (-1, 0), 1.1 * mm),
+                        ("TOPPADDING", (0, 1), (-1, -1), 2 * mm),
+                        ("BOTTOMPADDING", (0, 1), (-1, -1), 2 * mm),
+                    ]
+                ),
             )
+            story.append(KeepTogether([code_table]))
             story.append(Spacer(1, 2.2 * mm))
             index += 1
             continue
@@ -201,28 +246,45 @@ def build_story(markdown: str, body_width: float, styles: dict[str, ParagraphSty
             while index < len(lines) and lines[index].startswith("|"):
                 table_rows.append(lines[index])
                 index += 1
-            story.append(table_from_markdown(table_rows, body_width, styles))
+            story.append(KeepTogether([table_from_markdown(table_rows, body_width, styles)]))
             story.append(Spacer(1, 2.2 * mm))
+            continue
+
+        if line.strip() == "<!-- pagebreak -->":
+            story.append(PageBreak())
+            index += 1
             continue
 
         if line.startswith("# "):
             if not first_title:
                 story.append(PageBreak())
+            story.append(Paragraph("TECHNICAL FIELD GUIDE", styles["eyebrow"]))
             story.append(Paragraph(inline_markup(line[2:]), styles["title"]))
             story.append(
                 Paragraph(
-                    "Printable Linux-host procedure for the Altera Agilex 5 FPGA E-Series 065B "
-                    "Modular Development Kit.",
-                    ParagraphStyle(
-                        "Subtitle",
-                        parent=styles["body"],
-                        fontSize=11,
-                        leading=14,
-                        textColor=colors.HexColor("#41515e"),
-                        spaceAfter=8 * mm,
+                    "Field-proven deployment, AI model compilation, and validation procedure for the "
+                    "Altera Agilex 5 FPGA E-Series 065B Modular Development Kit.",
+                    styles["subtitle"],
+                )
+            )
+            story.append(
+                Table(
+                    [[Paragraph(REVISION, styles["table"])]],
+                    colWidths=[body_width],
+                    style=TableStyle(
+                        [
+                            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#e6f1f7")),
+                            ("LINEBEFORE", (0, 0), (0, -1), 2, colors.HexColor("#0b6f9c")),
+                            ("TEXTCOLOR", (0, 0), (-1, -1), colors.HexColor("#164e70")),
+                            ("LEFTPADDING", (0, 0), (-1, -1), 3.5 * mm),
+                            ("RIGHTPADDING", (0, 0), (-1, -1), 3.5 * mm),
+                            ("TOPPADDING", (0, 0), (-1, -1), 2 * mm),
+                            ("BOTTOMPADDING", (0, 0), (-1, -1), 2 * mm),
+                        ]
                     ),
                 )
             )
+            story.append(Spacer(1, 4 * mm))
             first_title = False
             index += 1
             continue
@@ -239,14 +301,17 @@ def build_story(markdown: str, body_width: float, styles: dict[str, ParagraphSty
 
         if line.startswith("> "):
             callout = Paragraph(inline_markup(line[2:]), styles["body"])
+            warning = "warning" in line.lower()
+            background = colors.HexColor("#fff3db") if warning else colors.HexColor("#e6f1f7")
+            border = colors.HexColor("#be6d00") if warning else colors.HexColor("#0b6f9c")
             story.append(
                 Table(
                     [[callout]],
                     colWidths=[body_width],
                     style=TableStyle(
                         [
-                            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#e6f1f7")),
-                            ("LINEBEFORE", (0, 0), (0, -1), 2, colors.HexColor("#0b6f9c")),
+                            ("BACKGROUND", (0, 0), (-1, -1), background),
+                            ("LINEBEFORE", (0, 0), (0, -1), 2, border),
                             ("LEFTPADDING", (0, 0), (-1, -1), 3.5 * mm),
                             ("RIGHTPADDING", (0, 0), (-1, -1), 3.5 * mm),
                             ("TOPPADDING", (0, 0), (-1, -1), 2.5 * mm),
@@ -300,7 +365,7 @@ def render(source: Path, output: Path) -> None:
         author="Altera FPGA bring-up notes",
     )
     story = build_story(source.read_text(encoding="utf-8"), document.width, styles)
-    document.build(story, onFirstPage=footer, onLaterPages=footer)
+    document.build(story, onFirstPage=footer, onLaterPages=later_page_header)
 
 
 def main() -> None:

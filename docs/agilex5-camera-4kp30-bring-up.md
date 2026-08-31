@@ -1,12 +1,36 @@
 # Agilex 5 E-Series 065B 4Kp30 Camera + AI Bring-Up
 
-**Scope:** A repeatable Linux-host procedure for the Altera Agilex™ 5 FPGA E-Series 065B Modular Development Kit with one or two Framos FSM:GO IMX678C MIPI CSI-2 cameras.
+## Document control
 
-**Design:** 4Kp30 Multi-Sensor Camera with AI Inference Solution System Example Design  
-**Official guide:** https://altera-fpga.github.io/rel-26.1/embedded-designs/agilex-5/e-series/modular/camera/camera_4k_ai/camera_4k_ai/  
-**Release assets used:** `altera-fpga/agilex-ed-camera-ai`, tag `rel-25.1`
+| Item | Value |
+| --- | --- |
+| Document type | Technical bring-up guide |
+| Audience | Hardware, FPGA, embedded-software, and validation engineers |
+| Status | Field-validated pre-built release procedure |
+| Validated configuration | Agilex 5 E-Series 065B MDK; one or two Framos FSM:GO IMX678C cameras |
+| Release assets | `altera-fpga/agilex-ed-camera-ai`, tag `rel-25.1` |
+| Documentation baseline | Altera embedded-design documentation `rel-26.1` |
 
-> Although the documentation is published under `rel-26.1`, this pre-built design's binaries and source release are `rel-25.1`. Use matching assets. Quartus Pro 25.1 is required to rebuild the design. A compatible newer Quartus Programmer can program the pre-built `.jic`; verify that it detects the carrier board before programming.
+## Purpose and scope
+
+Use this guide to install and validate the 4Kp30 Multi-Sensor Camera with AI Inference Solution System Example Design on an Altera Agilex™ 5 FPGA E-Series 065B Modular Development Kit. It covers the tested Linux-host path for one or two Framos FSM:GO IMX678C MIPI CSI-2 cameras, including QSPI, microSD, serial-console, Ethernet, DisplayPort, and AI-model setup.
+
+> **Compatibility notice:** Although the documentation is published under `rel-26.1`, this pre-built design's binaries and source release are `rel-25.1`. Use matching assets. Quartus Pro 25.1 is required to rebuild the design. A compatible newer Quartus Programmer can program the pre-built `.jic`; verify that it detects the carrier board before programming.
+
+## Before you begin
+
+- Confirm that the host is Linux x86_64 with Internet access, Docker, and Quartus Programmer.
+- Ensure that the cameras, microSD card, J35/J2 USB cables, Ethernet, DP cable, and display are available.
+- Keep the board powered off when connecting camera cables or inserting/removing the microSD card.
+- Obtain approval for the Ultralytics model license before downloading or compiling the YOLOv8 models.
+
+## Contents
+
+1. Install overview and hardware requirements
+2. Download and write the microSD image
+3. Program QSPI and boot Linux
+4. Open the serial console and web UI
+5. Compile/install AI models, run acceptance tests, and troubleshoot issues
 
 ## 1. What this guide installs
 
@@ -39,13 +63,19 @@ On the Linux host:
 mkdir -p ~/agilex5-camera-4kp30
 cd ~/agilex5-camera-4kp30
 
-curl -fLO https://github.com/altera-fpga/agilex-ed-camera-ai/releases/download/rel-25.1/hps-first-vvp-isp-demo-image-agilex5_mk_a5e065bb32aes1.wic.gz
-curl -fLO https://github.com/altera-fpga/agilex-ed-camera-ai/releases/download/rel-25.1/top.core.jic
+RELEASE_URL=https://github.com/altera-fpga/agilex-ed-camera-ai/releases/download/rel-25.1
+IMAGE=hps-first-vvp-isp-demo-image-agilex5_mk_a5e065bb32aes1.wic.gz
+JIC=top.core.jic
 
-echo "495605036a85bab7454ae56fabd659a4423a07e256a0ec0cbf4387270f56895c  hps-first-vvp-isp-demo-image-agilex5_mk_a5e065bb32aes1.wic.gz" | sha256sum -c -
-echo "8dc7434444c276c5b04005d3e664011ec60cc3fa3f07f43eaa3038d0568e7c19  top.core.jic" | sha256sum -c -
+curl -fLO "$RELEASE_URL/$IMAGE"
+curl -fLO "$RELEASE_URL/$JIC"
 
-gzip -dk hps-first-vvp-isp-demo-image-agilex5_mk_a5e065bb32aes1.wic.gz
+IMAGE_SHA256=495605036a85bab7454ae56fabd659a4423a07e256a0ec0cbf4387270f56895c
+JIC_SHA256=8dc7434444c276c5b04005d3e664011ec60cc3fa3f07f43eaa3038d0568e7c19
+printf '%s  %s\n' "$IMAGE_SHA256" "$IMAGE" | sha256sum -c -
+printf '%s  %s\n' "$JIC_SHA256" "$JIC" | sha256sum -c -
+
+gzip -dk "$IMAGE"
 ```
 
 Both checksum commands must print `OK`. The uncompressed `.wic` is the image written to the entire microSD device.
@@ -146,6 +176,17 @@ http://BOARD_IP/
 
 For example, `http://10.42.0.12/`. The IP is DHCP-provided and may change after a reboot. The web UI should load automatically after Linux has booted.
 
+## Phase 1 checkpoint
+
+Before compiling AI models, record that the base platform is working:
+
+- QSPI programming completed with `Successfully performed operation(s)`.
+- Linux booted from the flashed microSD and accepted the `root` serial login.
+- `eth0` received an address and the browser UI opened.
+- The DP display detected a signal and showed the selected camera source.
+
+<!-- pagebreak -->
+
 ## 8. Compile YOLOv8 models for the FPGA AI Suite
 
 The pre-built image does not supply YOLO model binaries. Before downloading the models, review and accept the Ultralytics license: https://www.ultralytics.com/license
@@ -243,3 +284,44 @@ With the FPGA AI Suite evaluation license, AI inference can stop after approxima
 - Release assets: https://github.com/altera-fpga/agilex-ed-camera-ai/releases/tag/rel-25.1
 - Source repository: https://github.com/altera-fpga/agilex-ed-camera-ai/tree/rel-25.1
 - Ultralytics license: https://www.ultralytics.com/license
+
+<!-- pagebreak -->
+
+## Deployment record
+
+Complete this section for each board that is prepared using this guide.
+
+| Field | Record |
+| --- | --- |
+| Date / operator | ______________________________________________ |
+| Board serial number | ______________________________________________ |
+| QSPI artifact and checksum verified | ______________________________________________ |
+| microSD image and checksum verified | ______________________________________________ |
+| Camera 0 live-video test | Pass / Fail — notes: __________________________ |
+| Camera 1 live-video test | Pass / Fail / Not fitted — notes: ______________ |
+| Detection model test | Pass / Fail — notes: __________________________ |
+| Pose model test | Pass / Fail — notes: __________________________ |
+| DP display and web UI test | Pass / Fail — notes: __________________________ |
+
+### Handoff evidence
+
+- Record the board DHCP address, monitor model, and camera serial numbers.
+- Attach a screenshot of the web UI and a photograph of the DP overlay.
+- Retain the release-asset checksums and the model compiler output with the board validation record.
+
+### Notes and corrective actions
+
+________________________________________________________________________________
+
+________________________________________________________________________________
+
+________________________________________________________________________________
+
+________________________________________________________________________________
+
+### Acceptance sign-off
+
+| Role | Name / signature / date |
+| --- | --- |
+| Bring-up engineer | ______________________________________________ |
+| Reviewer | ______________________________________________ |
