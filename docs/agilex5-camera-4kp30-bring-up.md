@@ -26,11 +26,51 @@ Use this guide to install and validate the 4Kp30 Multi-Sensor Camera with AI Inf
 
 ## Contents
 
-1. Install overview and hardware requirements
-2. Download and write the microSD image
-3. Program QSPI and boot Linux
-4. Open the serial console and web UI
-5. Compile/install AI models, run acceptance tests, and troubleshoot issues
+1. Quick customer bring-up with a prepared board and microSD card
+2. Detailed media preparation and QSPI programming
+3. Serial console, network, and web UI access
+4. AI model compilation and installation
+5. Acceptance testing, troubleshooting, and deployment record
+
+<!-- pagebreak -->
+
+## Quick customer bring-up
+
+Use this page when demonstrating a board at a customer site. It assumes the microSD card has already been flashed **and** contains the compiled YOLO model files, and that the board QSPI was already programmed with `top.core.jic`.
+
+> **Important:** A ready microSD card alone is not enough for a new or erased board. If QSPI has not previously been programmed, complete section 5 before attempting this quick-start procedure.
+
+### Pre-flight check
+
+- Board is powered off; the prepared microSD card is installed in the SOM slot.
+- SOM switch `S4 = ON-ON` (ASx4/QSPI boot).
+- Both cameras are attached with pin 1 correctly aligned.
+- DP display is connected and set to its DP input.
+- SOM `J6` Ethernet and `J2` serial USB are connected to the host/network.
+
+### Customer demonstration sequence
+
+1. Power on the board. Keep the DP display connected during boot.
+2. Open the HPS serial console at 115200 8N1 with no flow control; log in as `root` (no password).
+3. At the board prompt, obtain the DHCP address:
+
+```bash
+ifconfig eth0
+```
+
+4. On the host browser, open `http://BOARD_IP/`, replacing `BOARD_IP` with the `inet addr` value.
+5. Confirm that the DP display detects a signal and shows video.
+6. In the web UI, select camera 0 and camera 1; confirm live video from each.
+7. Select **Detect** and confirm object boxes/labels, then select **Pose** and confirm pose overlays.
+
+### If the demonstration does not start
+
+- **No DP signal:** Confirm the display input, reseat the DP cable, and power-cycle the monitor. Do not reflash QSPI solely for this symptom.
+- **No serial output:** Verify the J2 four-port serial group and use its third port; see section 6.
+- **No web UI:** Run `ifconfig eth0` again and confirm the host is on the same network.
+- **No AI overlay:** Verify the model files using the command in section 9, then reboot the board.
+
+<!-- pagebreak -->
 
 ## 1. What this guide installs
 
