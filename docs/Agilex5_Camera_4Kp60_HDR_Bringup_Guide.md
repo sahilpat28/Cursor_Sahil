@@ -22,7 +22,77 @@ It has two layers:
 
 ---
 
-## 2. Official references
+## 2. Customer demo fast start (pre-provisioned kit)
+
+Use this section when the kit has already been prepared and you need to bring it up in front of a customer. It is deliberately short; use the detailed procedure in Section 7 if a step fails.
+
+### What must already be ready
+
+| Item | Required state |
+|------|----------------|
+| QSPI | `top.core.jic` was programmed once successfully |
+| microSD card | Contains the matching `hps-first-vvp-isp-demo-image-agilex5_mk_a5e065bb32aes1.wic` image |
+| Boot switches | SOM SW1 is **ON-ON** (QSPI / AS×4 boot) |
+| Camera | Framos IMX678 connected to MIPI0 or MIPI1, with pin 1 aligned |
+| Display | Carrier **DisplayPort TX** connected to the selected monitor |
+| Host connections | Board J6 Ethernet and SOM J2 USB connected to the host PC |
+| Host network | Board and host are on the same Ethernet network; VPN is disabled if it interferes |
+
+> A prepared microSD card alone is not enough. QSPI must already contain the matching `top.core.jic` boot image.
+
+### Demo sequence
+
+**1. Power on**  
+Verify the connections above, insert the microSD card, and power on the board.
+
+**2. Wait for application startup**  
+Wait about two minutes for Linux and the camera application to start.
+
+**3. Open the HPS serial console**  
+Use 115200 8N1, press Enter, and log in as `root`:
+
+```bash
+sudo minicom -D /dev/ttyUSB6 -b 115200
+```
+
+`ttyUSB6` is the usual lab mapping; if it is blank, use the serial-port guidance in Section 7.3.
+
+**4. Get the board address**
+
+```bash
+ip -4 addr show eth0
+```
+
+**5. Open the GUI on the host PC**
+
+```text
+http://<board-ip>/
+```
+
+**6. Select the camera input**  
+In the web GUI, select **Input Config → Input Source → Camera**.
+
+**7. Confirm video**  
+Confirm camera video appears on the DisplayPort monitor.
+
+### If the GUI does not open
+
+First test normal Ethernet operation:
+
+```bash
+ping -c 2 -M do -s 1472 <board-ip>
+```
+
+- If this succeeds, keep the default MTU 1500 and continue with the GUI.
+- If this fails, apply the **lab-only MTU 400 workaround** in Section 8, then reload the GUI.
+
+### If the monitor has no video
+
+In the GUI select **Input TPG** first. If the test pattern appears, switch back to **Camera**. For the MIPI1 single-camera known issue, toggle **Camera → Input TPG → Camera**.
+
+---
+
+## 3. Official references
 
 | Resource | Link |
 |----------|------|
@@ -35,7 +105,7 @@ It has two layers:
 
 ---
 
-## 3. Does the official design require setting MTU?
+## 4. Does the official design require setting MTU?
 
 **No.** Altera’s official camera 4K documentation does **not** ask you to change Ethernet MTU.
 
@@ -75,11 +145,11 @@ ping -c 2 -M do -s 1472 BOARD_IP
 | Result | Action |
 |--------|--------|
 | Large ping succeeds | Keep default MTU 1500 (official / preferred) |
-| Large ping fails | Use lab MTU 400 workaround (Section 7) |
+| Large ping fails | Use lab MTU 400 workaround (Section 8) |
 
 ---
 
-## 4. One-time programming (already completed on this kit)
+## 5. One-time programming (already completed on this kit)
 
 Repeat only if microSD or QSPI is wiped.
 
@@ -122,7 +192,7 @@ quartus_pgm -c 1 -m jtag -o "pvi;top.core.jic"
 
 ---
 
-## 5. Hardware checklist (every session)
+## 6. Hardware checklist (every session)
 
 | Item | Setting / connection |
 |------|----------------------|
@@ -137,9 +207,9 @@ quartus_pgm -c 1 -m jtag -o "pvi;top.core.jic"
 
 ---
 
-## 6. Every-boot procedure (lab recommended)
+## 7. Every-boot procedure (lab recommended)
 
-### 6.1 Boot the host PC first
+### 7.1 Boot the host PC first
 
 Configure Wired Ethernet as **Shared to other computers**.
 
@@ -156,11 +226,11 @@ sudo nmcli connection up "netplan-enp3s0"
 ip -4 addr show enp3s0
 ```
 
-### 6.2 Power on the board
+### 7.2 Power on the board
 
 Wait about **2 minutes** for Linux and `VvpIspDemo` to start.
 
-### 6.3 Open HPS serial console
+### 7.3 Open HPS serial console
 
 With **J2 + J35** connected you typically get **8** USB serial ports.
 
@@ -186,7 +256,7 @@ gnome-terminal --title="HPS" -- bash -c \
 
 `ttyUSB` numbers can change after reboot. If `ttyUSB6` is blank, try `ttyUSB4` / `5` / `7`, or open all four and power-cycle once with minicom already open.
 
-### 6.4 Read board IP
+### 7.4 Read board IP
 
 ```bash
 ip -4 addr show eth0
@@ -202,7 +272,7 @@ ip -4 addr show eth0
 
 > Always re-read the IP. Do not assume it stays `.212`.
 
-### 6.5 Network health check (decide MTU)
+### 7.5 Network health check (decide MTU)
 
 On the host:
 
@@ -213,10 +283,10 @@ ping -c 2 $BOARD_IP
 ping -c 2 -M do -s 1472 $BOARD_IP
 ```
 
-- If **1472 succeeds** → skip Section 7, keep MTU 1500  
-- If **1472 fails** → apply Section 7 (MTU 400)
+- If **1472 succeeds** → skip Section 8, keep MTU 1500  
+- If **1472 fails** → apply Section 8 (MTU 400)
 
-### 6.6 Open the web GUI
+### 7.6 Open the web GUI
 
 ```bash
 curl -sS --max-time 10 http://$BOARD_IP/ | wc -c
@@ -227,7 +297,7 @@ google-chrome-stable http://$BOARD_IP/
 
 You should see the Altera splash, then the camera GUI.
 
-### 6.7 Select camera input
+### 7.7 Select camera input
 
 In the GUI:
 
@@ -251,7 +321,7 @@ Healthy example:
 
 ---
 
-## 7. Lab-only MTU workaround
+## 8. Lab-only MTU workaround
 
 Use only when large ping fails on your host↔board path.
 
@@ -292,7 +362,7 @@ On the lab path that needed this workaround, sizes above ~400 failed.
 
 ---
 
-## 8. DisplayPort blank / “please load image”
+## 9. DisplayPort blank / “please load image”
 
 Cameras can be detected in software while the monitor stays blank. That is usually a **DisplayPort link** issue, not a sensor detect failure.
 
@@ -306,7 +376,7 @@ Cameras can be detected in software while the monitor stays blank. That is usual
 
 ---
 
-## 9. Useful board commands
+## 10. Useful board commands
 
 ```bash
 ps | grep VvpIspDemo
@@ -325,21 +395,21 @@ App location: `/home/root/VvpIspDemo` (started by `/home/root/start.sh`).
 
 ---
 
-## 10. What not to redo every boot
+## 11. What not to redo every boot
 
 - Do **not** rewrite the microSD image
 - Do **not** reprogram QSPI (`top.core.jic`) unless flash was erased or boot is broken
 
 ---
 
-## 11. Troubleshooting quick table
+## 12. Troubleshooting quick table
 
 | Symptom | Likely cause | Action |
 |---------|--------------|--------|
 | No `/dev/ttyUSB*` | Board off / USB unplugged | Power on; connect J2 and J35 |
 | Only 4 ttyUSB ports | One USB cable missing | Connect both J2 and J35 |
 | Only Nios banner | Wrong serial port | Use HPS group’s 3rd port (often `ttyUSB6`) |
-| Ping OK, browser blank / curl body = 0 | MTU / large-frame path issue | Run 1472 ping test; apply Section 7 if needed |
+| Ping OK, browser blank / curl body = 0 | MTU / large-frame path issue | Run 1472 ping test; apply Section 8 if needed |
 | IP not `.212` | DHCP lease changed | Re-read `ip -4 addr show eth0` |
 | Cameras found, monitor blank | DP link | Try Input TPG; check DP cable/TX |
 | GUI greys out every few seconds | MTU 400 side effect | Accept for control, or fix Ethernet path for MTU 1500 |
@@ -347,7 +417,7 @@ App location: `/home/root/VvpIspDemo` (started by `/home/root/start.sh`).
 
 ---
 
-## 12. One-page cheat sheet
+## 13. One-page cheat sheet
 
 ```text
 1. PC Wired = Shared                -> 10.42.0.1
@@ -364,9 +434,10 @@ App location: `/home/root/VvpIspDemo` (started by `/home/root/start.sh`).
 
 ---
 
-## 13. Document history
+## 14. Document history
 
 | Version | Notes |
 |---------|-------|
 | 1.0 | Initial lab bring-up capture |
 | 1.1 | Reformatted for team use; clarified that MTU is **not** an official Altera requirement and is a lab-path workaround only |
+| 1.2 | Added customer demo fast-start section for a pre-provisioned board and microSD card |
