@@ -1,0 +1,45 @@
+GATE PASS / EQUIPMENT LIST
+25G Holoscan Sensor Bridge (HSB) Demo
+GE HealthCare (GEHC) Tech Day
+
+Event: GEHC Tech Day
+Demo: Altera Agilex 5 Holoscan Sensor Bridge - 25GbE
+Carried by: Sahil Patni, FAE - Altera
+Date: ________________
+Purpose: Customer technical demonstration / tech day exhibit
+
+List of Items (Carry-in / Carry-out)
+---------------------------------------------------------------------
+No.  Qty  Item Description                                  Remarks
+---------------------------------------------------------------------
+1    1    NVIDIA Jetson AGX Thor Developer Kit              Host / GPU platform
+2    1    AGX Thor power adapter + power cable              PSU for Thor
+3    1    Altera Agilex 5 Modular Development Kit           Group A / 25GbE HSB board
+4    1    Agilex 5 MDK power adapter + power cable          PSU for FPGA board
+5    2    Framos FSM:GO IMX678 camera modules               MIPI camera sensors
+6    2    MIPI camera flex cables                           Camera to MDK
+7    1    QSFP28 to 4x SFP28 breakout cable                 25G Thor <-> FPGA link
+8    1    USB Blaster / FPGA download cable                 If packed
+9    1    Keyboard / mouse / USB hub                        If packed
+10   1    HDMI / DisplayPort cable                          If packed
+11   1    Printed Holoscan guide / PPT handouts             Documentation
+12   1    Laptop (optional support)                         If carried
+---------------------------------------------------------------------
+
+Notes:
+1. All items are for technical demonstration use only and will be taken back after the event.
+2. No hazardous materials. Electronic demo equipment only.
+3. Please print TWO copies: one for security gate, one for carrier retention.
+4. Fill serial numbers below if required by security.
+
+Serial Numbers (fill at gate if required):
+Jetson AGX Thor S/N: ________________________________
+Agilex 5 MDK S/N: ___________________________________
+Other: _____________________________________________
+
+Acknowledgement / Sign-off:
+Visitor / Carrier signature: ____________________  Date: ______________
+Security / Gate signature: _____________________   Date: ______________
+Host / Escort name: ____________________________   Ext: _______________
+
+Print 2 copies for gate pass process.
