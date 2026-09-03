@@ -3,11 +3,11 @@
 | Field | Value |
 |-------|-------|
 | Design | 4Kp60 Multi-Sensor HDR Camera Solution System Example Design |
-| Release | Quartus Prime Pro **26.1** / repo branch `rel/26.1` |
+| Release | Use a matching pre-built QSPI + microSD pair; 25.1 and 26.1 are both documented |
 | Hardware | Agilex 5 FPGA E-Series **065B Modular Development Kit** |
 | Cameras | Framos FSM:GO **IMX678** (1 or 2 modules) |
 | Audience | Lab / engineering team |
-| Doc status | Lab working procedure + notes from bring-up |
+| Doc status | Team bring-up procedure with Ethernet validation and board-triage guidance |
 
 ---
 
@@ -18,7 +18,7 @@ This document tells a teammate how to **boot and run** the pre-built Altera came
 It has two layers:
 
 1. **Official Altera flow** (from the design documentation)
-2. **Lab-specific notes** discovered during bring-up on this host PC (especially Ethernet MTU)
+2. **Lab-specific notes** discovered during bring-up, including Ethernet validation and board triage
 
 ---
 
@@ -84,7 +84,7 @@ ping -c 2 -M do -s 1472 <board-ip>
 ```
 
 - If this succeeds, keep the default MTU 1500 and continue with the GUI.
-- If this fails, apply the **lab-only MTU 400 workaround** in Section 8, then reload the GUI.
+- If this fails, **do not lower MTU**. Follow the Ethernet validation and board-triage process in Section 8 before using the kit for a customer demonstration.
 
 ### If the monitor has no video
 
@@ -100,6 +100,8 @@ In the GUI select **Input TPG** first. If the test pattern appears, switch back 
 | Detailed guide | https://github.com/altera-fpga/agilex5-ed-camera/blob/rel/26.1/docs/es/camera/camera_4k/camera_4k.md |
 | Repository | https://github.com/altera-fpga/agilex5-ed-camera/tree/rel/26.1 |
 | Pre-built binaries | https://github.com/altera-fpga/agilex5-ed-camera/releases/tag/rel-26.1-isp_hdr-MDK_RevB_GrpB |
+| 25.1 test documentation | https://altera-fpga.github.io/rel-25.3/embedded-designs/agilex-5/e-series/modular/camera/camera_4k/camera_4k/ |
+| 25.1 pre-built binaries | https://github.com/altera-fpga/agilex5-ed-camera/releases/tag/rel-25.1 |
 | Repo quick start | https://github.com/altera-fpga/agilex5-ed-camera/blob/rel/26.1/AGX_5E_Altera_Modular_Dk_ISP_designs/HDR_CAMERA.md |
 | Known issues | https://github.com/altera-fpga/agilex5-ed-camera/blob/rel/26.1/docs/es/camera/camera_4k/known_issues.md |
 
@@ -116,26 +118,28 @@ Official network guidance is only:
 - Get the board IP with `ifconfig` / `ip a` after login as `root`
 - Open `http://<board-ip>/` in a browser
 
-### What if you do not set MTU?
+### Lab conclusion: keep MTU at 1500
 
 On a **healthy** Ethernet path (normal 1500-byte frames work):
 
 - You do **nothing** with MTU
 - GUI and board work at default MTU 1500
 
-On **this lab host path** (observed during bring-up):
+During the initial lab bring-up, one board showed a size-dependent Ethernet failure:
 
-- Frames larger than ~400 bytes were dropped (direct cable, switch, and USB-Ethernet dongles all showed the same ceiling)
-- Symptoms if you leave MTU at 1500:
+- Frames larger than roughly 400 bytes were dropped
+- Symptoms at MTU 1500 were:
   - `ping` small packets OK
   - `ping -M do -s 1472` fails
   - Browser page hangs / blank
-  - `curl` may show HTTP headers (`200 OK`, `Content-Length: 1112`) but **0 bytes body** / timeout
+  - `curl` may show `200 OK` but receive **0 bytes** of the HTML body before timing out
   - SSH key exchange can stall
-- Workaround used in this lab: set **MTU 400 on both PC and board**
-- Side effect of MTU 400: web GUI may briefly grey out every few seconds (WebSocket/UI traffic is fragmented). Live video is on **DisplayPort**, not the browser.
 
-**Team rule:** First test large ping. Only apply MTU 400 if large frames fail.
+Using MTU 400 only hid the fault: 400-byte packets were still intermittently lost and the GUI greyed out. It is **not** an approved team workaround.
+
+The same 25.1 image, host PC, and default MTU 1500 passed the full-size ping and GUI download after replacing the board. This isolates the incident to the original board's J6/HPS Ethernet path or associated board hardware; it is not an Ubuntu, browser, IP-version, or camera-design release issue.
+
+**Team rule:** Keep MTU at 1500. First test full-size ping. If it fails, quarantine the board for Ethernet triage rather than reducing MTU.
 
 ```bash
 # Replace BOARD_IP with the board address
@@ -145,17 +149,24 @@ ping -c 2 -M do -s 1472 BOARD_IP
 | Result | Action |
 |--------|--------|
 | Large ping succeeds | Keep default MTU 1500 (official / preferred) |
-| Large ping fails | Use lab MTU 400 workaround (Section 8) |
+| Large ping fails | Follow Ethernet validation and board triage (Section 8); do not lower MTU |
 
 ---
 
-## 5. One-time programming (already completed on this kit)
+## 5. One-time programming (select a matching release pair)
 
 Repeat only if microSD or QSPI is wiped.
 
-### Required release files
+### Release pairing rule
 
-From release `rel-26.1-isp_hdr-MDK_RevB_GrpB`:
+Never mix a QSPI `.jic` file from one release with a microSD `.wic` image from another release. Keep each pair in a separate host directory.
+
+| Release | Matching source | Lab status |
+|---------|-----------------|------------|
+| 25.1 | Release tag `rel-25.1` | Validated on replacement board at MTU 1500 |
+| 26.1 | Release tag `rel-26.1-isp_hdr-MDK_RevB_GrpB` | Current documented release; do not pair with 25.1 assets |
+
+Both release pairs use these filenames:
 
 | File | Purpose |
 |------|---------|
@@ -272,7 +283,7 @@ ip -4 addr show eth0
 
 > Always re-read the IP. Do not assume it stays `.212`.
 
-### 7.5 Network health check (decide MTU)
+### 7.5 Network health check (validate Ethernet)
 
 On the host:
 
@@ -283,14 +294,14 @@ ping -c 2 $BOARD_IP
 ping -c 2 -M do -s 1472 $BOARD_IP
 ```
 
-- If **1472 succeeds** → skip Section 8, keep MTU 1500  
-- If **1472 fails** → apply Section 8 (MTU 400)
+- If **1472 succeeds** → continue at MTU 1500  
+- If **1472 fails** → stop GUI testing and follow Section 8; do **not** lower MTU
 
 ### 7.6 Open the web GUI
 
 ```bash
 curl -sS --max-time 10 http://$BOARD_IP/ | wc -c
-# Healthy response size is about 1112 bytes of HTML
+# Healthy response: nonzero HTML (about 1035 bytes for 25.1; about 1112 bytes for 26.1)
 
 google-chrome-stable http://$BOARD_IP/
 ```
@@ -321,44 +332,49 @@ Healthy example:
 
 ---
 
-## 8. Lab-only MTU workaround
+## 8. Ethernet validation and board triage
 
-Use only when large ping fails on your host↔board path.
+Use this section if small pings work but `ping -M do -s 1472` fails, or if the GUI is blank despite a working camera/DisplayPort pipeline.
 
-### Board
+### Required normal configuration
+
+- Board `eth0`: MTU **1500**
+- Host Ethernet: MTU **1500**
+- Host and board: same IPv4 network
+- Host VPN/proxy: disabled if it interferes
+
+### 1. Confirm the board application works locally
 
 ```bash
-ip link set eth0 mtu 400
+wget -S -O /tmp/gui-local.html -T 5 http://127.0.0.1/
+wc -c /tmp/gui-local.html
 ```
 
-### Host PC (direct shared link on `enp3s0`)
+If this returns nonzero HTML but the host browser is blank, continue below.
 
-```bash
-sudo ip link set enp3s0 mtu 400
-sudo ip route replace 10.42.0.0/24 dev enp3s0 src 10.42.0.1 mtu lock 400
-```
-
-### Verify
+### 2. Validate the host-to-board Ethernet path
 
 ```bash
 ping -c 2 $BOARD_IP
+ping -c 2 -M do -s 1472 $BOARD_IP
 curl -sS --max-time 10 http://$BOARD_IP/ | wc -c
-# expect ~1112
 ```
 
-### Optional size probe
+Expected result: the full-size ping succeeds and `curl` receives nonzero HTML.
 
-```bash
-for s in 56 200 400 500 800 1200 1472; do
-  if ping -c 1 -W 1 -M do -s $s $BOARD_IP >/dev/null 2>&1; then
-    echo "OK  $s"
-  else
-    echo "FAIL $s"
-  fi
-done
-```
+### 3. If full-size traffic fails
 
-On the lab path that needed this workaround, sizes above ~400 failed.
+1. Keep MTU 1500; do not use a smaller MTU as a permanent workaround.
+2. Replace the Ethernet cable with a known-good Cat5e/Cat6 cable.
+3. Test directly against a second host PC with a normal 1500-MTU Ethernet connection.
+4. If the failure follows the board, remove it from customer/demo use and open a board support case.
+
+### Known lab incident and resolution
+
+- **Original board:** Failed full-size IPv4 and IPv6 traffic on Ubuntu and Windows, directly and through different network paths. Camera output and local web GUI were working. Packet loss began near 400 bytes.
+- **Replacement board:** Using the same 25.1 QSPI/microSD pair and Ubuntu host, full-size ping passed and the web GUI returned a 1035-byte HTML response at MTU 1500.
+
+The evidence identifies the original board's Ethernet/J6/HPS network path as faulty, though it does not identify the exact component.
 
 ---
 
@@ -409,10 +425,10 @@ App location: `/home/root/VvpIspDemo` (started by `/home/root/start.sh`).
 | No `/dev/ttyUSB*` | Board off / USB unplugged | Power on; connect J2 and J35 |
 | Only 4 ttyUSB ports | One USB cable missing | Connect both J2 and J35 |
 | Only Nios banner | Wrong serial port | Use HPS group’s 3rd port (often `ttyUSB6`) |
-| Ping OK, browser blank / curl body = 0 | MTU / large-frame path issue | Run 1472 ping test; apply Section 8 if needed |
+| Small ping works but browser blank / curl body = 0 | Large-frame Ethernet failure | Run the 1472 ping test and follow Section 8; do not lower MTU |
 | IP not `.212` | DHCP lease changed | Re-read `ip -4 addr show eth0` |
 | Cameras found, monitor blank | DP link | Try Input TPG; check DP cable/TX |
-| GUI greys out every few seconds | MTU 400 side effect | Accept for control, or fix Ethernet path for MTU 1500 |
+| GUI greys out every few seconds | Intermittent Ethernet transport fault | Validate full-size ping at MTU 1500; compare with a known-good board |
 | VPN connected | Host network interference | Disable VPN (official guidance) |
 
 ---
@@ -425,8 +441,8 @@ App location: `/home/root/VvpIspDemo` (started by `/home/root/start.sh`).
 3. minicom /dev/ttyUSB6 115200      -> root
 4. Board: ip -4 addr show eth0
 5. Host:  ping -M do -s 1472 BOARD_IP
-   - fail  -> set MTU 400 on board + PC
-   - pass  -> keep MTU 1500
+   - fail  -> do not lower MTU; follow board Ethernet triage
+   - pass  -> keep MTU 1500 and open GUI
 6. Chrome http://BOARD_IP/
 7. GUI Input Config -> Camera
    (if needed: Camera <-> TPG <-> Camera)
@@ -441,3 +457,4 @@ App location: `/home/root/VvpIspDemo` (started by `/home/root/start.sh`).
 | 1.0 | Initial lab bring-up capture |
 | 1.1 | Reformatted for team use; clarified that MTU is **not** an official Altera requirement and is a lab-path workaround only |
 | 1.2 | Added customer demo fast-start section for a pre-provisioned board and microSD card |
+| 1.3 | Replaced the MTU-400 recommendation with validated Ethernet triage after a replacement board passed full-size traffic and stable GUI operation at MTU 1500 |
