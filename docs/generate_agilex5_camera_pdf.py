@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import math
 import re
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.platypus import (
     KeepTogether,
+    Flowable,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -27,15 +29,157 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = ROOT / "agilex5-camera-4kp30-bring-up.md"
 DEFAULT_OUTPUT = ROOT / "agilex5-camera-4kp30-bring-up.pdf"
-REVISION = "Revision 1.0  |  31 August 2026"
+REVISION = "Revision 4.0  |  4 September 2026"
 
 
 def inline_markup(text: str) -> str:
     """Turn the small Markdown subset used in the guide into ReportLab markup."""
-    escaped = html.escape(text.strip())
-    escaped = re.sub(r"`([^`]+)`", r'<font face="Courier">\1</font>', escaped)
-    escaped = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", escaped)
-    return escaped
+    def format_plain(segment: str) -> str:
+        escaped = html.escape(segment)
+        escaped = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", escaped)
+
+        def hyperlink(match: re.Match[str]) -> str:
+            url = match.group(0)
+            return f'<link href="{url}" color="#005a9c"><u>{url}</u></link>'
+
+        return re.sub(r"https?://[^\s<]+", hyperlink, escaped)
+
+    segments = re.split(r"(`[^`]+`)", text.strip())
+    formatted = []
+    for segment in segments:
+        if segment.startswith("`") and segment.endswith("`"):
+            formatted.append(f'<font face="Courier">{html.escape(segment[1:-1])}</font>')
+        else:
+            formatted.append(format_plain(segment))
+    return "".join(formatted)
+
+
+class ImplementationDiagram(Flowable):
+    """Compact vector block diagram of the reference camera design."""
+
+    height = 305
+
+    def __init__(self, width: float) -> None:
+        super().__init__()
+        self.width = width
+        self.height = 305
+
+    def wrap(self, available_width: float, available_height: float) -> tuple[float, float]:
+        self.width = available_width
+        return available_width, self.height
+
+    @staticmethod
+    def _arrow(canvas, x1: float, y1: float, x2: float, y2: float, *, dashed: bool = False) -> None:
+        canvas.saveState()
+        canvas.setStrokeColor(colors.HexColor("#41515e"))
+        canvas.setLineWidth(1)
+        if dashed:
+            canvas.setDash(3, 2)
+        canvas.line(x1, y1, x2, y2)
+        canvas.setDash()
+        angle = math.atan2(y2 - y1, x2 - x1)
+        arrow_length = 5
+        for delta in (math.pi * 0.82, -math.pi * 0.82):
+            canvas.line(
+                x2,
+                y2,
+                x2 + arrow_length * math.cos(angle + delta),
+                y2 + arrow_length * math.sin(angle + delta),
+            )
+        canvas.restoreState()
+
+    @staticmethod
+    def _box(
+        canvas,
+        x: float,
+        y: float,
+        width: float,
+        height: float,
+        label: str,
+        *,
+        fill: str,
+        text: str = "#17212b",
+        font_size: float = 5.7,
+    ) -> None:
+        canvas.saveState()
+        canvas.setFillColor(colors.HexColor(fill))
+        canvas.setStrokeColor(colors.HexColor("#597384"))
+        canvas.roundRect(x, y, width, height, 3, fill=1, stroke=1)
+        canvas.setFillColor(colors.HexColor(text))
+        canvas.setFont("Helvetica-Bold", font_size)
+        lines = label.split("\n")
+        line_height = font_size + 1.5
+        baseline = y + (height + (len(lines) - 1) * line_height) / 2 - font_size * 0.35
+        for offset, line in enumerate(lines):
+            canvas.drawCentredString(x + width / 2, baseline - offset * line_height, line)
+        canvas.restoreState()
+
+    def draw(self) -> None:
+        canvas = self.canv
+        width = self.width
+
+        canvas.saveState()
+        canvas.setFillColor(colors.HexColor("#f0f7fb"))
+        canvas.setStrokeColor(colors.HexColor("#9eb5c4"))
+        canvas.roundRect(0, 86, width, 196, 5, fill=1, stroke=1)
+        canvas.setFillColor(colors.HexColor("#164e70"))
+        canvas.setFont("Helvetica-Bold", 8)
+        canvas.drawString(8, 268, "PROGRAMMABLE LOGIC (FPGA) — 4Kp30 VIDEO AND AI DATA PATH")
+
+        boxes = {
+            "mipi": (70, 166, 54, 54),
+            "selector": (131, 166, 54, 54),
+            "isp": (192, 166, 54, 54),
+            "prep": (253, 166, 54, 54),
+            "ai": (314, 166, 70, 54),
+            "overlay": (391, 166, 44, 54),
+            "dp": (442, 166, 43, 54),
+        }
+        camera_x, camera_width = 7, 56
+        self._box(canvas, camera_x, 220, camera_width, 35, "Camera 0\nIMX678C", fill="#dff3e5")
+        self._box(canvas, camera_x, 128, camera_width, 35, "Camera 1\nIMX678C", fill="#dff3e5")
+        self._box(canvas, *boxes["mipi"], "MIPI D-PHY\nCSI-2 Rx", fill="#d9ecf7")
+        self._box(canvas, *boxes["selector"], "Multi-sensor\nselector", fill="#d9ecf7")
+        self._box(canvas, *boxes["isp"], "ISP\nDemosaic • AE\nAWB • ANR", fill="#d9ecf7", font_size=5.1)
+        self._box(canvas, *boxes["prep"], "AI pre-\nprocessing", fill="#d9ecf7")
+        self._box(canvas, *boxes["ai"], "FPGA AI Suite\nYOLOv8n\nDetect / Pose", fill="#0b6f9c", text="#ffffff")
+        self._box(canvas, *boxes["overlay"], "Overlay\nframe\nbuffer", fill="#e7ddf5", font_size=5.1)
+        self._box(canvas, *boxes["dp"], "DP Tx\n4Kp30\nDisplay", fill="#dff3e5", font_size=5.1)
+
+        self._arrow(canvas, 63, 237, 70, 204)
+        self._arrow(canvas, 63, 145, 70, 182)
+        for source, target in zip(
+            ("mipi", "selector", "isp", "prep", "ai", "overlay"),
+            ("selector", "isp", "prep", "ai", "overlay", "dp"),
+        ):
+            x1, y1, w1, h1 = boxes[source]
+            x2, y2, _, h2 = boxes[target]
+            self._arrow(canvas, x1 + w1, y1 + h1 / 2, x2, y2 + h2 / 2)
+
+        canvas.setFillColor(colors.HexColor("#164e70"))
+        canvas.setFont("Helvetica-Bold", 8)
+        canvas.drawString(8, 70, "HPS / STORAGE / CONTROL PLANE")
+        self._box(
+            canvas,
+            100,
+            27,
+            264,
+            34,
+            "HPS Linux  •  Camera + ISP configuration  •  AI scheduling/results  •  Web GUI",
+            fill="#dce6ee",
+            font_size=5.7,
+        )
+        self._box(canvas, 7, 27, 77, 34, "microSD\nLinux + models", fill="#f3ead1")
+        self._box(canvas, 384, 27, 101, 34, "QSPI\nFPGA configuration", fill="#f3ead1")
+        self._arrow(canvas, 84, 44, 100, 44)
+        self._arrow(canvas, 434, 61, 420, 166)
+        self._arrow(canvas, 220, 61, 220, 166, dashed=True)
+        self._arrow(canvas, 349, 61, 349, 166, dashed=True)
+
+        canvas.setFillColor(colors.HexColor("#41515e"))
+        canvas.setFont("Helvetica", 6.2)
+        canvas.drawString(8, 9, "Solid arrows: configuration/data flow     Dashed arrows: HPS control     Ethernet provides browser access to the HPS web UI")
+        canvas.restoreState()
 
 
 def footer(canvas, document) -> None:
@@ -241,12 +385,22 @@ def build_story(markdown: str, body_width: float, styles: dict[str, ParagraphSty
             index += 1
             continue
 
+        if line.strip() == "<!-- implementation-diagram -->":
+            story.append(ImplementationDiagram(body_width))
+            story.append(Spacer(1, 2.5 * mm))
+            index += 1
+            continue
+
         if line.startswith("|"):
             table_rows = []
             while index < len(lines) and lines[index].startswith("|"):
                 table_rows.append(lines[index])
                 index += 1
-            story.append(KeepTogether([table_from_markdown(table_rows, body_width, styles)]))
+            table = table_from_markdown(table_rows, body_width, styles)
+            if len(table_rows) > 12:
+                story.append(table)
+            else:
+                story.append(KeepTogether([table]))
             story.append(Spacer(1, 2.2 * mm))
             continue
 

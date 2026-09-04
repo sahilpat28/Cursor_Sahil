@@ -1,74 +1,96 @@
-# Agilex 5 E-Series 065B 4Kp30 Camera + AI Bring-Up
+# Agilex 5 E-Series 065B 4Kp30 Camera + AI
+## First-Time Bring-Up and Customer Demonstration Runbook
 
 ## Document control
 
 | Item | Value |
 | --- | --- |
-| Document type | Technical bring-up guide |
-| Audience | Hardware, FPGA, embedded-software, and validation engineers |
+| Document type | First-time provisioning and offline customer-demo runbook |
+| Audience | New hardware, FPGA, embedded-software, validation, and field engineers |
 | Status | Field-validated pre-built release procedure |
 | Validated configuration | Agilex 5 E-Series 065B MDK; one or two Framos FSM:GO IMX678C cameras |
 | Release assets | `altera-fpga/agilex-ed-camera-ai`, tag `rel-25.1` |
-| Documentation baseline | Altera embedded-design documentation `rel-26.1` |
+| Documentation baseline | Official Altera camera guide `rel-25.1`; user-supplied current guide `rel-26.1` |
 
 ## Purpose and scope
 
-Use this guide to install and validate the 4Kp30 Multi-Sensor Camera with AI Inference Solution System Example Design on an Altera Agilex™ 5 FPGA E-Series 065B Modular Development Kit. It covers the tested Linux-host path for one or two Framos FSM:GO IMX678C MIPI CSI-2 cameras, including QSPI, microSD, serial-console, Ethernet, DisplayPort, and AI-model setup.
+Use this guide to install and validate the 4Kp30 Multi-Sensor Camera with AI Inference Solution System Example Design on an Altera Agilex™ 5 FPGA E-Series 065B Modular Development Kit. It is written for a first-time operator and contains two paths:
+
+- **First-time provisioning:** downloads assets, writes the microSD card, programs QSPI, and compiles/installs the AI models. Internet access is required.
+- **Customer demonstration:** boots a prepared board and prepared microSD card using only files carried on the host laptop. Internet access is not required at the customer site.
 
 > **Compatibility notice:** Although the documentation is published under `rel-26.1`, this pre-built design's binaries and source release are `rel-25.1`. Use matching assets. Quartus Pro 25.1 is required to rebuild the design. A compatible newer Quartus Programmer can program the pre-built `.jic`; verify that it detects the carrier board before programming.
 
 ## Before you begin
 
-- Confirm that the host is Linux x86_64 with Internet access, Docker, and Quartus Programmer.
+- Confirm that the host is Linux x86_64 with Quartus Programmer, a serial-terminal application, and a web browser.
+- For first-time provisioning, also confirm Internet access, Docker, and at least 8 GB of free RAM.
 - Ensure that the cameras, microSD card, J35/J2 USB cables, Ethernet, DP cable, and display are available.
 - Keep the board powered off when connecting camera cables or inserting/removing the microSD card.
 - Obtain approval for the Ultralytics model license before downloading or compiling the YOLOv8 models.
 
-## Contents
-
-1. Quick customer bring-up with a prepared board and microSD card
-2. Detailed media preparation and QSPI programming
-3. Serial console, network, and web UI access
-4. AI model compilation and installation
-5. Acceptance testing, troubleshooting, and deployment record
-
 <!-- pagebreak -->
 
-## Quick customer bring-up
+## Customer demonstration quick-start — no Internet required
 
-Use this page when demonstrating a board at a customer site. It assumes the microSD card has already been flashed **and** contains the compiled YOLO model files, and that the board QSPI was already programmed with `top.core.jic`.
+Use this page at the customer site. It starts a design that was prepared in advance. Internet access is **not** needed at the customer site; local Ethernet is still required for the browser UI.
 
-> **Important:** A ready microSD card alone is not enough for a new or erased board. If QSPI has not previously been programmed, complete section 5 before attempting this quick-start procedure.
+> **Offline kit requirement:** Carry the prepared microSD card, local copy of `top.core.jic`, this PDF, a Linux laptop with Quartus Programmer and Minicom already installed, both micro-USB cables, DP cable, Ethernet cable, and the compatible camera modules. The prepared card must contain the Linux image and the four compiled AI-model assets for Detect/Pose.
 
-### Pre-flight check
+### Decide which customer-site path applies
 
-- Board is powered off; the prepared microSD card is installed in the SOM slot.
-- SOM switch `S4 = ON-ON` (ASx4/QSPI boot).
-- Both cameras are attached with pin 1 correctly aligned.
-- DP display is connected and set to its DP input.
-- SOM `J6` Ethernet and `J2` serial USB are connected to the host/network.
+- If QSPI is known to contain `top.core.jic`, skip directly to **Boot and demonstrate**.
+- If the board is new, erased, or its QSPI state is unknown, complete **Program QSPI from the local offline kit** first.
 
-### Customer demonstration sequence
+### Program QSPI from the local offline kit
 
-1. Power on the board. Keep the DP display connected during boot.
-2. Open the HPS serial console at 115200 8N1 with no flow control; log in as `root` (no password).
-3. At the board prompt, obtain the DHCP address:
+1. Power the board **off** and set SOM switch `S4 = OFF-OFF` (JTAG mode).
+2. Connect carrier `J35` micro-USB to the laptop and power on the board.
+3. From the directory holding the local `top.core.jic`, verify the cable and program QSPI:
+
+```bash
+quartus_pgm -l
+quartus_pgm -c 1 -m jtag -o "pvi;top.core.jic"
+```
+
+4. Wait for `Successfully performed operation(s)` and `0 errors`.
+5. Power the board **off**, set `S4 = ON-ON` (ASx4/QSPI boot), and keep the prepared microSD card installed.
+
+### Boot and demonstrate
+
+1. With the board off, insert the prepared microSD card. Connect both cameras, DP display, `J2` HPS serial USB, and `J6` Ethernet.
+2. Set the DP display to its DP input; then power on the board. Leave the display connected throughout boot.
+3. Open the HPS serial terminal at 115200 baud, 8 data bits, no parity, one stop bit, with no flow control. On the validated laptop, the HPS UART is `/dev/ttyUSB3`:
+
+```bash
+gnome-terminal --title="Agilex-HPS-ttyUSB3" -- bash -c \
+  "sudo minicom -D /dev/ttyUSB3 -b 115200; exec bash"
+```
+
+4. Log in as `root` (no password), then obtain the board's local address:
 
 ```bash
 ifconfig eth0
 ```
 
-4. On the host browser, open `http://BOARD_IP/`, replacing `BOARD_IP` with the `inet addr` value.
-5. Confirm that the DP display detects a signal and shows video.
-6. In the web UI, select camera 0 and camera 1; confirm live video from each.
-7. Select **Detect** and confirm object boxes/labels, then select **Pose** and confirm pose overlays.
+5. In the laptop browser, open `http://BOARD_IP/`, replacing `BOARD_IP` with the `inet addr` value.
+6. Confirm DP video, select camera 0 and camera 1 in the UI, and verify live video from each.
+7. Select **Detect** to demonstrate object boxes/labels, then **Pose** to demonstrate pose overlays.
 
 ### If the demonstration does not start
 
-- **No DP signal:** Confirm the display input, reseat the DP cable, and power-cycle the monitor. Do not reflash QSPI solely for this symptom.
-- **No serial output:** Verify the J2 four-port serial group and use its third port; see section 6.
-- **No web UI:** Run `ifconfig eth0` again and confirm the host is on the same network.
-- **No AI overlay:** Verify the model files using the command in section 9, then reboot the board.
+- **No serial output:** Do not assume `/dev/ttyUSB3` on every laptop. Disconnect/reconnect only `J2`; its four reappearing UARTs form the J2 group. Use its third port, as described in section 6.
+- **No web UI, DP signal, or AI overlay:** Internet is unnecessary, but the board needs a DHCP address, display input/DP cable, and prepared model files. Use the detailed troubleshooting table.
+
+<!-- pagebreak -->
+
+## Implementation block diagram
+
+The video path runs in programmable logic (PL). Linux on the HPS configures the camera/ISP/AI components, schedules inference, processes AI results, and exposes the web UI. The multi-sensor selector chooses the active camera source for the 4Kp30 pipeline.
+
+<!-- implementation-diagram -->
+
+> **Data flow:** Camera pixels travel left-to-right through MIPI reception, source selection, ISP, AI pre-processing, FPGA AI Suite, overlay, and DisplayPort. The dashed arrows represent HPS control; QSPI supplies FPGA configuration and microSD supplies Linux plus compiled models.
 
 <!-- pagebreak -->
 
@@ -318,12 +340,38 @@ With the FPGA AI Suite evaluation license, AI inference can stop after approxima
 | Display says “No signal” | Verify display input and DP cable, connect before board boot, reseat both ends, and power-cycle the monitor. Do not reflash QSPI solely for this symptom. |
 | UI works but no DP output | At the HPS prompt run `pidof VvpIspDemo` and `systemctl --no-pager --full status vvp-isp.service`. Confirm the DP display link separately. |
 
-## Useful references
+## Official links and build inputs
 
-- Altera camera example design: https://altera-fpga.github.io/rel-26.1/embedded-designs/agilex-5/e-series/modular/camera/camera_4k_ai/camera_4k_ai/
-- Release assets: https://github.com/altera-fpga/agilex-ed-camera-ai/releases/tag/rel-25.1
-- Source repository: https://github.com/altera-fpga/agilex-ed-camera-ai/tree/rel-25.1
-- Ultralytics license: https://www.ultralytics.com/license
+Use the pinned `rel-25.1` resources when rebuilding or regenerating this specific design. The current `rel-26.1` documentation is useful for board guidance, but do not mix newer source, models, or generated artifacts with this `rel-25.1` image/JIC flow without revalidating the complete design.
+
+| Resource | Official link and when it is needed |
+| --- | --- |
+| Release-matched camera guide | https://altera-fpga.github.io/rel-25.1/embedded-designs/agilex-5/e-series/modular/camera/camera_4k_ai/camera_4k_ai/ — primary instructions for this asset release |
+| Current camera guide | https://altera-fpga.github.io/rel-26.1/embedded-designs/agilex-5/e-series/modular/camera/camera_4k_ai/camera_4k_ai/ — current Altera documentation referenced by this project |
+| Pre-built artifacts | https://github.com/altera-fpga/agilex-ed-camera-ai/releases/tag/rel-25.1 — download `top.core.jic` and `hps-first-vvp-isp-demo-image-agilex5_mk_a5e065bb32aes1.wic.gz` |
+| Camera design source | https://github.com/altera-fpga/agilex-ed-camera-ai/tree/rel-25.1 — clone with `--recurse-submodules` for source build/model compilation |
+| Source-build instructions | https://github.com/altera-fpga/agilex-ed-camera-ai/blob/rel-25.1/README.md — matching SOF and HPS-first RBF/JIC build flows |
+| Quartus Prime Pro 25.1 Linux | https://www.intel.com/content/www/us/en/software-kit/851652/intel-quartus-prime-pro-edition-design-software-version-25-1-for-linux.html — required to rebuild the `rel-25.1` hardware design |
+| Quartus download center | https://www.altera.com/products/development-tools/quartus — official portal for Programmer and device support |
+| Nios V tools | https://www.altera.com/design/guidance/nios-v-developer — required by the source hardware build |
+| FPGA AI Suite 2025.1 | https://www.altera.com/downloads/add-development-tools/fpga-ai-suite-version-2025-1 — required by the model compiler |
+| Modular Design Toolkit | https://github.com/altera-fpga/modular-design-toolkit — checked out automatically by the design source as a submodule |
+| Linux SoC FPGA source | https://github.com/altera-opensource/linux-socfpga/tree/socfpga-6.6.22-lts — input to a custom Yocto software build |
+| U-Boot SoC FPGA source | https://github.com/altera-opensource/u-boot-socfpga/tree/v2024.01 — input to a custom Yocto software build |
+| Arm Trusted Firmware | https://github.com/ARM-software/arm-trusted-firmware/tree/socfpga_v2.11.0 — input to a custom Yocto software build |
+| Yocto Project Poky | https://git.yoctoproject.org/poky — the matching software flow uses the `scarthgap` release |
+| Ultralytics license | https://www.ultralytics.com/license — review before obtaining YOLO models |
+| YOLOv8n detection model | https://github.com/ultralytics/assets/releases/download/v8.3.0/yolov8n.pt — place in `source/yolo_cnn` before compiling |
+| YOLOv8n pose model | https://github.com/ultralytics/assets/releases/download/v8.3.0/yolov8n-pose.pt — place in `source/yolo_cnn` before compiling |
+
+### Source-build choices
+
+The downloadable JIC/SD-card flow in this runbook is the lowest-risk path for a first-time board bring-up. Rebuild only when the design must be changed.
+
+- **FPGA-first SOF flow:** use `AGX_5E_Modular_Devkit_ISP_AI_FF_RD.xml` and the Yocto `kas/agilex_camera_ff.yml` configuration.
+- **HPS-first RBF/JIC flow:** use `AGX_5E_Modular_Devkit_ISP_AI_RD.xml` and the Yocto `kas/agilex_camera.yml` configuration. This is the source-build equivalent of the pre-built QSPI + microSD boot approach.
+
+Source builds require the correct license combination. The design README documents the OpenCore Plus, Video and Vision Processing Suite, Tone Mapping Operator, 3D LUT, FPGA AI Suite, MIPI D-PHY, MIPI CSI-2, and Nios V licensing constraints. The official example is a demonstration design and should be revalidated before production deployment.
 
 <!-- pagebreak -->
 
